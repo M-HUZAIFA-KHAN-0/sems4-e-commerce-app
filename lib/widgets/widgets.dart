@@ -1,0 +1,9 @@
+// Barrel file for all widgets
+export 'carousel_widget.dart';
+export 'brand_boxes_widget.dart';
+export 'top_deals_widget.dart';
+export 'product_display_widget.dart';
+export 'top_bar_widget.dart';
+export 'bottom_bar_widget.dart';
+export 'specification_details.dart';
+export 'specification_highlights.dart';
