@@ -13,10 +13,16 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   late PageController _pageController;
   late ScrollController _thumbScrollController;
+  final GlobalKey _specDetailsKey = GlobalKey();
+  final GlobalKey _reviewsKey = GlobalKey();
+  late ScrollController _scrollController;
 
   int _currentPage = 0;
   String selectedColor = 'Gold';
   String selectedStorage = '512GB - 8GB RAM';
+  int selectedQuantity = 1;
+  late int availableStock = 15;
+  bool _stockLimitReached = false;
 
   final List<IconData> carouselIcons = [
     Icons.laptop, // 👈 STATIC FIRST (featured)
@@ -26,31 +32,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     Icons.watch,
     Icons.headset,
   ];
-
-  // Widget _thumbnailItem(int index) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       _pageController.animateToPage(
-  //         index,
-  //         duration: const Duration(milliseconds: 300),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     },
-  //     child: Container(
-  //       width: 60,
-  //       height: 60,
-  //       decoration: BoxDecoration(
-  //         border: Border.all(
-  //           color: _currentPage == index ? Colors.blue : Colors.grey[300]!,
-  //           width: 2,
-  //         ),
-  //         borderRadius: BorderRadius.circular(8),
-  //         color: Colors.grey[100],
-  //       ),
-  //       child: Icon(Icons.laptop, size: 36, color: Colors.grey[400]),
-  //     ),
-  //   );
-  // }
 
   Widget _thumbnailItem(int index) {
     return GestureDetector(
@@ -86,17 +67,34 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     super.initState();
     _pageController = PageController();
     _thumbScrollController = ScrollController();
+    _scrollController = ScrollController();
+    // Initialize stock from product map (single source). Default to 5 if not provided.
+    availableStock = (widget.product['stock'] is int)
+        ? widget.product['stock'] as int
+        : 5;
+    if (availableStock < 1) {
+      _stockLimitReached = true;
+    }
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     _thumbScrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final brandImages = <ImageProvider>[
+      const AssetImage("assets/brands/lenovo.png"),
+      const AssetImage("assets/brands/dell.png"),
+      const AssetImage("assets/brands/hp.png"),
+      // const AssetImage("assets/brands/apple.png"),
+      // const AssetImage("assets/brands/acer.png"),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -118,6 +116,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -125,7 +124,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: SizedBox(
-                height: 300, // total height same as carousel
+                height: 250, // total height same as carousel
                 child: Row(
                   children: [
                     /// MAIN CAROUSEL (LEFT)
@@ -345,10 +344,30 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                   const SizedBox(height: 24),
 
+                  /// STORAGE SECTION
+                  const Text(
+                    'Storage',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      _buildStorageOption('512GB - 8GB RAM'),
+                      _buildStorageOption('256GB - 8GB RAM'),
+                      _buildStorageOption('512GB - 16GB RAM'),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
                   /// COLORS SECTION
                   const Text(
                     'Colors',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 12),
@@ -367,32 +386,96 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
-
-                  /// STORAGE SECTION
+                  // --- Quantity selector ---
                   const Text(
-                    'Storage',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    'Quantity',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
 
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
+                  Row(
                     children: [
-                      _buildStorageOption('512GB - 8GB RAM'),
-                      _buildStorageOption('256GB - 8GB RAM'),
-                      _buildStorageOption('512GB - 16GB RAM'),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 36,
+                                minHeight: 36,
+                              ),
+                              icon: const Icon(Icons.remove, size: 20),
+                              onPressed: () {
+                                setState(() {
+                                  if (selectedQuantity > 1) {
+                                    selectedQuantity -= 1;
+                                    // If we dropped below stock limit, clear the flag
+                                    if (selectedQuantity < availableStock)
+                                      _stockLimitReached = false;
+                                  }
+                                });
+                              },
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: Text(
+                                selectedQuantity.toString(),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 36,
+                                minHeight: 36,
+                              ),
+                              icon: const Icon(Icons.add, size: 20),
+                              onPressed: () {
+                                setState(() {
+                                  if (selectedQuantity < availableStock) {
+                                    selectedQuantity += 1;
+                                    _stockLimitReached = false;
+                                  } else {
+                                    // reached limit, show message
+                                    _stockLimitReached = true;
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 12),
+                      Text(
+                        _stockLimitReached
+                            ? 'Stock not available'
+                            : '',
+                        style: TextStyle(
+                          color: _stockLimitReached
+                              ? Colors.red
+                              : Colors.grey[600],
+                        ),
+                      ),
                     ],
                   ),
-
                   const SizedBox(height: 24),
 
                   /// DESCRIPTION
                   const Text(
                     'Description',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 12),
@@ -477,6 +560,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             // --- Specification Details (tag-based sections + rows) ---
             Padding(
+              key: _specDetailsKey,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SpecificationDetails(
                 sections: [
@@ -531,7 +615,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: [
                   const Text(
                     "Similar Products",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 12),
@@ -575,29 +659,231 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ],
               ),
             ),
+
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      "Shop By Brand",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  BrandImageSlider(
+                    images: brandImages,
+                    height: 165,
+                    itemWidth:
+                        195, // keeps the “next tile partially visible” feel
+                    borderRadius: 20,
+                    horizontalPadding: 24,
+                    itemSpacing: 18,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            Container(
+              child: Column(
+                children: [
+                  ShopMoreCategoriesWidget(
+                    title: "Shop More Categories",
+                    items: const [
+                      ShopCategoryCardData(
+                        image: AssetImage("assets/categories/earbuds.png"),
+                        title: "Wireless\nEarbuds",
+                      ),
+                      ShopCategoryCardData(
+                        image: AssetImage("assets/categories/watch.png"),
+                        title: "Smart\nWatches",
+                      ),
+                      ShopCategoryCardData(
+                        image: AssetImage("assets/categories/speakers.png"),
+                        title: "Bluetooth\nSpeakers",
+                      ),
+                      ShopCategoryCardData(
+                        image: AssetImage("assets/categories/tablet.png"),
+                        title: "Tablets",
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Container(
+            //   child: Column(
+            //     children: [
+            //       ProductReview(
+            //         name: "John Doe",
+            //         rating: 5,
+            //         verified: true,
+            //         date: "June 10, 2023",
+            //         text:
+            //             "Amazing laptop with great performance. Highly recommend for professionals and students alike!",
+            //         images: [
+            //           "assets/review1.jpg",
+            //           "assets/review2.jpg",
+            //           "assets/review3.jpg",
+            //           "assets/review3.jpg",
+            //           "assets/review3.jpg",
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Reviews section
+            Padding(
+              key: _reviewsKey,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Reviews',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+                  ProductReview(
+                    name: 'Sharjeel Atiq',
+                    rating: 5,
+                    date: '04 Jun 2025',
+                    text:
+                        'been 7 days using the product. It was indeed brand new and I am 100% satisfied with this huge purchase.',
+                    images: [
+                      "assets/review1.jpg",
+                      "assets/review2.jpg",
+                      "assets/review3.jpg",
+                      "assets/review3.jpg",
+                      "assets/review3.jpg",
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ProductReview(
+                    name: 'Hammad Mian',
+                    rating: 5,
+                    date: '14 Oct 2025',
+                    text: 'Good',
+                    images: ["assets/review1.jpg", "assets/review2.jpg"],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          height: 56,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    // Scroll to specification details
+                    if (_specDetailsKey.currentContext != null) {
+                      await Scrollable.ensureVisible(
+                        _specDetailsKey.currentContext!,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.list_alt, color: Colors.black),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Specs',
+                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            child: const Text(
-              'Add to Cart',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    if (_reviewsKey.currentContext != null) {
+                      await Scrollable.ensureVisible(
+                        _reviewsKey.currentContext!,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.star_border, color: Colors.black),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Review',
+                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    // Scroll to compare or implement later
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.compare_arrows, color: Colors.black),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Compare',
+                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              SizedBox(
+                width: 140,
+                height: 48,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    'Add to Cart',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF7941D),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -631,20 +917,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child: Column(
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 45,
+            height: 45,
+
             decoration: BoxDecoration(
               border: Border.all(
                 color: isSelected ? Colors.blue : Colors.grey[300]!,
                 width: isSelected ? 3 : 1,
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(50),
             ),
             child: Container(
               margin: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: colorValue,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(50),
               ),
             ),
           ),

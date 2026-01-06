@@ -7,3 +7,6 @@ export 'top_bar_widget.dart';
 export 'bottom_bar_widget.dart';
 export 'specification_details.dart';
 export 'specification_highlights.dart';
+export 'brand_image_slider_widget.dart';
+export 'product_review.dart';
+export 'product_category_widget.dart';
