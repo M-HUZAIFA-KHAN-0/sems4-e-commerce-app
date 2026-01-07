@@ -60,7 +60,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
 
                       const SizedBox(height: 18),
-                      const Icon(Icons.directions_car_filled, size: 74, color: Colors.black),
+                      const Icon(
+                        Icons.directions_car_filled,
+                        size: 74,
+                        color: Colors.black,
+                      ),
                       const SizedBox(height: 16),
 
                       const Text(
@@ -86,7 +90,9 @@ class _LoginPageState extends State<LoginPage> {
                               validator: (v) {
                                 final value = (v ?? "").trim();
                                 if (value.isEmpty) return "Email is required";
-                                if (!_isValidEmail(value)) return "Please enter a valid email";
+                                if (!_isValidEmail(value)) {
+                                  return "Please enter a valid email";
+                                }
                                 return null;
                               },
                             ),
@@ -96,11 +102,16 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _passCtrl,
                               prefixIcon: Icons.lock_outline,
                               obscureText: _obscurePass,
-                              suffixIcon: _obscurePass ? Icons.visibility_off : Icons.visibility,
-                              onSuffixTap: () => setState(() => _obscurePass = !_obscurePass),
+                              suffixIcon: _obscurePass
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              onSuffixTap: () =>
+                                  setState(() => _obscurePass = !_obscurePass),
                               validator: (v) {
                                 final value = (v ?? "");
-                                if (value.isEmpty) return "Password is required";
+                                if (value.isEmpty) {
+                                  return "Password is required";
+                                }
                                 return null;
                               },
                             ),
@@ -108,15 +119,20 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 14),
 
                             InkWell(
-                              onTap: () => setState(() => _remember = !_remember),
+                              onTap: () =>
+                                  setState(() => _remember = !_remember),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   _SquareCheck(isChecked: _remember),
                                   const SizedBox(width: 8),
                                   const Text(
                                     "Remember me",
-                                    style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -124,10 +140,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             const SizedBox(height: 14),
 
-                            _PrimaryButton(
-                              text: "Sign in",
-                              onPressed: _submit,
-                            ),
+                            _PrimaryButton(text: "Sign in", onPressed: _submit),
 
                             const SizedBox(height: 18),
                             const _ContinueDivider(text: "or continue with"),
@@ -137,7 +150,11 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _SocialIconButton(
-                                  child: const Icon(Icons.facebook, color: Color(0xFF1877F2), size: 22),
+                                  child: const Icon(
+                                    Icons.facebook,
+                                    color: Color(0xFF1877F2),
+                                    size: 22,
+                                  ),
                                   onTap: () {},
                                 ),
                                 const SizedBox(width: 14),
@@ -147,7 +164,11 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 const SizedBox(width: 14),
                                 _SocialIconButton(
-                                  child: const Icon(Icons.apple, color: Colors.black, size: 22),
+                                  child: const Icon(
+                                    Icons.apple,
+                                    color: Colors.black,
+                                    size: 22,
+                                  ),
                                   onTap: () {},
                                 ),
                               ],
@@ -160,18 +181,28 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 const Text(
                                   "Don’t have an account? ",
-                                  style: TextStyle(fontSize: 11, color: Color(0xFF9AA0A6), fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF9AA0A6),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (_) => const SignUpPage()),
+                                      MaterialPageRoute(
+                                        builder: (_) => const SignUpPage(),
+                                      ),
                                     );
                                   },
                                   child: const Text(
                                     "Sign up",
-                                    style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.w800),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -220,6 +251,7 @@ class _AuthField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
@@ -229,7 +261,11 @@ class _AuthField extends StatelessWidget {
         filled: true,
         fillColor: _fieldBg,
         hintText: hint,
-        hintStyle: const TextStyle(fontSize: 12, color: Color(0xFFB0B6BE), fontWeight: FontWeight.w600),
+        hintStyle: const TextStyle(
+          fontSize: 12,
+          color: Color(0xFFB0B6BE),
+          fontWeight: FontWeight.w600,
+        ),
         prefixIcon: Icon(prefixIcon, size: 18, color: Colors.black54),
         suffixIcon: suffixIcon == null
             ? null
@@ -237,9 +273,18 @@ class _AuthField extends StatelessWidget {
                 onTap: onSuffixTap,
                 child: Icon(suffixIcon, size: 18, color: Colors.black45),
               ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        enabledBorder: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(12)),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+        ),
         errorStyle: const TextStyle(fontSize: 11, height: 1.1),
       ),
     );
@@ -260,7 +305,9 @@ class _SquareCheck extends StatelessWidget {
         borderRadius: BorderRadius.circular(3),
         border: Border.all(color: Colors.black, width: 1.2),
       ),
-      child: isChecked ? const Icon(Icons.check, size: 12, color: Colors.white) : null,
+      child: isChecked
+          ? const Icon(Icons.check, size: 12, color: Colors.white)
+          : null,
     );
   }
 }
@@ -277,18 +324,30 @@ class _PrimaryButton extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
-        boxShadow: const [BoxShadow(color: Color(0x22000000), blurRadius: 14, offset: Offset(0, 6))],
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 14,
+            offset: Offset(0, 6),
+          ),
+        ],
       ),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
         ),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -303,15 +362,23 @@ class _ContinueDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE))),
+        const Expanded(
+          child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE)),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9AA0A6), fontWeight: FontWeight.w700),
+            style: const TextStyle(
+              fontSize: 11,
+              color: Color(0xFF9AA0A6),
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
-        const Expanded(child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE))),
+        const Expanded(
+          child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE)),
+        ),
       ],
     );
   }
@@ -348,11 +415,20 @@ class _GoogleG extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback: (rect) => const LinearGradient(
-        colors: [Color(0xFF4285F4), Color(0xFF34A853), Color(0xFFFBBC05), Color(0xFFEA4335)],
+        colors: [
+          Color(0xFF4285F4),
+          Color(0xFF34A853),
+          Color(0xFFFBBC05),
+          Color(0xFFEA4335),
+        ],
       ).createShader(rect),
       child: const Text(
         "G",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w900,
+          color: Colors.white,
+        ),
       ),
     );
   }

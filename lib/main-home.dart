@@ -509,7 +509,7 @@
 //   }
 // }
 
-import 'package:first/screens/login_page.dart';
+import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
 import 'screens/add_to_card_page.dart';
@@ -643,7 +643,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // Navigate to Profile page when Profile icon is clicked
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
+              MaterialPageRoute(builder: (context) => const WishlistPage()),
             );
           } else {
             setState(() {

@@ -4,7 +4,7 @@ import '../screens/product_detail_page.dart';
 class ProductDisplayWidget extends StatelessWidget {
   final List<Map<String, dynamic>> cars;
 
-  const ProductDisplayWidget({required this.cars});
+  const ProductDisplayWidget({super.key, required this.cars});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ProductDisplayWidget extends StatelessWidget {
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> car;
 
-  const ProductCard({required this.car});
+  const ProductCard({super.key, required this.car});
 
   @override
   Widget build(BuildContext context) {

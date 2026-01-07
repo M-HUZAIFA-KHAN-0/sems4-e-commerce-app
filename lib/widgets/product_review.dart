@@ -10,7 +10,7 @@ class ProductReview extends StatelessWidget {
   final List<String>? images; // asset paths or network URLs
 
   const ProductReview({
-    Key? key,
+    super.key,
     required this.name,
     this.avatarInitials,
     required this.rating,
@@ -18,7 +18,7 @@ class ProductReview extends StatelessWidget {
     this.date,
     this.text,
     this.images,
-  }) : super(key: key);
+  });
 
   Future<void> _openImageViewer(BuildContext context, int initialPage) async {
     if (images == null || images!.isEmpty) return;

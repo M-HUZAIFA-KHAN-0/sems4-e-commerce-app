@@ -113,6 +113,7 @@
 
 
 import 'package:first/main-home.dart';
+import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
@@ -243,7 +244,12 @@ class _CartPageExampleState extends State<CartPageExample> {
               context,
               MaterialPageRoute(builder: (context) => const MyHomePage()),
             );
-          } else {
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const WishlistPage()),
+            );
+          }else {
             setState(() {
               _selectedBottomIndex = index;
             });

@@ -5,7 +5,7 @@ import '../widgets/widgets.dart';
 class ProductDetailPage extends StatefulWidget {
   final Map<String, dynamic> product;
 
-  const ProductDetailPage({required this.product});
+  const ProductDetailPage({super.key, required this.product});
 
   @override
   State<ProductDetailPage> createState() => _ProductDetailPageState();
@@ -417,8 +417,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   if (selectedQuantity > 1) {
                                     selectedQuantity -= 1;
                                     // If we dropped below stock limit, clear the flag
-                                    if (selectedQuantity < availableStock)
+                                    if (selectedQuantity < availableStock) {
                                       _stockLimitReached = false;
+                                    }
                                   }
                                 });
                               },

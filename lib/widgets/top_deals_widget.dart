@@ -83,7 +83,7 @@ class FilterChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const FilterChip({
+  const FilterChip({super.key, 
     required this.label,
     required this.isSelected,
     required this.onTap,

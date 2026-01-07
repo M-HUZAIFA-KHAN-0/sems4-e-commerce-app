@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'email_verification_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -11,16 +12,30 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  final _confirmCtrl = TextEditingController();
+  late final TextEditingController _emailCtrl;
+  late final TextEditingController _firstNameCtrl;
+  late final TextEditingController _lastNameCtrl;
+  late final TextEditingController _passCtrl;
+  late final TextEditingController _confirmCtrl;
 
   bool _remember = false;
   bool _obscurePass = true;
   bool _obscureConfirm = true;
 
   @override
+  void initState() {
+    super.initState();
+    _emailCtrl = TextEditingController();
+    _firstNameCtrl = TextEditingController();
+    _lastNameCtrl = TextEditingController();
+    _passCtrl = TextEditingController();
+    _confirmCtrl = TextEditingController();
+  }
+
+  @override
   void dispose() {
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
     _emailCtrl.dispose();
     _passCtrl.dispose();
     _confirmCtrl.dispose();
@@ -33,12 +48,22 @@ class _SignUpPageState extends State<SignUpPage> {
     return r.hasMatch(e);
   }
 
+  bool _isAlpha(String value) {
+    final v = value.trim();
+    final r = RegExp(r'^[A-Za-z]+$');
+    return r.hasMatch(v);
+  }
+
   void _submit() {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() != true) return;
 
     // TODO: Call your API
-    // If success -> navigate or show success msg
+    // If success -> navigate to verification screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const EmailVerificationPage()),
+    );
   }
 
   @override
@@ -60,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: IconButton(
-                          icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+                          icon: const Icon(Icons.arrow_back_ios_new, size: 22),
                           onPressed: () => Navigator.maybePop(context),
                         ),
                       ),
@@ -68,9 +93,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(height: 18),
 
                       // Big icon
-                      const Icon(Icons.directions_car_filled, size: 74, color: Colors.black),
+                      const Icon(
+                        Icons.directions_car_filled,
+                        size: 74,
+                        color: Colors.black,
+                      ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
                       // Title
                       const Text(
@@ -89,6 +118,42 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: Column(
                           children: [
                             _AuthField(
+                              hint: "First name",
+                              controller: _firstNameCtrl,
+                              prefixIcon: Icons.person_outline,
+                              validator: (v) {
+                                final value = (v ?? "").trim();
+                                if (value.isEmpty) {
+                                  return "First name is required";
+                                }
+                                if (!_isAlpha(value)) {
+                                  return "Only alphabets allowed";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            _AuthField(
+                              hint: "Last name",
+                              controller: _lastNameCtrl,
+                              prefixIcon: Icons.person_outline,
+                              validator: (v) {
+                                final value = (v ?? "").trim();
+                                if (value.isEmpty) {
+                                  return "Last name is required";
+                                }
+                                if (!_isAlpha(value)) {
+                                  return "Only alphabets allowed";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            _AuthField(
                               hint: "Email",
                               controller: _emailCtrl,
                               keyboardType: TextInputType.emailAddress,
@@ -96,7 +161,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               validator: (v) {
                                 final value = (v ?? "").trim();
                                 if (value.isEmpty) return "Email is required";
-                                if (!_isValidEmail(value)) return "Please enter a valid email";
+                                if (!_isValidEmail(value)) {
+                                  return "Please enter a valid email";
+                                }
                                 return null;
                               },
                             ),
@@ -108,12 +175,19 @@ class _SignUpPageState extends State<SignUpPage> {
                               controller: _passCtrl,
                               prefixIcon: Icons.lock_outline,
                               obscureText: _obscurePass,
-                              suffixIcon: _obscurePass ? Icons.visibility_off : Icons.visibility,
-                              onSuffixTap: () => setState(() => _obscurePass = !_obscurePass),
+                              suffixIcon: _obscurePass
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              onSuffixTap: () =>
+                                  setState(() => _obscurePass = !_obscurePass),
                               validator: (v) {
                                 final value = (v ?? "");
-                                if (value.isEmpty) return "Password is required";
-                                if (value.length < 6) return "Password must be at least 6 characters";
+                                if (value.isEmpty) {
+                                  return "Password is required";
+                                }
+                                if (value.length < 6) {
+                                  return "Password must be at least 6 characters";
+                                }
                                 return null;
                               },
                             ),
@@ -126,12 +200,20 @@ class _SignUpPageState extends State<SignUpPage> {
                               controller: _confirmCtrl,
                               prefixIcon: Icons.lock_outline,
                               obscureText: _obscureConfirm,
-                              suffixIcon: _obscureConfirm ? Icons.visibility_off : Icons.visibility,
-                              onSuffixTap: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                              suffixIcon: _obscureConfirm
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              onSuffixTap: () => setState(
+                                () => _obscureConfirm = !_obscureConfirm,
+                              ),
                               validator: (v) {
                                 final value = (v ?? "");
-                                if (value.isEmpty) return "Confirm your password";
-                                if (value != _passCtrl.text) return "Passwords do not match";
+                                if (value.isEmpty) {
+                                  return "Confirm your password";
+                                }
+                                if (value != _passCtrl.text) {
+                                  return "Passwords do not match";
+                                }
                                 return null;
                               },
                             ),
@@ -140,15 +222,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             // Remember me
                             InkWell(
-                              onTap: () => setState(() => _remember = !_remember),
+                              onTap: () =>
+                                  setState(() => _remember = !_remember),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   _SquareCheck(isChecked: _remember),
                                   const SizedBox(width: 8),
                                   const Text(
                                     "Remember me",
-                                    style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -156,9 +243,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             const SizedBox(height: 14),
 
-                            // Sign up button
+                            // Sign up button (navigates to verification)
                             _PrimaryButton(
-                              text: "Sign up",
+                              text: "Sign up & Verify",
                               onPressed: _submit,
                             ),
 
@@ -174,7 +261,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _SocialIconButton(
-                                  child: const Icon(Icons.facebook, color: Color(0xFF1877F2), size: 22),
+                                  child: const Icon(
+                                    Icons.facebook,
+                                    color: Color(0xFF1877F2),
+                                    size: 22,
+                                  ),
                                   onTap: () {},
                                 ),
                                 const SizedBox(width: 14),
@@ -184,7 +275,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                                 const SizedBox(width: 14),
                                 _SocialIconButton(
-                                  child: const Icon(Icons.apple, color: Colors.black, size: 22),
+                                  child: const Icon(
+                                    Icons.apple,
+                                    color: Colors.black,
+                                    size: 22,
+                                  ),
                                   onTap: () {},
                                 ),
                               ],
@@ -198,18 +293,28 @@ class _SignUpPageState extends State<SignUpPage> {
                               children: [
                                 const Text(
                                   "Already have an account? ",
-                                  style: TextStyle(fontSize: 11, color: Color(0xFF9AA0A6), fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF9AA0A6),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (_) => const LoginPage()),
+                                      MaterialPageRoute(
+                                        builder: (_) => const LoginPage(),
+                                      ),
                                     );
                                   },
                                   child: const Text(
                                     "Sign in",
-                                    style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.w800),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -259,6 +364,7 @@ class _AuthField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
@@ -268,7 +374,11 @@ class _AuthField extends StatelessWidget {
         filled: true,
         fillColor: _fieldBg,
         hintText: hint,
-        hintStyle: const TextStyle(fontSize: 12, color: Color(0xFFB0B6BE), fontWeight: FontWeight.w600),
+        hintStyle: const TextStyle(
+          fontSize: 12,
+          color: Color(0xFFB0B6BE),
+          fontWeight: FontWeight.w600,
+        ),
         prefixIcon: Icon(prefixIcon, size: 18, color: Colors.black54),
         suffixIcon: suffixIcon == null
             ? null
@@ -276,7 +386,10 @@ class _AuthField extends StatelessWidget {
                 onTap: onSuffixTap,
                 child: Icon(suffixIcon, size: 18, color: Colors.black45),
               ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(12),
@@ -326,7 +439,11 @@ class _PrimaryButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
         boxShadow: const [
-          BoxShadow(color: Color(0x22000000), blurRadius: 14, offset: Offset(0, 6)),
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 14,
+            offset: Offset(0, 6),
+          ),
         ],
       ),
       child: ElevatedButton(
@@ -334,11 +451,17 @@ class _PrimaryButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
+          ),
         ),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -353,15 +476,23 @@ class _ContinueDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE))),
+        const Expanded(
+          child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE)),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9AA0A6), fontWeight: FontWeight.w700),
+            style: const TextStyle(
+              fontSize: 11,
+              color: Color(0xFF9AA0A6),
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
-        const Expanded(child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE))),
+        const Expanded(
+          child: Divider(thickness: 1, height: 1, color: Color(0xFFE7E9EE)),
+        ),
       ],
     );
   }
@@ -399,11 +530,20 @@ class _GoogleG extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback: (rect) => const LinearGradient(
-        colors: [Color(0xFF4285F4), Color(0xFF34A853), Color(0xFFFBBC05), Color(0xFFEA4335)],
+        colors: [
+          Color(0xFF4285F4),
+          Color(0xFF34A853),
+          Color(0xFFFBBC05),
+          Color(0xFFEA4335),
+        ],
       ).createShader(rect),
       child: const Text(
         "G",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white),
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w900,
+          color: Colors.white,
+        ),
       ),
     );
   }

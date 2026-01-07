@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class SpecificationDetails extends StatelessWidget {
   final List<Map<String, dynamic>> sections;
 
-  const SpecificationDetails({Key? key, required this.sections})
-    : super(key: key);
+  const SpecificationDetails({super.key, required this.sections});
 
   Widget _buildRow(Map<String, String> row) {
     return Padding(
@@ -56,7 +55,7 @@ class SpecificationDetails extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Divider(height: 1),
-              ...rows.map((r) => _buildRow(r)).toList(),
+              ...rows.map((r) => _buildRow(r)),
             ],
           ),
         );

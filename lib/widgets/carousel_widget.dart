@@ -82,7 +82,7 @@ class DealCard extends StatelessWidget {
   final String desc;
   final IconData icon;
 
-  const DealCard({
+  const DealCard({super.key, 
     required this.percent,
     required this.title,
     required this.desc,

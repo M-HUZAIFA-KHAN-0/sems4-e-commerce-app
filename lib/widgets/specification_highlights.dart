@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class SpecificationHighlights extends StatelessWidget {
   final List<Map<String, dynamic>> tags;
 
-  const SpecificationHighlights({Key? key, required this.tags})
-    : super(key: key);
+  const SpecificationHighlights({super.key, required this.tags});
 
   Widget _buildTag(BuildContext context, Map<String, dynamic> t) {
     final icon = t['icon'];
