@@ -509,8 +509,10 @@
 //   }
 // }
 
+import 'package:first/screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
+import 'screens/add_to_card_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -598,7 +600,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     'Special Offers',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  TextButton(onPressed: () {}, child: const Text('See All')),
+                  // TextButton(onPressed: () {}, child: const Text('See All')),
                 ],
               ),
 
@@ -628,11 +630,26 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomBarWidget(
+        isLoggedIn: false,
         currentIndex: _selectedBottomIndex,
         onIndexChanged: (index) {
-          setState(() {
-            _selectedBottomIndex = index;
-          });
+          if (index == 3) {
+            // Navigate to Cart page when Bag icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartPageExample()),
+            );
+          } else if (index == 2) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          } else {
+            setState(() {
+              _selectedBottomIndex = index;
+            });
+          }
         },
       ),
     );

@@ -19,10 +19,10 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             Text(
-              'Top Deals',
+              'top Brands',    
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text('See All', style: TextStyle(color: Colors.blue, fontSize: 12)),
+            // Text('See All', style: TextStyle(color: Colors.blue, fontSize: 12)),
           ],
         ),
         const SizedBox(height: 12),

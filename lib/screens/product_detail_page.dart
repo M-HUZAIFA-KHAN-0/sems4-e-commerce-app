@@ -1,3 +1,4 @@
+import 'package:first/screens/add_to_card_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
@@ -866,7 +867,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 width: 140,
                 height: 48,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartPageExample(),
+                      ),
+                    );
+                  },
                   icon: const Icon(
                     Icons.shopping_bag_outlined,
                     color: Colors.white,
