@@ -70,7 +70,8 @@ class CartListWidget extends StatefulWidget {
     this.onChanged,
     this.onShopNow,
     // this.emptyMessage = "Your cart is empty",
-    this.emptyMessage = "Your bag is empty.\nWhen you add products, they'll\nappear here."
+    this.emptyMessage =
+        "Your bag is empty.\nWhen you add products, they'll\nappear here.",
   });
 
   final List<CartProductItem>? items;
@@ -124,7 +125,8 @@ class _CartListWidgetState extends State<CartListWidget> {
     super.dispose();
   }
 
-  void _notifyParent() => widget.onChanged?.call(List<CartProductItem>.of(_items));
+  void _notifyParent() =>
+      widget.onChanged?.call(List<CartProductItem>.of(_items));
 
   void _showStockMsg(String id, String msg) {
     _timers[id]?.cancel();
@@ -159,7 +161,10 @@ class _CartListWidgetState extends State<CartListWidget> {
   }
 
   void _clearSelected() {
-    final selectedIds = _items.where((e) => e.isSelected).map((e) => e.id).toSet();
+    final selectedIds = _items
+        .where((e) => e.isSelected)
+        .map((e) => e.id)
+        .toSet();
 
     setState(() {
       _items.removeWhere((e) => selectedIds.contains(e.id));
@@ -208,103 +213,156 @@ class _CartListWidgetState extends State<CartListWidget> {
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return Center(
-  child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 24),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Icon
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF111111), width: 1.2),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.shopping_bag_outlined,
-              size: 20,
-              color: Color(0xFF111111),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Message (same "structure" as your Text return)
-        Text(
-          widget.emptyMessage, // e.g. "Your bag is empty.\nWhen you add products, they'll\nappear here."
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 14,
-            height: 1.35,
-            color: Color(0xFF111111),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-
-        // ✅ fixed gap between content and button
-        const SizedBox(height: 25),
-
-        // Button
-        SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: ElevatedButton(
-            // onPressed: widget.onShopNow,
-            onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyHomePage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF111111),
+                    width: 1.2,
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 20,
+                    color: Color(0xFF111111),
+                  ),
+                ),
               ),
-            ),
-            child: const Text(
-              "Shop Now",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+
+              const SizedBox(height: 16),
+
+              // Message (same "structure" as your Text return)
+              Text(
+                widget
+                    .emptyMessage, // e.g. "Your bag is empty.\nWhen you add products, they'll\nappear here."
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  height: 1.35,
+                  color: Color(0xFF111111),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+
+              // ✅ fixed gap between content and button
+              const SizedBox(height: 25),
+
+              // Button
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  // onPressed: widget.onShopNow,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyHomePage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  child: const Text(
+                    "Shop Now",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
-    ),
-  ),
-);
+      );
     }
 
     final anySelected = _items.any((e) => e.isSelected);
+    final allSelected = _items.isNotEmpty && _items.every((e) => e.isSelected);
+
+    void selectAll(bool selected) {
+      setState(() {
+        for (int i = 0; i < _items.length; i++) {
+          _items[i] = _items[i].copyWith(isSelected: selected);
+        }
+      });
+      _notifyParent();
+    }
 
     return Column(
       children: [
-        // Clear selected items
+        // Select all + Clear selected items
         Container(
           color: Colors.white,
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-          alignment: Alignment.centerRight,
-          child: InkWell(
-            onTap: anySelected ? _clearSelected : null,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: Text(
-                "Clear selected items",
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => selectAll(!allSelected),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 140),
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: allSelected ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: allSelected
+                          ? Colors.black
+                          : const Color(0xFFE7E9EE),
+                      width: 2,
+                    ),
+                  ),
+                  child: allSelected
+                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      : const SizedBox.shrink(),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Select all items',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: anySelected ? Colors.black87 : _textGrey,
+                  color: Colors.black87,
                 ),
               ),
-            ),
+              const Spacer(),
+              InkWell(
+                onTap: anySelected ? _clearSelected : null,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 6,
+                  ),
+                  child: Text(
+                    "Clear selected items",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: anySelected ? Colors.black87 : _textGrey,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -381,7 +439,10 @@ class _CartRowCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected ? _green : Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: isSelected ? _green : _borderGrey, width: 2),
+                border: Border.all(
+                  color: isSelected ? _green : _borderGrey,
+                  width: 2,
+                ),
               ),
               child: isSelected
                   ? const Icon(Icons.check, color: Colors.white, size: 16)
@@ -432,7 +493,11 @@ class _CartRowCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         child: const Padding(
                           padding: EdgeInsets.all(6),
-                          child: Icon(Icons.delete_outline, color: _iconGrey, size: 24),
+                          child: Icon(
+                            Icons.delete_outline,
+                            color: _iconGrey,
+                            size: 24,
+                          ),
                         ),
                       ),
                     ],
@@ -490,7 +555,8 @@ class _CartRowCard extends StatelessWidget {
                         min: 1,
                         max: maxQty,
                         onMinus: item.quantity > 1 ? onMinus : null,
-                        onPlus: onPlus, // still clickable: shows message when > stock
+                        onPlus:
+                            onPlus, // still clickable: shows message when > stock
                       ),
                     ],
                   ),
@@ -522,10 +588,18 @@ class _CartRowCard extends StatelessWidget {
 
   Widget _buildImage() {
     if (item.imageProvider != null) {
-      return Image(image: item.imageProvider!, fit: BoxFit.cover, filterQuality: FilterQuality.high);
+      return Image(
+        image: item.imageProvider!,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.high,
+      );
     }
     if (item.imageUrl != null && item.imageUrl!.isNotEmpty) {
-      return Image.network(item.imageUrl!, fit: BoxFit.cover, filterQuality: FilterQuality.high);
+      return Image.network(
+        item.imageUrl!,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.high,
+      );
     }
     return const Center(child: Icon(Icons.image_outlined, color: _iconGrey));
   }
@@ -557,7 +631,11 @@ class _QtyControl extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           "$quantity",
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black87),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+            color: Colors.black87,
+          ),
         ),
         const SizedBox(width: 8),
         _CircleIconButton(icon: Icons.add, onTap: onPlus),

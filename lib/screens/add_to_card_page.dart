@@ -113,6 +113,8 @@
 
 
 import 'package:first/main-home.dart';
+import 'package:first/screens/notification_page.dart';
+import 'package:first/screens/profile_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
@@ -244,12 +246,24 @@ class _CartPageExampleState extends State<CartPageExample> {
               context,
               MaterialPageRoute(builder: (context) => const MyHomePage()),
             );
+          } else if (index == 1) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NotificationPage()),
+            );
           } else if (index == 2) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const WishlistPage()),
             );
-          }else {
+          } else if (index == 4) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
+            );
+          } else {
             setState(() {
               _selectedBottomIndex = index;
             });

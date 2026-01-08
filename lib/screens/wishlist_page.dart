@@ -1,5 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
+import 'package:first/screens/notification_page.dart';
+import 'package:first/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
@@ -134,7 +136,11 @@ class _WishlistPageState extends State<WishlistPage> {
                   ),
                   child: const Text(
                     'Add all items to cart',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -150,10 +156,22 @@ class _WishlistPageState extends State<WishlistPage> {
               context,
               MaterialPageRoute(builder: (context) => const MyHomePage()),
             );
+          } else if (index == 1) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NotificationPage()),
+            );
           } else if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const CartPageExample()),
+            );
+          } else if (index == 4) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
             );
           } else {
             setState(() {
@@ -312,27 +330,76 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
     }
 
     final anySelected = _items.any((e) => e.isSelected);
+    final allSelected = _items.isNotEmpty && _items.every((e) => e.isSelected);
+
+    void selectAll(bool selected) {
+      setState(() {
+        for (int i = 0; i < _items.length; i++) {
+          _items[i] = _items[i].copyWith(isSelected: selected);
+        }
+      });
+      _notifyParent();
+    }
 
     return Column(
       children: [
         Container(
           color: Colors.white,
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-          alignment: Alignment.centerRight,
-          child: InkWell(
-            onTap: anySelected ? _clearSelected : null,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-              child: Text(
-                "Clear selected items",
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => selectAll(!allSelected),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 140),
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: allSelected ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: allSelected
+                          ? Colors.black
+                          : const Color(0xFFE7E9EE),
+                      width: 2,
+                    ),
+                  ),
+                  child: allSelected
+                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      : const SizedBox.shrink(),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Select all items',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: anySelected ? Colors.black87 : const Color(0xFF9AA0A6),
+                  color: Colors.black87,
                 ),
               ),
-            ),
+              const Spacer(),
+              InkWell(
+                onTap: anySelected ? _clearSelected : null,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 6,
+                  ),
+                  child: Text(
+                    "Clear selected items",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: anySelected
+                          ? Colors.black87
+                          : const Color(0xFF9AA0A6),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
 

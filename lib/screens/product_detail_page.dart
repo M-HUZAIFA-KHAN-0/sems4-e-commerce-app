@@ -89,9 +89,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     final brandImages = <ImageProvider>[
-      const AssetImage("assets/brands/lenovo.png"),
-      const AssetImage("assets/brands/dell.png"),
-      const AssetImage("assets/brands/hp.png"),
+      const AssetImage("../assets/brands/lenovo.png"),
+      const AssetImage("../assets/brands/dell.png"),
+      const AssetImage("../assets/brands/hp.png"),
       // const AssetImage("assets/brands/apple.png"),
       // const AssetImage("assets/brands/acer.png"),
     ];
@@ -698,19 +698,19 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     title: "Shop More Categories",
                     items: const [
                       ShopCategoryCardData(
-                        image: AssetImage("assets/categories/earbuds.png"),
+                        image: AssetImage("../assets/brands/dell.png"),
                         title: "Wireless\nEarbuds",
                       ),
                       ShopCategoryCardData(
-                        image: AssetImage("assets/categories/watch.png"),
+                        image: AssetImage("../assets/brands/dell.png"),
                         title: "Smart\nWatches",
                       ),
                       ShopCategoryCardData(
-                        image: AssetImage("assets/categories/speakers.png"),
+                        image: AssetImage("../assets/brands/dell.png"),
                         title: "Bluetooth\nSpeakers",
                       ),
                       ShopCategoryCardData(
-                        image: AssetImage("assets/categories/tablet.png"),
+                        image: AssetImage("../assets/brands/dell.png"),
                         title: "Tablets",
                       ),
                     ],
@@ -764,11 +764,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     text:
                         'been 7 days using the product. It was indeed brand new and I am 100% satisfied with this huge purchase.',
                     images: [
-                      "assets/review1.jpg",
-                      "assets/review2.jpg",
-                      "assets/review3.jpg",
-                      "assets/review3.jpg",
-                      "assets/review3.jpg",
+                      "../assets/brands/dell.png",
+                      "../assets/brands/dell.png",
+                      "../assets/brands/dell.png",
+                      "../assets/brands/dell.png",
+                      "../assets/brands/dell.png",
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -777,7 +777,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     rating: 5,
                     date: '14 Oct 2025',
                     text: 'Good',
-                    images: ["assets/review1.jpg", "assets/review2.jpg"],
+                    images: ["../assets/brands/dell.png", "../assets/brands/dell.png"],
                   ),
                 ],
               ),

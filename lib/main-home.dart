@@ -509,6 +509,8 @@
 //   }
 // }
 
+import 'package:first/screens/notification_page.dart';
+import 'package:first/screens/profile_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
@@ -644,6 +646,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const WishlistPage()),
+            );
+          } else if (index == 1) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NotificationPage()),
+            );
+          } else if (index == 4) {
+            // Navigate to Profile page when Profile icon is clicked
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
             );
           } else {
             setState(() {

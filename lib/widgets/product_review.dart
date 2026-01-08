@@ -51,7 +51,14 @@ class ProductReview extends StatelessWidget {
                           child: Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.all(12),
-                            child: image,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: MediaQuery.of(ctx).size.width * 0.85,
+                                maxHeight:
+                                    MediaQuery.of(ctx).size.height * 0.75,
+                              ),
+                              child: image,
+                            ),
                           ),
                         );
                       },
