@@ -11,3 +11,4 @@ export 'brand_image_slider_widget.dart';
 export 'product_review.dart';
 export 'product_category_widget.dart';
 export 'add_to_card_prod_item_widget.dart';
+export 'view_purchased_status_widget.dart';

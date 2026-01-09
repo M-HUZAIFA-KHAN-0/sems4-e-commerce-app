@@ -105,6 +105,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          'Product Details',
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite_border, color: Colors.black),
@@ -123,7 +127,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           children: [
             /// PRODUCT IMAGE + THUMBNAILS ROW
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              // padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: SizedBox(
                 height: 250, // total height same as carousel
                 child: Row(
@@ -209,7 +214,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            // const SizedBox(height: 16),
 
             /// PRODUCT DETAILS
             Padding(
@@ -217,6 +222,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+
+                  ProductStatsRow(
+                    views: 12345,
+                    purchases: 245,
+                  ),
+                  const SizedBox(height: 8),
                   /// PRODUCT NAME
                   const Text(
                     'HP Laptop EQ2180AU 15.6 Inches\nAMD Ryzen 5 (8GB RAM - 512GBSSD)',
@@ -227,7 +239,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
 
                   /// RATING & REVIEW
                   Row(
@@ -255,8 +267,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ],
                   ),
 
-                  const SizedBox(height: 16),
+                  
 
+                  const SizedBox(height: 10),
                   /// PRICE SECTION
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +364,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
 
                   Wrap(
                     spacing: 12,
@@ -371,7 +384,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
 
                   SizedBox(
                     height: 100,
@@ -398,6 +411,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Row(
                     children: [
                       Container(
+                        height: 44,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey[300]!),
                           borderRadius: BorderRadius.circular(8),
@@ -408,8 +422,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             IconButton(
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(
-                                minWidth: 36,
-                                minHeight: 36,
+                                minWidth: 28,
+                                minHeight: 28,
                               ),
                               icon: const Icon(Icons.remove, size: 20),
                               onPressed: () {
@@ -426,7 +440,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 8,
                               ),
                               child: Text(
                                 selectedQuantity.toString(),
@@ -439,8 +453,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             IconButton(
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(
-                                minWidth: 36,
-                                minHeight: 36,
+                                minWidth: 28,
+                                minHeight: 28,
                               ),
                               icon: const Icon(Icons.add, size: 20),
                               onPressed: () {
@@ -498,111 +512,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
 
             const SizedBox(height: 8),
-
-            // --- Specification Highlights (tag-based data) ---
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 0),
-            //   child: SpecificationHighlights(
-            //     tags: [
-            //       {
-            //         'icon': Icons.laptop,
-            //         'title': '15.6',
-            //         'description': 'Display',
-            //       },
-            //       {
-            //         'icon': Icons.memory,
-            //         'title': '512 GB',
-            //         'description': 'Internal Memory',
-            //       },
-            //       {
-            //         'icon': Icons.computer,
-            //         'title': '5500 U',
-            //         'description': 'Processor',
-            //       },
-            //       {
-            //         'icon': Icons.developer_board,
-            //         'title': 'AMD',
-            //         'description': 'Generation',
-            //       },
-            //     ],
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: SizedBox(
-                width: double.infinity, // 👈 100% screen width
-                child: SpecificationHighlights(
-                  tags: [
-                    {
-                      'icon': Icons.laptop,
-                      'title': '15.6',
-                      'description': 'Display',
-                    },
-                    {
-                      'icon': Icons.memory,
-                      'title': '512 GB',
-                      'description': 'Internal Memory',
-                    },
-                    {
-                      'icon': Icons.computer,
-                      'title': '5500 U',
-                      'description': 'Processor',
-                    },
-                    {
-                      'icon': Icons.developer_board,
-                      'title': 'AMD',
-                      'description': 'Generation',
-                    },
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // --- Specification Details (tag-based sections + rows) ---
-            Padding(
-              key: _specDetailsKey,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SpecificationDetails(
-                sections: [
-                  {
-                    'title': 'General Features',
-                    'rows': [
-                      {'key': 'Dimensions', 'value': 'N/A'},
-                      {'key': 'Weight', 'value': '1.69 kg'},
-                      {
-                        'key': 'Operating System',
-                        'value': 'Genuine Windows 11 Home',
-                      },
-                      {'key': 'Generation', 'value': 'AMD'},
-                    ],
-                  },
-                  {
-                    'title': 'Display',
-                    'rows': [
-                      {'key': 'Screen Size', 'value': '15.6'},
-                      {'key': 'Screen Resolution', 'value': '1920x1080'},
-                      {'key': 'Touch Screen', 'value': 'No'},
-                      {'key': 'Backlit Keyboard', 'value': 'N/A'},
-                    ],
-                  },
-                  {
-                    'title': 'Memory',
-                    'rows': [
-                      {'key': 'Internal Memory', 'value': '512 GB'},
-                      {'key': 'RAM', 'value': '8 GB'},
-                      {
-                        'key': 'Graphics Memory',
-                        'value': 'AMD Radeon™ Graphics',
-                      },
-                    ],
-                  },
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
 
             /// SIMILAR PRODUCTS
             Container(
@@ -662,34 +571,87 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
 
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      "Shop By Brand",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  BrandImageSlider(
-                    images: brandImages,
-                    height: 165,
-                    itemWidth:
-                        195, // keeps the “next tile partially visible” feel
-                    borderRadius: 20,
-                    horizontalPadding: 24,
-                    itemSpacing: 18,
-                  ),
+            const SizedBox(height: 28),
+
+            Padding(
+              key: _specDetailsKey,
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: SizedBox(
+                width: double.infinity, // 👈 100% screen width
+                child: SpecificationHighlights(
+                  tags: [
+                    {
+                      'icon': Icons.laptop,
+                      'title': '15.6',
+                      'description': 'Display',
+                    },
+                    {
+                      'icon': Icons.memory,
+                      'title': '512 GB',
+                      'description': 'Internal Memory',
+                    },
+                    {
+                      'icon': Icons.computer,
+                      'title': '5500 U',
+                      'description': 'Processor',
+                    },
+                    {
+                      'icon': Icons.developer_board,
+                      'title': 'AMD',
+                      'description': 'Generation',
+                    },
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // --- Specification Details (tag-based sections + rows) ---
+            Padding(
+              // key: _specDetailsKey,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SpecificationDetails(
+                sections: [
+                  {
+                    'title': 'General Features',
+                    'rows': [
+                      {'key': 'Dimensions', 'value': 'N/A'},
+                      {'key': 'Weight', 'value': '1.69 kg'},
+                      {
+                        'key': 'Operating System',
+                        'value': 'Genuine Windows 11 Home',
+                      },
+                      {'key': 'Generation', 'value': 'AMD'},
+                    ],
+                  },
+                  {
+                    'title': 'Display',
+                    'rows': [
+                      {'key': 'Screen Size', 'value': '15.6'},
+                      {'key': 'Screen Resolution', 'value': '1920x1080'},
+                      {'key': 'Touch Screen', 'value': 'No'},
+                      {'key': 'Backlit Keyboard', 'value': 'N/A'},
+                    ],
+                  },
+                  {
+                    'title': 'Memory',
+                    'rows': [
+                      {'key': 'Internal Memory', 'value': '512 GB'},
+                      {'key': 'RAM', 'value': '8 GB'},
+                      {
+                        'key': 'Graphics Memory',
+                        'value': 'AMD Radeon™ Graphics',
+                      },
+                    ],
+                  },
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+
+            const SizedBox(height: 16),
+
+          
 
             Container(
               child: Column(
@@ -743,46 +705,92 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             //   ),
             // ),
             // Reviews section
-            Padding(
-              key: _reviewsKey,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
+            Container(
+              child: Padding(
+                key: _reviewsKey,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Reviews',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 24),
+                    ProductReview(
+                      name: 'Sharjeel Atiq',
+                      rating: 5,
+                      date: '04 Jun 2025',
+                      text:
+                          'been 7 days using the product. It was indeed brand new and I am 100% satisfied with this huge purchase.',
+                      images: [
+                        "../assets/brands/dell.png",
+                        "../assets/brands/dell.png",
+                        "../assets/brands/dell.png",
+                        "../assets/brands/dell.png",
+                        "../assets/brands/dell.png",
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ProductReview(
+                      name: 'Hammad Mian',
+                      rating: 5,
+                      date: '14 Oct 2025',
+                      text: 'Good',
+                      images: ["../assets/brands/dell.png", "../assets/brands/dell.png"],
+                    ),
+                  ],
+                ),
               ),
+            ),
+            
+
+  //           const SizedBox(height: 24, child: DecoratedBox(
+  //   decoration: BoxDecoration(color: Color.fromARGB(255, 180, 180, 180)),
+  // ),),
+
+              Container(
+                height: 20,
+                color: const Color.fromARGB(255, 233, 233, 233),
+              ),
+            const SizedBox(height: 24),
+
+             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Reviews',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      "Shop By Brand",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  ProductReview(
-                    name: 'Sharjeel Atiq',
-                    rating: 5,
-                    date: '04 Jun 2025',
-                    text:
-                        'been 7 days using the product. It was indeed brand new and I am 100% satisfied with this huge purchase.',
-                    images: [
-                      "../assets/brands/dell.png",
-                      "../assets/brands/dell.png",
-                      "../assets/brands/dell.png",
-                      "../assets/brands/dell.png",
-                      "../assets/brands/dell.png",
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ProductReview(
-                    name: 'Hammad Mian',
-                    rating: 5,
-                    date: '14 Oct 2025',
-                    text: 'Good',
-                    images: ["../assets/brands/dell.png", "../assets/brands/dell.png"],
+                  const SizedBox(height: 18),
+                  BrandImageSlider(
+                    images: brandImages,
+                    height: 165,
+                    itemWidth:
+                        195, // keeps the “next tile partially visible” feel
+                    borderRadius: 20,
+                    horizontalPadding: 24,
+                    itemSpacing: 18,
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 24),
+            
+
+           
           ],
+          
         ),
       ),
       bottomNavigationBar: Container(
@@ -799,7 +807,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_specDetailsKey.currentContext != null) {
                       await Scrollable.ensureVisible(
                         _specDetailsKey.currentContext!,
-                        duration: const Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
                     }
@@ -824,7 +832,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     if (_reviewsKey.currentContext != null) {
                       await Scrollable.ensureVisible(
                         _reviewsKey.currentContext!,
-                        duration: const Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
                     }
@@ -964,12 +972,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue[50] : Colors.transparent,
           border: Border.all(
             color: isSelected ? Colors.blue : Colors.grey[300]!,
-            width: isSelected ? 2 : 1,
+            width: isSelected ? 2 : 2,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
