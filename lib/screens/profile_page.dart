@@ -1,6 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/notification_page.dart';
+import 'package:first/screens/order_history_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:first/widgets/bottom_bar_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('Profile'),
+      //   backgroundColor: Colors.white,
+      //   foregroundColor: Colors.black87,
+      //   elevation: 0,
+      // ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
         child: Column(
@@ -32,13 +39,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   end: Alignment.bottomRight,
                 ),
               ),
-              padding: const EdgeInsets.fromLTRB(16, 40, 16, 60),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
               child: Stack(
                 children: [
                   // Settings icon in top right
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: -10,
+                    right: -5,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -53,57 +60,41 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   // Profile info
-                  Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Huzaifa Khan',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                              ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 3),
                             ),
-                            const SizedBox(height: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFEB3B),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Text(
-                                'Priceoye club member',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.black,
-                                ),
-                              ),
+                            child: const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 50,
                             ),
-                          ],
-                        ),
+                          ),
+                      
+                          const SizedBox(height: 10),
+                      
+                          const Text(
+                            'Huzaifa Khan',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -120,7 +111,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.credit_card_outlined,
                     label: 'Pay',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.local_shipping_outlined,
@@ -183,6 +179,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.trending_down_outlined,
                     label: 'EMI',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MenuSectionWidget(
+                title: 'Profile',
+                menuItems: [
+                  MenuItemData(
+                    icon: Icons.menu_book,
+                    label: 'Address Book',
+                    onTap: () {},
+                  ),
+                  MenuItemData(
+                    icon: Icons.edit_square,
+                    label: 'Edit Profile',
+                    onTap: () {},
+                  ),
+                  MenuItemData(
+                    icon: Icons.logout,
+                    label: 'Logout',
                     onTap: () {},
                   ),
                 ],
