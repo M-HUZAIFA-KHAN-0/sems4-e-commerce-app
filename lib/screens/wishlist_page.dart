@@ -49,41 +49,11 @@ class _WishlistPageState extends State<WishlistPage> {
     ),
   ];
 
-  double _parsePrice(String priceText) {
-    var s = priceText.replaceAll(RegExp(r'[^0-9,\.]'), '');
-    if (s.isEmpty) return 0;
-
-    final lastComma = s.lastIndexOf(',');
-    final lastDot = s.lastIndexOf('.');
-    final commaIsDecimal = lastComma > lastDot;
-
-    if (commaIsDecimal) {
-      s = s.replaceAll('.', '');
-      s = s.replaceAll(',', '.');
-    } else {
-      s = s.replaceAll(',', '');
-    }
-
-    return double.tryParse(s) ?? 0;
-  }
-
-  String _formatMoney(double value) {
-    final fixed = value.toStringAsFixed(2).replaceAll('.', ',');
-    return "\$ $fixed";
-  }
-
   @override
   Widget build(BuildContext context) {
     // ✅ calculate ONLY selected items
     final selectedItems = wishlistItems.where((e) => e.isSelected).toList();
     final selectedCount = selectedItems.length;
-
-    final totalSelected = selectedItems.fold<double>(
-      0,
-      (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
-    );
-
-    final totalText = _formatMoney(totalSelected);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF3F4F6),
@@ -113,37 +83,53 @@ class _WishlistPageState extends State<WishlistPage> {
             Container(
               color: Colors.white,
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    final selectedIds = wishlistItems
-                        .where((e) => e.isSelected)
-                        .map((e) => e.id)
-                        .toSet();
-                    setState(() {
-                      wishlistItems.removeWhere(
-                        (e) => selectedIds.contains(e.id),
-                      );
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
-                    ),
-                  ),
-                  child: const Text(
-                    'Add all items to cart',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+
+              child: PrimaryBtnWidget(
+                onPressed: () {
+                  final selectedIds = wishlistItems
+                      .where((e) => e.isSelected)
+                      .map((e) => e.id)
+                      .toSet();
+                  setState(() {
+                    wishlistItems.removeWhere(
+                      (e) => selectedIds.contains(e.id),
+                    );
+                  });
+                },
+                buttonText: 'Add all items to cart',
               ),
+
+              // child: SizedBox(
+              //   width: double.infinity,
+              //   height: 48,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       final selectedIds = wishlistItems
+              //           .where((e) => e.isSelected)
+              //           .map((e) => e.id)
+              //           .toSet();
+              //       setState(() {
+              //         wishlistItems.removeWhere(
+              //           (e) => selectedIds.contains(e.id),
+              //         );
+              //       });
+              //     },
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.black,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(26),
+              //       ),
+              //     ),
+              //     child: const Text(
+              //       'Add all items to cart',
+              //       style: TextStyle(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w800,
+              //         color: Colors.white,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ),
         ],
       ),
@@ -356,7 +342,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                   height: 20,
                   decoration: BoxDecoration(
                     color: allSelected ? Colors.black : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                       color: allSelected
                           ? Colors.black
@@ -380,20 +366,40 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
               ),
               const Spacer(),
               InkWell(
-                onTap: anySelected ? _clearSelected : null,
+                onTap: anySelected
+                    ? () {
+                        showDialog(
+                          context: context,
+                          builder: (dialogContext) {
+                            return DeleteConfirmationDialog(
+                              title: 'Clear Selected Items',
+                              content:
+                                  'Are you sure you want to clear the selected items?', // Pass content
+                              onConfirm: () {
+                                _clearSelected();
+                              },
+                            );
+                          },
+                        );
+                      }
+                    : null,
                 borderRadius: BorderRadius.circular(8),
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 6,
+                    horizontal: 9,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 221, 221, 221),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "Clear selected items",
+                    'Clear selected items',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: anySelected
-                          ? Colors.black87
+                          ? const Color.fromARGB(221, 238, 0, 0)
                           : const Color(0xFF9AA0A6),
                     ),
                   ),
@@ -461,10 +467,14 @@ class _WishlistRowCard extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: isSelected ? _green : Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                color: isSelected
+                    ? const Color.fromARGB(255, 0, 0, 0)
+                    : Colors.white,
+                borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected ? _green : _borderGrey,
+                  color: isSelected
+                      ? const Color.fromARGB(255, 0, 0, 0)
+                      : _borderGrey,
                   width: 2,
                 ),
               ),

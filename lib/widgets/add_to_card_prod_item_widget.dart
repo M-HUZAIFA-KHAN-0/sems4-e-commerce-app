@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:first/main-home.dart';
+import 'package:first/widgets/delete_confirmation_dialog_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartProductItem {
@@ -321,7 +322,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                   height: 20,
                   decoration: BoxDecoration(
                     color: allSelected ? Colors.black : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                       color: allSelected
                           ? Colors.black
@@ -345,19 +346,37 @@ class _CartListWidgetState extends State<CartListWidget> {
               ),
               const Spacer(),
               InkWell(
-                onTap: anySelected ? _clearSelected : null,
+                // onTap: anySelected ? _clearSelected : null,
+                onTap: anySelected ? () {
+                  showDialog(context: context, builder: (dialogContext){
+                    return DeleteConfirmationDialog(
+                      title: "Clear selected items",
+                      content:
+                      "Are you sure you want to remove the selected items from your cart?",
+                      onConfirm: () {
+                        _clearSelected();
+                      },
+                    );
+                  });
+                } : null,
                 borderRadius: BorderRadius.circular(8),
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 6,
+                    horizontal: 9,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 221, 221, 221),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "Clear selected items",
+                    'Clear selected items',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: anySelected ? Colors.black87 : _textGrey,
+                      fontWeight: FontWeight.w600,
+                      color: anySelected
+                          ? const Color.fromARGB(221, 238, 0, 0)
+                          : const Color(0xFF9AA0A6),
                     ),
                   ),
                 ),
@@ -437,10 +456,10 @@ class _CartRowCard extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: isSelected ? _green : Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                color: isSelected ? const Color.fromARGB(255, 0, 0, 0) : Colors.white,
+                borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected ? _green : _borderGrey,
+                  color: isSelected ? const Color.fromARGB(255, 0, 0, 0) : _borderGrey,
                   width: 2,
                 ),
               ),

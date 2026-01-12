@@ -96,7 +96,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 if (subtitle != null) ...[
                   const SizedBox(height: 6),
                   Text(
-                    subtitle!,
+                    subtitle,
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 13,

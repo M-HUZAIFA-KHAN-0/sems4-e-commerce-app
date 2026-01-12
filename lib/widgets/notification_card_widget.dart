@@ -481,7 +481,6 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
   static const Color _textGrey = Color(0xFF9AA0A6);
   static const Color _iconGrey = Color(0xFFBDBDBD);
   static const Color _borderGrey = Color(0xFFE7E9EE);
-  static const Color _newBlue = Color(0xFF0A84FF);
 
   bool _favorited = false;
 

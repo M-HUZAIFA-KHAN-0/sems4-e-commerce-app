@@ -472,7 +472,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: _labelGrey,
+                                color: Color.fromARGB(255, 0, 0, 0),
                               ),
                             ),
                           ),
@@ -490,28 +490,12 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                       const SizedBox(height: 12),
 
                       // Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 44,
-                        child: ElevatedButton(
-                          onPressed: widget.onSelectPayment,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _buttonGreen,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          child: const Text(
-                            "Select payment method",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      
+                      PrimaryBtnWidget(onPressed: widget.onSelectPayment,
+                        buttonText: "Select payment method",
                       ),
+                      
+                      const SizedBox(height: 8),
                     ],
                   )
                 : const SizedBox.shrink(),

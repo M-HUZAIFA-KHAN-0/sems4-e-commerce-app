@@ -19,7 +19,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
       'imageUrl': 'https://picsum.photos/200?10',
-      'productName': 'Air pods max by Apple  sadasdasdasdwassdgthythdgseadascds',
+      'productName': 'Air pods max by Apple',
       'variant': 'Grey',
       'quantity': 1,
       'price': '\$ 1999,99',

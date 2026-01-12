@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_page.dart';
+import '../widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -82,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            _AuthField(
+                            AuthField(
                               hint: "Email",
                               controller: _emailCtrl,
                               keyboardType: TextInputType.emailAddress,
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                             const SizedBox(height: 12),
-                            _AuthField(
+                            AuthField(
                               hint: "Password",
                               controller: _passCtrl,
                               prefixIcon: Icons.lock_outline,
@@ -220,74 +221,7 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
       ),
-    );
-  }
-}
-
-// same UI components as signup (copied to keep “no design changes”)
-class _AuthField extends StatelessWidget {
-  const _AuthField({
-    required this.hint,
-    required this.controller,
-    required this.prefixIcon,
-    this.suffixIcon,
-    this.onSuffixTap,
-    this.keyboardType,
-    this.obscureText = false,
-    this.validator,
-  });
-
-  final String hint;
-  final TextEditingController controller;
-  final IconData prefixIcon;
-  final IconData? suffixIcon;
-  final VoidCallback? onSuffixTap;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final String? Function(String?)? validator;
-
-  static const Color _fieldBg = Color(0xFFF3F4F6);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-      style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: _fieldBg,
-        hintText: hint,
-        hintStyle: const TextStyle(
-          fontSize: 12,
-          color: Color(0xFFB0B6BE),
-          fontWeight: FontWeight.w600,
-        ),
-        prefixIcon: Icon(prefixIcon, size: 18, color: Colors.black54),
-        suffixIcon: suffixIcon == null
-            ? null
-            : InkWell(
-                onTap: onSuffixTap,
-                child: Icon(suffixIcon, size: 18, color: Colors.black45),
-              ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 14,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        errorStyle: const TextStyle(fontSize: 11, height: 1.1),
-      ),
-    );
+   );
   }
 }
 

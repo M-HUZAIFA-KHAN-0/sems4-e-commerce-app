@@ -1,5 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
+import 'package:first/screens/address_book_page.dart';
+import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/order_history_page.dart';
 import 'package:first/screens/wishlist_page.dart';
@@ -195,7 +197,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.menu_book,
                     label: 'Address Book',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddressScreen()),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.edit_square,
@@ -205,7 +212,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.logout,
                     label: 'Logout',
-                    onTap: () {},
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: false, // jitna content hai utni hi height
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (ctx) {
+                          return LogoutDrawer(
+                            onLogout: () {
+                              // Yahan tum logout ka logic likh sakte ho
+                              // print("User logged out");
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
