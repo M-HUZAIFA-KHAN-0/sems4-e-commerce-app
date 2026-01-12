@@ -1,0 +1,20 @@
+// Barrel file for all widgets
+export 'carousel_widget.dart';
+export 'brand_boxes_widget.dart';
+export 'top_deals_widget.dart';
+export 'product_display_widget.dart';
+export 'top_bar_widget.dart';
+export 'bottom_bar_widget.dart';
+export 'specification_details.dart';
+export 'specification_highlights.dart';
+export 'brand_image_slider_widget.dart';
+export 'product_review.dart';
+export 'product_category_widget.dart';
+export 'add_to_card_prod_item_widget.dart';
+export 'view_purchased_status_widget.dart';
+export 'order_group_card_widget.dart';
+export 'address_item_card_widget.dart';
+export 'auth_field_widget.dart';
+export 'notification_card_widget.dart';
+export 'delete_confirmation_dialog_widget.dart';
+export 'primary_btn_widget.dart';
