@@ -112,38 +112,60 @@ class _ProfilePageState extends State<ProfilePage> {
                 menuItems: [
                   MenuItemData(
                     icon: Icons.credit_card_outlined,
-                    label: 'Pay',
+                    label: 'To Pay',
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 1,)),
+                      );
+                    },
+                  ),
+                  MenuItemData(
+                    icon: Icons.business_center_outlined,
+                    label: 'To Ship',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 2,)),
                       );
                     },
                   ),
                   MenuItemData(
                     icon: Icons.local_shipping_outlined,
-                    label: 'Receive',
-                    onTap: () {},
+                    label: 'To Receive',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 3,)),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.message_outlined,
-                    label: 'Review',
-                    onTap: () {},
+                    label: 'To Review',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 4,)),
+                      );
+                    },
                     badgeCount: 1,
                   ),
                   MenuItemData(
-                    icon: Icons.undo_outlined,
-                    label: 'Refund',
-                    onTap: () {},
+                    // icon: Icons.undo_outlined,
+                    icon: Icons.cancel_presentation_outlined,
+                    label: 'Cancellations',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 5,)),
+                      );
+                    },
                   ),
                   MenuItemData(
-                    icon: Icons.assignment_outlined,
+                    icon: Icons.edit_document,
+                    // icon: Icons.assignment_outlined,
                     label: 'Complaints',
-                    onTap: () {},
-                  ),
-                  MenuItemData(
-                    icon: Icons.verified_outlined,
-                    label: 'Addons',
                     onTap: () {},
                   ),
                 ],
@@ -164,8 +186,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {},
                   ),
                   MenuItemData(
-                    icon: Icons.card_giftcard_outlined,
-                    label: 'Open Parcel',
+                    icon: Icons.help_center,
+                    label: 'Help Center',
                     onTap: () {},
                   ),
                   MenuItemData(
@@ -173,16 +195,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     label: 'Contact',
                     onTap: () {},
                   ),
-                  MenuItemData(
-                    icon: Icons.location_on_outlined,
-                    label: 'Locations',
-                    onTap: () {},
-                  ),
-                  MenuItemData(
-                    icon: Icons.trending_down_outlined,
-                    label: 'EMI',
-                    onTap: () {},
-                  ),
+                  // MenuItemData(
+                  //   icon: Icons.location_on_outlined,
+                  //   label: 'Locations',
+                  //   onTap: () {},
+                  // ),
+                  // MenuItemData(
+                  //   icon: Icons.trending_down_outlined,
+                  //   label: 'EMI',
+                  //   onTap: () {},
+                  // ),
                 ],
               ),
             ),

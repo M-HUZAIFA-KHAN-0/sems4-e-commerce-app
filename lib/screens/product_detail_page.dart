@@ -1,6 +1,7 @@
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
+import 'comparison_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -222,13 +223,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-
-                  ProductStatsRow(
-                    views: 12345,
-                    purchases: 245,
-                  ),
+                  ProductStatsRow(views: 12345, purchases: 245),
                   const SizedBox(height: 8),
+
                   /// PRODUCT NAME
                   const Text(
                     'HP Laptop EQ2180AU 15.6 Inches\nAMD Ryzen 5 (8GB RAM - 512GBSSD)',
@@ -267,9 +264,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ],
                   ),
 
-                  
-
                   const SizedBox(height: 10),
+
                   /// PRICE SECTION
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,9 +471,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                       const SizedBox(width: 12),
                       Text(
-                        _stockLimitReached
-                            ? 'Stock not available'
-                            : '',
+                        _stockLimitReached ? 'Stock not available' : '',
                         style: TextStyle(
                           color: _stockLimitReached
                               ? Colors.red
@@ -651,8 +645,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 16),
 
-          
-
             Container(
               child: Column(
                 children: [
@@ -705,7 +697,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             //   ),
             // ),
             // Reviews section
-            
             Container(
               child: Padding(
                 key: _reviewsKey,
@@ -718,7 +709,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   children: [
                     const Text(
                       'Reviews',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     ProductReview(
@@ -741,25 +735,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       rating: 5,
                       date: '14 Oct 2025',
                       text: 'Good',
-                      images: ["../assets/brands/dell.png", "../assets/brands/dell.png"],
+                      images: [
+                        "../assets/brands/dell.png",
+                        "../assets/brands/dell.png",
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            
 
-  //           const SizedBox(height: 24, child: DecoratedBox(
-  //   decoration: BoxDecoration(color: Color.fromARGB(255, 180, 180, 180)),
-  // ),),
-
-              Container(
-                height: 20,
-                color: const Color.fromARGB(255, 233, 233, 233),
-              ),
+            //           const SizedBox(height: 24, child: DecoratedBox(
+            //   decoration: BoxDecoration(color: Color.fromARGB(255, 180, 180, 180)),
+            // ),),
+            Container(
+              height: 20,
+              color: const Color.fromARGB(255, 233, 233, 233),
+            ),
             const SizedBox(height: 24),
 
-             Container(
+            Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -787,11 +782,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
             const SizedBox(height: 24),
-            
-
-           
           ],
-          
         ),
       ),
       bottomNavigationBar: Container(
@@ -855,7 +846,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    // Scroll to compare or implement later
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            ComparisonPage(currentProduct: widget.product),
+                      ),
+                    );
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
