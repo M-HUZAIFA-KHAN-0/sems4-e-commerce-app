@@ -4,19 +4,23 @@ class PrimaryBtnWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String buttonText;
   final Color? backgroundColor;
+  final double? height;
+  final double? width;
 
   const PrimaryBtnWidget({
     super.key,
     required this.onPressed,
     this.buttonText = 'Add New Address',
     this.backgroundColor = Colors.black,
+    this.height = 48,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: 48,
+      width: width ?? double.infinity,
+      height: height ?? 48,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

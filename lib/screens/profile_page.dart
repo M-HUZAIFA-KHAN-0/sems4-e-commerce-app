@@ -194,7 +194,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 UnpaidOrder(
                   id: '1',
                   productImage: 'image_url',
-                  productTitle: 'Product Name',
                   orderBadgeText: 'SPECIAL OFFER...',
                   onPayNowPressed: () {
                     // Handle payment navigation

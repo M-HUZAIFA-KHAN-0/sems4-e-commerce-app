@@ -5,14 +5,12 @@ import 'dart:async';
 class UnpaidOrder {
   final String id;
   final String productImage;
-  final String productTitle;
   final String orderBadgeText;
   final VoidCallback onPayNowPressed;
 
   UnpaidOrder({
     required this.id,
     required this.productImage,
-    required this.productTitle,
     required this.orderBadgeText,
     required this.onPayNowPressed,
   });
@@ -34,7 +32,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
   late Timer _autoScrollTimer;
   late Timer _countdownTimer;
   int _currentPage = 0;
-  int _remainingSeconds = 600; // 10 minutes = 600 seconds
+  int _remainingSeconds = 600;
 
   @override
   void initState() {
@@ -99,7 +97,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -116,7 +114,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
         children: [
           // Carousel or Single Card
           SizedBox(
-            height: 140,
+            height: 70,
             child: widget.orders.length == 1
                 ? _buildOrderCard(widget.orders[0])
                 : PageView.builder(
@@ -162,13 +160,13 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
 
   Widget _buildOrderCard(UnpaidOrder order) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         children: [
           // Product Image
           Container(
-            width: 100,
-            height: 116,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Colors.grey[200],
@@ -176,40 +174,6 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
                 image: NetworkImage(order.productImage),
                 fit: BoxFit.cover,
               ),
-            ),
-            child: Stack(
-              children: [
-                // Badge for "SPECIAL OFFER..."
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(8),
-                        // bottom: Radius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      order.orderBadgeText,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
           const SizedBox(width: 14),
@@ -260,26 +224,350 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
           ),
           const SizedBox(width: 8),
           // Pay Now Button
-          GestureDetector(
-            onTap: order.onPayNowPressed,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFFF4757), width: 2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Pay Now',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFFFF4757),
-                ),
-              ),
-            ),
+          // GestureDetector(
+          //   onTap: order.onPayNowPressed,
+          //   child: Container(
+          //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          //     decoration: BoxDecoration(
+          //       border: Border.all(color: const Color(0xFFFF4757), width: 2),
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //     child: const Text(
+          //       'Pay Now',
+          //       style: TextStyle(
+          //         fontSize: 12,
+          //         fontWeight: FontWeight.w600,
+          //         color: Color(0xFFFF4757),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+
+          ElevatedButton(
+        onPressed: order.onPayNowPressed,
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: Colors.black,
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(26),
           ),
+        ),
+        child: Text(
+          'Pay Now',
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
+        ),
+      ),
         ],
       ),
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'dart:async';
+// import 'package:flutter/material.dart';
+
+// /// -------------------- MODEL --------------------
+
+// class UnpaidOrder {
+//   final String id;
+//   final String image;
+//   final VoidCallback onPay;
+
+//   const UnpaidOrder({
+//     required this.id,
+//     required this.image,
+//     required this.onPay,
+//   });
+// }
+
+// /// -------------------- MAIN WIDGET --------------------
+
+// class UnpaidOrderCarouselWidget extends StatefulWidget {
+//   final List<UnpaidOrder> orders;
+
+//   const UnpaidOrderCarouselWidget({super.key, required this.orders});
+
+//   @override
+//   State<UnpaidOrderCarouselWidget> createState() =>
+//       _UnpaidOrderCarouselWidgetState();
+// }
+
+// class _UnpaidOrderCarouselWidgetState
+//     extends State<UnpaidOrderCarouselWidget> {
+//     PageController? _controller;
+//   Timer? _autoScrollTimer;
+//   Timer? _countdownTimer;
+
+//   int _currentPage = 0;
+//   int _remainingSeconds = 600;
+
+//   @override
+// void initState() {
+//   super.initState();
+//   _controller = PageController();
+
+//   if (widget.orders.length > 1) {
+//     _startAutoScroll();
+//   }
+
+//   _startCountdown();
+// }
+
+//   void _startAutoScroll() {
+//     _autoScrollTimer =
+//         Timer.periodic(const Duration(seconds: 5), (_) {
+//       if (!mounted) return;
+
+//       _currentPage = (_currentPage + 1) % widget.orders.length;
+//       _controller!.animateToPage(
+//         _currentPage,
+//         duration: const Duration(milliseconds: 500),
+//         curve: Curves.easeInOut,
+//       );
+
+//       _remainingSeconds = 600;
+//     });
+//   }
+
+//   void _startCountdown() {
+//     _countdownTimer =
+//         Timer.periodic(const Duration(seconds: 1), (_) {
+//       if (!mounted) return;
+
+//       setState(() {
+//         if (_remainingSeconds > 0) _remainingSeconds--;
+//       });
+//     });
+//   }
+
+//   @override
+// void dispose() {
+//   _controller?.dispose();
+//   _autoScrollTimer?.cancel();
+//   _countdownTimer?.cancel();
+//   super.dispose();
+// }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (widget.orders.isEmpty) return const SizedBox();
+
+//     return Container(
+//       margin: const EdgeInsets.all(16),
+//       decoration: _cardDecoration(),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           /// ⭐ PAGE VIEW MUST HAVE HEIGHT
+//           SizedBox(
+//             height: 104,
+//             child: PageView.builder(
+//               controller: _controller,
+//               onPageChanged: (i) {
+//                 setState(() {
+//                   _currentPage = i;
+//                   _remainingSeconds = 600;
+//                 });
+//               },
+//               itemCount: widget.orders.length,
+//               itemBuilder: (_, i) =>
+//                   _OrderCard(
+//                     order: widget.orders[i],
+//                     remainingSeconds: _remainingSeconds,
+//                   ),
+//             ),
+//           ),
+
+//           if (widget.orders.length > 1) _Indicators(),
+//         ],
+//       ),
+//     );
+//   }
+
+//   BoxDecoration _cardDecoration() => BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12),
+//         boxShadow: [
+//           BoxShadow(
+//             blurRadius: 10,
+//             color: Colors.black.withOpacity(.06),
+//           )
+//         ],
+//       );
+// }
+
+// /// -------------------- ORDER CARD --------------------
+
+// class _OrderCard extends StatelessWidget {
+//   final UnpaidOrder order;
+//   final int remainingSeconds;
+
+//   const _OrderCard({
+//     required this.order,
+//     required this.remainingSeconds,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(12),
+//       child: Row(
+//         children: [
+//           _Image(order.image),
+//           const SizedBox(width: 12),
+//           _Info(remainingSeconds),
+//           _PayButton(order.onPay),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// /// -------------------- IMAGE --------------------
+
+// class _Image extends StatelessWidget {
+//   final String url;
+
+//   const _Image(this.url);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(8),
+//       child: Image.network(
+//         url,
+//         width: 60,
+//         height: 60,
+//         fit: BoxFit.cover,
+//       ),
+//     );
+//   }
+// }
+
+// /// -------------------- INFO --------------------
+
+// class _Info extends StatelessWidget {
+//   final int seconds;
+
+//   const _Info(this.seconds);
+
+//   String _format(int s) {
+//     final m = (s % 3600) ~/ 60;
+//     final sec = s % 60;
+//     return '$m:${sec.toString().padLeft(2, '0')}';
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Expanded(
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           const Text(
+//             'Unpaid Order',
+//             style: TextStyle(fontWeight: FontWeight.w600),
+//           ),
+//           const SizedBox(height: 4),
+//           Text(
+//             'Expire in ${_format(seconds)}',
+//             style: const TextStyle(color: Colors.grey),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// /// -------------------- PAY BUTTON --------------------
+
+// class _PayButton extends StatelessWidget {
+//   final VoidCallback onTap;
+
+//   const _PayButton(this.onTap);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         padding:
+//             const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+//         decoration: BoxDecoration(
+//           border: Border.all(color: Colors.red),
+//           borderRadius: BorderRadius.circular(8),
+//         ),
+//         child: const Text(
+//           'Pay Now',
+//           style: TextStyle(
+//             color: Colors.red,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// /// -------------------- INDICATORS --------------------
+
+// class _Indicators extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Padding(
+//       padding: EdgeInsets.only(bottom: 8),
+//       child: SizedBox(height: 6),
+//     );
+//   }
+// }
