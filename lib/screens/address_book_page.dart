@@ -265,7 +265,52 @@ class _AddressScreenState extends State<AddressScreen> {
                         ),
                         if (editingAddr != null) ...[
                           Center(
-                            child: TextButton(
+                            // child: TextButton(
+                            //   onPressed: () {
+                            //     showDialog(
+                            //       context: context,
+                            //       builder: (dialogContext) {
+                            //         return DeleteConfirmationDialog(
+                            //           title: 'Delete Address', // Pass heading
+                            //           content:
+                            //               'Are you sure you want to delete this address?', // Pass content
+                            //           onConfirm: () {
+                            //             setState(() {
+                            //               addresses.removeAt(
+                            //                 index!,
+                            //               ); // Perform deletion
+                            //             });
+                            //             Navigator.pop(context);
+                            //           },
+                            //         );
+                            //       },
+                            //     );
+                            //   },
+                            //   child: Container(
+                            //     padding: const EdgeInsets.symmetric(
+                            //       horizontal: 12,
+                            //       vertical: 8,
+                            //     ),
+                            //     decoration: BoxDecoration(
+                            //       color: const Color.fromARGB(
+                            //         255,
+                            //         221,
+                            //         221,
+                            //         221,
+                            //       ),
+                            //       borderRadius: BorderRadius.circular(8),
+                            //     ),
+                            //     child: const Text(
+                            //       'Delete Address',
+                            //       style: TextStyle(
+                            //         fontSize: 12,
+                            //         fontWeight: FontWeight.w600,
+                            //         color: Colors.red,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            child: IconButton(
                               onPressed: () {
                                 showDialog(
                                   context: context,
@@ -276,9 +321,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                           'Are you sure you want to delete this address?', // Pass content
                                       onConfirm: () {
                                         setState(() {
-                                          addresses.removeAt(
-                                            index!,
-                                          ); // Perform deletion
+                                          addresses.removeAt(index!);
                                         });
                                         Navigator.pop(context);
                                       },
@@ -286,27 +329,17 @@ class _AddressScreenState extends State<AddressScreen> {
                                   },
                                 );
                               },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    221,
-                                    221,
-                                    221,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Text(
-                                  'Delete Address',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.red,
-                                  ),
+                              icon: Icon(
+                                Icons.delete,
+                                size: 34,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  255,
+                                  255,
+                                  255,
                                 ),
                               ),
                             ),

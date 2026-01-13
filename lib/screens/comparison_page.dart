@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/comparison_product_slot_widget.dart';
-import '../widgets/comparison_specs_widget.dart';
+import 'package:first/widgets/widgets.dart';
 
 class ComparisonPage extends StatefulWidget {
   final Map<String, dynamic>? currentProduct;

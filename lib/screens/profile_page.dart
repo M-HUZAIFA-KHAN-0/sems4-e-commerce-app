@@ -1,13 +1,13 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/address_book_page.dart';
+import 'package:first/screens/faqs_page.dart';
 import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/order_history_page.dart';
 import 'package:first/screens/wishlist_page.dart';
-import 'package:first/widgets/bottom_bar_widget.dart';
 import 'package:flutter/material.dart';
-import '../widgets/menu_section_widget.dart';
+import '../widgets/widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -82,9 +82,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               size: 50,
                             ),
                           ),
-                      
+
                           const SizedBox(height: 10),
-                      
+
                           const Text(
                             'Huzaifa Khan',
                             textAlign: TextAlign.center,
@@ -116,7 +116,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 1,)),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const OrderHistoryPage(initialTabIndex: 1),
+                        ),
                       );
                     },
                   ),
@@ -126,7 +129,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 2,)),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const OrderHistoryPage(initialTabIndex: 2),
+                        ),
                       );
                     },
                   ),
@@ -136,7 +142,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 3,)),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const OrderHistoryPage(initialTabIndex: 3),
+                        ),
                       );
                     },
                   ),
@@ -146,7 +155,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 4,)),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const OrderHistoryPage(initialTabIndex: 4),
+                        ),
                       );
                     },
                     badgeCount: 1,
@@ -158,7 +170,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OrderHistoryPage(initialTabIndex: 5,)),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const OrderHistoryPage(initialTabIndex: 5),
+                        ),
                       );
                     },
                   ),
@@ -174,6 +189,99 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 12),
 
+            UnpaidOrderCarouselWidget(
+              orders: [
+                UnpaidOrder(
+                  id: '1',
+                  productImage: 'image_url',
+                  productTitle: 'Product Name',
+                  orderBadgeText: 'SPECIAL OFFER...',
+                  onPayNowPressed: () {
+                    // Handle payment navigation
+                  },
+                ),
+                // ... more orders if needed
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            RecentlyViewedCarouselWidget(
+              products: [
+                RecentlyViewedProduct(
+                  id: '1',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
+                  discountPercent: 7,
+                ),
+                // ... more products
+              ],
+              onViewMorePressed: () {
+                // Navigate to view more page
+              },
+            ),
+
+            const SizedBox(height: 12),
+
             // Help section
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -183,7 +291,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.help_outline,
                     label: 'FAQs',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FAQsPage(),
+                        ),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.help_center,
@@ -222,7 +337,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AddressScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => AddressScreen(),
+                        ),
                       );
                     },
                   ),
@@ -237,9 +354,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        isScrollControlled: false, // jitna content hai utni hi height
+                        isScrollControlled:
+                            false, // jitna content hai utni hi height
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
                         ),
                         builder: (ctx) {
                           return LogoutDrawer(

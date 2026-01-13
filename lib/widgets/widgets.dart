@@ -18,3 +18,8 @@ export 'auth_field_widget.dart';
 export 'notification_card_widget.dart';
 export 'delete_confirmation_dialog_widget.dart';
 export 'primary_btn_widget.dart';
+export 'comparison_product_slot_widget.dart';
+export 'comparison_specs_widget.dart';
+export 'recently_viewed_carousel_widget.dart';
+export 'menu_section_widget.dart';
+export 'unpaid_order_carousel_widget.dart';

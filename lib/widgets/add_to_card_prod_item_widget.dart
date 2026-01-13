@@ -345,39 +345,71 @@ class _CartListWidgetState extends State<CartListWidget> {
                 ),
               ),
               const Spacer(),
-              InkWell(
-                // onTap: anySelected ? _clearSelected : null,
-                onTap: anySelected ? () {
-                  showDialog(context: context, builder: (dialogContext){
-                    return DeleteConfirmationDialog(
-                      title: "Clear selected items",
-                      content:
-                      "Are you sure you want to remove the selected items from your cart?",
-                      onConfirm: () {
-                        _clearSelected();
-                      },
-                    );
-                  });
-                } : null,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 4,
+              // InkWell(
+              //   // onTap: anySelected ? _clearSelected : null,
+              //   onTap: anySelected ? () {
+              //     showDialog(context: context, builder: (dialogContext){
+              //       return DeleteConfirmationDialog(
+              //         title: "Clear selected items",
+              //         content:
+              //         "Are you sure you want to remove the selected items from your cart?",
+              //         onConfirm: () {
+              //           _clearSelected();
+              //         },
+              //       );
+              //     });
+              //   } : null,
+              //   borderRadius: BorderRadius.circular(8),
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 9,
+              //       vertical: 4,
+              //     ),
+              //     decoration: BoxDecoration(
+              //       color: const Color.fromARGB(255, 221, 221, 221),
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: Text(
+              //       'Clear selected items',
+              //       style: TextStyle(
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.w600,
+              //         color: anySelected
+              //             ? const Color.fromARGB(221, 238, 0, 0)
+              //             : const Color(0xFF9AA0A6),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              Center(
+                child: IconButton(
+                  onPressed: anySelected
+                      ? () {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              return DeleteConfirmationDialog(
+                                title: 'Clear Selected Items', // Pass heading
+                                content:
+                                    'Are you sure you want to clear the selected items?', // Pass content
+                                onConfirm: () {
+                                  _clearSelected();
+                                },
+                              );
+                            },
+                          );
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.delete,
+                    size: 34,
+                    color: anySelected
+                        ? const Color.fromARGB(255, 0, 0, 0)
+                        : const Color(0xFF9AA0A6),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 221, 221, 221),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Clear selected items',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: anySelected
-                          ? const Color.fromARGB(221, 238, 0, 0)
-                          : const Color(0xFF9AA0A6),
-                    ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ),
