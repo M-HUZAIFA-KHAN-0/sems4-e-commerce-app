@@ -1,4 +1,5 @@
 import 'package:first/main-home.dart';
+import 'package:first/screens/checkout_page.dart';
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/profile_page.dart';
 import 'package:first/screens/wishlist_page.dart';
@@ -377,8 +378,11 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
 
                       // Button
                       
-                      PrimaryBtnWidget(onPressed: widget.onSelectPayment,
+                      PrimaryBtnWidget(
                         buttonText: "Select payment method",
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage()));
+                        }
                       ),
                       
                       const SizedBox(height: 8),

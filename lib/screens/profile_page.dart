@@ -48,19 +48,42 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   // Settings icon in top right
                   Positioned(
-                    top: -10,
-                    right: -5,
+                    top: -20,
+                    right: -12,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         // border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: const Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                        size: 28,
+
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.settings,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EditProfilePage(
+                                initialData: {
+                                  'firstName': 'John',
+                                  'lastName': 'Doe',
+                                  'email': 'john@example.com',
+                                  'phone': '+923001234567',
+                                },
+                              ),
+                            ),
+                          );
+                        },
                       ),
+                      // child: const Icon(
+                      //   Icons.settings,
+                      //   color: Colors.white,
+                      //   size: 28,
+                      // ),
                     ),
                   ),
                   // Profile info
@@ -180,9 +203,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   MenuItemData(
-                    icon: Icons.edit_document,
+                    icon: Icons.assignment_return_outlined,
                     // icon: Icons.assignment_outlined,
-                    label: 'Complaints',
+                    label: 'Returns',
                     onTap: () {},
                   ),
                 ],
@@ -319,9 +342,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
+                  // MenuItemData(
+                  //   icon: Icons.help_center,
+                  //   label: 'Help Center',
+                  //   onTap: () {},
+                  // ),
                   MenuItemData(
-                    icon: Icons.help_center,
-                    label: 'Help Center',
+                    icon: Icons.edit_document,
+                    // icon: Icons.assignment_outlined,
+                    label: 'Complaints',
                     onTap: () {},
                   ),
                   MenuItemData(
@@ -359,12 +388,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EditProfilePage(initialData: {
-        'firstName': 'John',
-        'lastName': 'Doe',
-        'email': 'john@example.com',
-        'phone': '+923001234567',
-      }),
+                          builder: (context) => const EditProfilePage(
+                            initialData: {
+                              'firstName': 'John',
+                              'lastName': 'Doe',
+                              'email': 'john@example.com',
+                              'phone': '+923001234567',
+                            },
+                          ),
                         ),
                       );
                     },
