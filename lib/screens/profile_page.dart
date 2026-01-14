@@ -1,6 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/address_book_page.dart';
+import 'package:first/screens/edit_profile_page.dart';
 import 'package:first/screens/faqs_page.dart';
 import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/notification_page.dart';
@@ -354,7 +355,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.edit_square,
                     label: 'Edit Profile',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfilePage(initialData: {
+        'firstName': 'John',
+        'lastName': 'Doe',
+        'email': 'john@example.com',
+        'phone': '+923001234567',
+      }),
+                        ),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.logout,
