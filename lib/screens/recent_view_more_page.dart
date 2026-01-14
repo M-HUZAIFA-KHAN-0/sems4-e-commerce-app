@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
 
+
+
+
+// import 'package:flutter/material.dart';
+// import '../widgets/widgets.dart';
 
 // class RecentViewMorePage extends StatefulWidget {
 //   const RecentViewMorePage({super.key});
-
 //   @override
 //   State<RecentViewMorePage> createState() => _RecentViewMorePageState();
 // }
@@ -12,23 +14,81 @@ import '../widgets/widgets.dart';
 // class _RecentViewMorePageState extends State<RecentViewMorePage> {
 //   String selectedFilter = 'All';
 
+//   // Function to parse date string 'dd/M/yyyy' to DateTime
+//   DateTime parseDate(String dateStr) {
+//     final parts = dateStr.split('/');
+//     final day = int.parse(parts[0]);
+//     final month = int.parse(parts[1]);
+//     final year = int.parse(parts[2]);
+//     return DateTime(year, month, day);
+//   }
+
 //   // 🔹 Dummy recent data (replace with API data)
+//   // Changed 'viewedAt' to String in format 'dd/M/yyyy'
 //   final List<Map<String, dynamic>> allRecentItems = [
 //     {
 //       'name': 'Laptop',
-//       'viewedAt': DateTime.now().subtract(const Duration(days: 1)),
+//       'viewedAt': '13/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 55,000',
+//       'originalPrice': 'Rs 65,000',
+//       'discount': '15',
+//     },
+//     {
+//       'name': 'Laptop',
+//       'viewedAt': '13/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 55,000',
+//       'originalPrice': 'Rs 65,000',
+//       'discount': '15',
+//     },
+//     {
+//       'name': 'Laptop',
+//       'viewedAt': '13/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 55,000',
+//       'originalPrice': 'Rs 65,000',
+//       'discount': '15',
 //     },
 //     {
 //       'name': 'Mobile',
-//       'viewedAt': DateTime.now().subtract(const Duration(days: 5)),
+//       'viewedAt': '9/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 25,000',
+//       'originalPrice': 'Rs 30,000',
+//       'discount': '17',
 //     },
 //     {
 //       'name': 'Headphones',
-//       'viewedAt': DateTime.now().subtract(const Duration(days: 10)),
+//       'viewedAt': '4/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 2,999',
+//       'originalPrice': 'Rs 4,000',
+//       'discount': '25',
+//     },
+//     {
+//       'name': 'Headphones',
+//       'viewedAt': '4/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 2,999',
+//       'originalPrice': 'Rs 4,000',
+//       'discount': '25',
+//     },
+//     {
+//       'name': 'Headphones',
+//       'viewedAt': '4/1/2026',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 2,999',
+//       'originalPrice': 'Rs 4,000',
+//       'discount': '25',
 //     },
 //     {
 //       'name': 'Mouse',
-//       'viewedAt': DateTime.now().subtract(const Duration(days: 20)),
+//       'viewedAt': '25/12/2025',
+//       'imageUrl': 'https://picsum.photos/200?3',
+//       'price': 'Rs 999',
+//       'originalPrice': 'Rs 1,500',
+//       'discount': '33',
 //     },
 //   ];
 
@@ -36,9 +96,7 @@ import '../widgets/widgets.dart';
 //     if (selectedFilter == 'All') {
 //       return allRecentItems;
 //     }
-
 //     int days = 0;
-
 //     switch (selectedFilter) {
 //       case 'Last 3 days':
 //         days = 3;
@@ -53,17 +111,34 @@ import '../widgets/widgets.dart';
 //         days = 30;
 //         break;
 //     }
-
-//     final cutoffDate = DateTime.now().subtract(Duration(days: days));
-
+//     final now = DateTime.now();
+//     final cutoffDate = DateTime(now.year, now.month, now.day).subtract(Duration(days: days));
 //     return allRecentItems
-//         .where((item) =>
-//             (item['viewedAt'] as DateTime).isAfter(cutoffDate))
+//         .where((item) {
+//           final viewedStr = item['viewedAt'] as String;
+//           final viewedDate = parseDate(viewedStr);
+//           return !viewedDate.isBefore(cutoffDate);
+//         })
 //         .toList();
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
+//     final items = filteredItems;
+
+//     // Sort items by viewedAt descending
+//     items.sort((a, b) => parseDate(b['viewedAt'] as String).compareTo(parseDate(a['viewedAt'] as String)));
+
+//     // Group by date string (since it's already the formatted date)
+//     final Map<String, List<Map<String, dynamic>>> groups = {};
+//     for (var item in items) {
+//       final dateStr = item['viewedAt'] as String;
+//       groups.putIfAbsent(dateStr, () => []);
+//       groups[dateStr]!.add(item);
+//     }
+
+//     final dateKeys = groups.keys.toList();
+
 //     return Scaffold(
 //       backgroundColor: const Color(0xFFF3F4F6),
 //       appBar: AppBar(
@@ -75,7 +150,7 @@ import '../widgets/widgets.dart';
 //       body: Column(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
-//           // 🔥 FILTER WIDGET
+//           // 🔥 FILTER WIDGET (same design as tumhara TopDealsWidget)
 //           Padding(
 //             padding: const EdgeInsets.all(16),
 //             child: TopDealsWidget(
@@ -95,32 +170,55 @@ import '../widgets/widgets.dart';
 //               },
 //             ),
 //           ),
-
 //           // 🔹 LIST
 //           Expanded(
-//             child: filteredItems.isEmpty
+//             child: items.isEmpty
 //                 ? const Center(
 //                     child: Text(
 //                       'No recently viewed items',
 //                       style: TextStyle(color: Colors.grey),
 //                     ),
 //                   )
-//                 : ListView.builder(
-//                     padding: const EdgeInsets.symmetric(horizontal: 16),
-//                     itemCount: filteredItems.length,
-//                     itemBuilder: (context, index) {
-//                       final item = filteredItems[index];
-
-//                       return Card(
-//                         margin: const EdgeInsets.only(bottom: 12),
-//                         child: ListTile(
-//                           title: Text(item['name']),
-//                           subtitle: Text(
-//                             'Viewed on ${item['viewedAt'].toString().split(' ').first}',
-//                           ),
-//                         ),
-//                       );
-//                     },
+//                 : Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 7),
+//                     child: ListView.builder(
+//                       itemCount: dateKeys.length,
+//                       itemBuilder: (context, index) {
+//                         final dateStr = dateKeys[index];
+//                         final groupItems = groups[dateStr]!;
+//                         return Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Padding(
+//                               padding: const EdgeInsets.fromLTRB(9, 16, 0, 8),
+//                               child: Text(
+//                                 dateStr,
+//                                 style: const TextStyle(
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.bold,
+//                                   color: Colors.black87,
+//                                 ),
+//                               ),
+//                             ),
+//                             ProductCardGrid(
+//                               items: groupItems.map((item) {
+//                                 return ProductItem(
+//                                   prodName: item['name'],
+//                                   imageUrl: item['imageUrl'],
+//                                   price: item['price'],
+//                                   originalPrice: item['originalPrice'],
+//                                   discount: item['discount'],
+//                                   tag: 'Viewed on ${item['viewedAt']}',
+//                                   onTap: () {
+//                                     print('Image tapped: ${item['name']}');
+//                                   },
+//                                 );
+//                               }).toList(),
+//                             ),
+//                           ],
+//                         );
+//                       },
+//                     ),
 //                   ),
 //           ),
 //         ],
@@ -156,9 +254,23 @@ import '../widgets/widgets.dart';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import '../widgets/widgets.dart';
+
 class RecentViewMorePage extends StatefulWidget {
   const RecentViewMorePage({super.key});
-
   @override
   State<RecentViewMorePage> createState() => _RecentViewMorePageState();
 }
@@ -166,11 +278,21 @@ class RecentViewMorePage extends StatefulWidget {
 class _RecentViewMorePageState extends State<RecentViewMorePage> {
   String selectedFilter = 'All';
 
+  // Function to parse date string 'dd/M/yyyy' to DateTime
+  DateTime parseDate(String dateStr) {
+    final parts = dateStr.split('/');
+    final day = int.parse(parts[0]);
+    final month = int.parse(parts[1]);
+    final year = int.parse(parts[2]);
+    return DateTime(year, month, day);
+  }
+
   // 🔹 Dummy recent data (replace with API data)
+  // Changed 'viewedAt' to String in format 'dd/M/yyyy'
   final List<Map<String, dynamic>> allRecentItems = [
     {
       'name': 'Laptop',
-      'viewedAt': DateTime.now().subtract(const Duration(days: 1)),
+      'viewedAt': '13/1/2026',
       'imageUrl': 'https://picsum.photos/200?3',
       'price': 'Rs 55,000',
       'originalPrice': 'Rs 65,000',
@@ -178,7 +300,47 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
     },
     {
       'name': 'Mobile',
-      'viewedAt': DateTime.now().subtract(const Duration(days: 5)),
+      'viewedAt': '9/1/2026',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 25,000',
+      'originalPrice': 'Rs 30,000',
+      'discount': '17',
+    },
+    {
+      'name': 'Mobile',
+      'viewedAt': '9/1/2026',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 25,000',
+      'originalPrice': 'Rs 30,000',
+      'discount': '17',
+    },
+    {
+      'name': 'Mobile',
+      'viewedAt': '9/1/2026',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 25,000',
+      'originalPrice': 'Rs 30,000',
+      'discount': '17',
+    },
+    {
+      'name': 'Mobile',
+      'viewedAt': '9/1/2026',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 25,000',
+      'originalPrice': 'Rs 30,000',
+      'discount': '17',
+    },
+    {
+      'name': 'Mobile',
+      'viewedAt': '9/1/2026',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 25,000',
+      'originalPrice': 'Rs 30,000',
+      'discount': '17',
+    },
+    {
+      'name': 'Mobile',
+      'viewedAt': '9/1/2026',
       'imageUrl': 'https://picsum.photos/200?3',
       'price': 'Rs 25,000',
       'originalPrice': 'Rs 30,000',
@@ -186,7 +348,7 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
     },
     {
       'name': 'Headphones',
-      'viewedAt': DateTime.now().subtract(const Duration(days: 10)),
+      'viewedAt': '4/1/2026',
       'imageUrl': 'https://picsum.photos/200?3',
       'price': 'Rs 2,999',
       'originalPrice': 'Rs 4,000',
@@ -194,7 +356,39 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
     },
     {
       'name': 'Mouse',
-      'viewedAt': DateTime.now().subtract(const Duration(days: 20)),
+      'viewedAt': '25/12/2025',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 999',
+      'originalPrice': 'Rs 1,500',
+      'discount': '33',
+    },
+    {
+      'name': 'Mouse',
+      'viewedAt': '25/12/2025',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 999',
+      'originalPrice': 'Rs 1,500',
+      'discount': '33',
+    },
+    {
+      'name': 'Mouse',
+      'viewedAt': '25/12/2025',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 999',
+      'originalPrice': 'Rs 1,500',
+      'discount': '33',
+    },
+    {
+      'name': 'Mouse',
+      'viewedAt': '25/12/2025',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'price': 'Rs 999',
+      'originalPrice': 'Rs 1,500',
+      'discount': '33',
+    },
+    {
+      'name': 'Mouse',
+      'viewedAt': '25/12/2025',
       'imageUrl': 'https://picsum.photos/200?3',
       'price': 'Rs 999',
       'originalPrice': 'Rs 1,500',
@@ -206,7 +400,6 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
     if (selectedFilter == 'All') {
       return allRecentItems;
     }
-
     int days = 0;
     switch (selectedFilter) {
       case 'Last 3 days':
@@ -222,15 +415,34 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
         days = 30;
         break;
     }
-
-    final cutoffDate = DateTime.now().subtract(Duration(days: days));
+    final now = DateTime.now();
+    final cutoffDate = DateTime(now.year, now.month, now.day).subtract(Duration(days: days));
     return allRecentItems
-        .where((item) => (item['viewedAt'] as DateTime).isAfter(cutoffDate))
+        .where((item) {
+          final viewedStr = item['viewedAt'] as String;
+          final viewedDate = parseDate(viewedStr);
+          return !viewedDate.isBefore(cutoffDate);
+        })
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final items = filteredItems;
+
+    // Sort items by viewedAt descending
+    items.sort((a, b) => parseDate(b['viewedAt'] as String).compareTo(parseDate(a['viewedAt'] as String)));
+
+    // Group by date string (since it's already the formatted date)
+    final Map<String, List<Map<String, dynamic>>> groups = {};
+    for (var item in items) {
+      final dateStr = item['viewedAt'] as String;
+      groups.putIfAbsent(dateStr, () => []);
+      groups[dateStr]!.add(item);
+    }
+
+    final dateKeys = groups.keys.toList();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF3F4F6),
       appBar: AppBar(
@@ -239,8 +451,7 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
         foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           // 🔥 FILTER WIDGET (same design as tumhara TopDealsWidget)
           Padding(
@@ -262,35 +473,53 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
               },
             ),
           ),
-
-          // 🔹 LIST
-          Expanded(
-            child: filteredItems.isEmpty
-                ? const Center(
+          if (filteredItems.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: const Center(
+                child: Text(
+                  'No recently viewed items',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+          ...dateKeys.map((dateStr) {
+            final groupItems = groups[dateStr]!;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(9, 16, 0, 8),
                     child: Text(
-                      'No recently viewed items',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
-                    child: ProductCardGrid(
-                      items: filteredItems.map((item) {
-                        return ProductItem(
-                          prodName: item['name'],
-                          imageUrl: item['imageUrl'],
-                          price: item['price'],
-                          originalPrice: item['originalPrice'],
-                          discount: item['discount'],
-                          tag: 'Viewed on ${item['viewedAt'].toString().split(' ')[0]}',
-                          onTap: () {
-                            print('Image tapped: ${item['name']}');
-                          },
-                        );
-                      }).toList(),
+                      dateStr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-          ),
+                  ProductCardGrid(
+                    items: groupItems.map((item) {
+                      return ProductItem(
+                        prodName: item['name'],
+                        imageUrl: item['imageUrl'],
+                        price: item['price'],
+                        originalPrice: item['originalPrice'],
+                        discount: item['discount'],
+                        tag: 'Viewed on ${item['viewedAt']}',
+                        onTap: () {
+                          print('Image tapped: ${item['name']}');
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ],
       ),
     );

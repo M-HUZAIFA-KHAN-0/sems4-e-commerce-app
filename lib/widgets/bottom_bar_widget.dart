@@ -248,11 +248,11 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
             selectedItemColor: Colors.black,
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w400,
             ),
           ),
