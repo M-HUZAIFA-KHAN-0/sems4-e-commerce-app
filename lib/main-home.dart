@@ -619,7 +619,10 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 24),
 
               /// TOP DEALS
-              const TopDealsWidget(),
+              const TopDealsWidget(
+                title: 'Top Brands',
+                items: ['All', 'Mercedes', 'Tesla', 'BMW'],
+              ),
 
               const SizedBox(height: 20),
 

@@ -8,7 +8,7 @@ class RecentlyViewedProduct {
   final String image;
   final double currentPrice;
   final double originalPrice;
-  final double discountPercent;
+  final double? discountPercent;
 
   RecentlyViewedProduct({
     required this.id,
@@ -16,7 +16,7 @@ class RecentlyViewedProduct {
     required this.image,
     required this.currentPrice,
     required this.originalPrice,
-    required this.discountPercent,
+    this.discountPercent,
   });
 }
 
@@ -50,7 +50,7 @@ class _RecentlyViewedCarouselWidgetState
   }
 
   void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (_pageController.hasClients && mounted) {
         _currentPage =
             (_currentPage + 1) % ((widget.products.length / 3).ceil());
@@ -78,7 +78,7 @@ class _RecentlyViewedCarouselWidgetState
       children: [
         // Header with "Recently Viewed" and "View More"
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -117,7 +117,7 @@ class _RecentlyViewedCarouselWidgetState
         const SizedBox(height: 8),
         // Carousel
         SizedBox(
-          height: 280,
+          height: 160,
           child: widget.products.isEmpty
               ? Center(
                   child: Text(
@@ -145,7 +145,7 @@ class _RecentlyViewedCarouselWidgetState
                     );
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 7),
                       child: Row(
                         children: List.generate(3, (cardIndex) {
                           return Expanded(
@@ -161,26 +161,6 @@ class _RecentlyViewedCarouselWidgetState
                   },
                 ),
         ),
-        const SizedBox(height: 12),
-        // Page Indicators
-        if (totalPages > 1)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              totalPages,
-              (index) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: _currentPage == index ? 24 : 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: _currentPage == index
-                      ? const Color(0xFFFF4757)
-                      : Colors.grey[300],
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
@@ -195,9 +175,9 @@ class RecentlyViewedProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(7),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -215,15 +195,15 @@ class RecentlyViewedProductCard extends StatelessWidget {
             children: [
               // Product Image Container
               Container(
-                height: 160,
+                height: 90,
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
                   color: Colors.grey,
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
+                    top: Radius.circular(8),
                   ),
                   child: Image.network(
                     product.image,
@@ -242,34 +222,35 @@ class RecentlyViewedProductCard extends StatelessWidget {
                 ),
               ),
               // Discount Badge
-              Positioned(
-                top: 8,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFF4757),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    '↓ ${product.discountPercent.toStringAsFixed(0)}%',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+              if (product.discountPercent != null)
+                Positioned(
+                  top: 6,
+                  left: 6,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 3,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '↓ ${product.discountPercent!.toStringAsFixed(0)}%',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           // Product Details
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(7),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -279,28 +260,28 @@ class RecentlyViewedProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 10.5,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                      height: 1.3,
+                      color: Color.fromARGB(221, 32, 32, 32),
+                      height: 1,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 4),
                   // Current Price
                   Text(
                     'Rs${product.currentPrice.toStringAsFixed(0)}',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 11.5,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFFFF4757),
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  // const SizedBox(height: 2),
                   // Original Price (Strikethrough)
                   Text(
                     'Rs${product.originalPrice.toStringAsFixed(0)}',
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: FontWeight.w400,
                       color: Colors.grey[500],
                       decoration: TextDecoration.lineThrough,

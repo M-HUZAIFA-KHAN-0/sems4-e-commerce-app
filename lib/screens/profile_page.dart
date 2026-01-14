@@ -5,6 +5,7 @@ import 'package:first/screens/faqs_page.dart';
 import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/order_history_page.dart';
+import 'package:first/screens/recent_view_more_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
@@ -199,6 +200,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Handle payment navigation
                   },
                 ),
+                UnpaidOrder(
+                  id: '1',
+                  productImage: 'image_url',
+                  orderBadgeText: 'SPECIAL OFFER...',
+                  onPayNowPressed: () {
+                    // Handle payment navigation
+                  },
+                ),
                 // ... more orders if needed
               ],
             ),
@@ -206,6 +215,14 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 12),
 
             RecentlyViewedCarouselWidget(
+              onViewMorePressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecentViewMorePage(),
+                  ),
+                );
+              },
               products: [
                 RecentlyViewedProduct(
                   id: '1',
@@ -262,7 +279,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   image: 'image_url',
                   currentPrice: 1678,
                   originalPrice: 1800,
-                  discountPercent: 7,
                 ),
                 RecentlyViewedProduct(
                   id: '2',
@@ -270,13 +286,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   image: 'image_url',
                   currentPrice: 1678,
                   originalPrice: 1800,
-                  discountPercent: 7,
+                ),
+                RecentlyViewedProduct(
+                  id: '2',
+                  title: 'Insert 5G network card',
+                  image: 'image_url',
+                  currentPrice: 1678,
+                  originalPrice: 1800,
                 ),
                 // ... more products
               ],
-              onViewMorePressed: () {
-                // Navigate to view more page
-              },
             ),
 
             const SizedBox(height: 12),
@@ -309,16 +328,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     label: 'Contact',
                     onTap: () {},
                   ),
-                  // MenuItemData(
-                  //   icon: Icons.location_on_outlined,
-                  //   label: 'Locations',
-                  //   onTap: () {},
-                  // ),
-                  // MenuItemData(
-                  //   icon: Icons.trending_down_outlined,
-                  //   label: 'EMI',
-                  //   onTap: () {},
-                  // ),
                 ],
               ),
             ),

@@ -23,3 +23,4 @@ export 'comparison_specs_widget.dart';
 export 'recently_viewed_carousel_widget.dart';
 export 'menu_section_widget.dart';
 export 'unpaid_order_carousel_widget.dart';
+export 'recent_view_display_card_widget.dart' hide ProductCard;
