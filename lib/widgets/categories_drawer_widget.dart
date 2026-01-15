@@ -227,7 +227,7 @@
 
 //                       // child: Column(
 //                       //   children: [
-                          
+
 //                       //      Text(
 //                       //         'MAIN NAVIGATION',
 //                       //         style: TextStyle(
@@ -237,7 +237,7 @@
 //                       //           letterSpacing: 1.2,
 //                       //         ),
 //                       //       ),
-                          
+
 //                       //     // const SizedBox(height: 16),
 //                       //     // ...List.generate(
 //                       //     //   mainNavItems.length,
@@ -246,7 +246,6 @@
 //                       //     // ),
 //                       //   ],
 //                       // ),
-
 
 //                     ),
 //                   ],
@@ -477,7 +476,6 @@
 
 // // Main Navigation Item Widget
 
-
 // class MainNavItemWidget extends StatelessWidget {
 //   final MenuItemData item;
 //   final VoidCallback onTap;
@@ -508,8 +506,6 @@
 //   }
 // }
 
-
-
 // // class MainNavItemWidget extends StatelessWidget {
 // //   final MainNavItem item;
 
@@ -536,47 +532,13 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
+
+/// Slow Drawer Animation Configuration
+class SlowDrawerConfig {
+  static const Duration animationDuration = Duration(milliseconds: 600);
+  static const Curve animationCurve = Curves.easeInOut;
+}
 
 class CategoriesDrawer extends StatefulWidget {
   const CategoriesDrawer({super.key});
@@ -619,19 +581,22 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
   final List<MenuItemData> bottomMenuItems = [
     MenuItemData(label: 'About'),
     MenuItemData(label: 'FAQs'),
-    MenuItemData(label: 'Careers'),
-    MenuItemData(label: 'Contact', icon: Icons.contact_phone),
-    MenuItemData(label: 'Privacy Policy', icon: Icons.privacy_tip),
-    MenuItemData(label: 'Press & Blog', icon: Icons.newspaper),
-    MenuItemData(label: 'Installments Plan', icon: Icons.payments),
+    MenuItemData(label: 'Contact'),
+    MenuItemData(label: 'Privacy Policy'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        drawerTheme: const DrawerThemeData(
+        drawerTheme: DrawerThemeData(
           elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(8),
+              bottomRight: Radius.circular(8),
+            ),
+          ),
         ),
       ),
       child: Drawer(
@@ -642,7 +607,10 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
               // Header
               Container(
                 color: const Color(0xFF2196F3),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 child: Row(
                   children: [
                     const SizedBox(width: 48),
@@ -674,7 +642,10 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                       // Top Menu
                       Container(
                         color: const Color(0xFF2196F3),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         child: Column(
                           children: List.generate(
                             topMenuItems.length,
@@ -704,7 +675,9 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                             const SizedBox(height: 16),
                             ...List.generate(
                               categories.length,
-                              (i) => CategoryExpandableItem(category: categories[i]),
+                              (i) => CategoryExpandableItem(
+                                category: categories[i],
+                              ),
                             ),
                           ],
                         ),
@@ -730,7 +703,8 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                             const SizedBox(height: 16),
                             ...List.generate(
                               popularLists.length,
-                              (i) => PopularListItemWidget(item: popularLists[i]),
+                              (i) =>
+                                  PopularListItemWidget(item: popularLists[i]),
                             ),
                           ],
                         ),
@@ -741,7 +715,10 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                       // Bottom Menu (Main Navigation)
                       Container(
                         color: const Color(0xFF2196F3),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         child: Column(
                           children: List.generate(
                             bottomMenuItems.length,
@@ -761,6 +738,18 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
         ),
       ),
     );
+  }
+}
+
+/// Custom drawer wrapper to control animation timing
+class SlowDrawerAnimation extends StatelessWidget {
+  final Widget child;
+
+  const SlowDrawerAnimation({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
   }
 }
 
@@ -800,7 +789,7 @@ class MenuItemWidget extends StatelessWidget {
         child: Row(
           children: [
             if (item.icon != null)
-            Icon(item.icon, size: 24, color: Colors.white),
+              Icon(item.icon, size: 24, color: Colors.white),
             const SizedBox(width: 16),
             Text(
               item.label,
@@ -817,106 +806,36 @@ class MenuItemWidget extends StatelessWidget {
   }
 }
 
-// Category Expandable Item Widget
-class CategoryExpandableItem extends StatefulWidget {
+// Category Item Widget (Simple - No Dropdown)
+class CategoryExpandableItem extends StatelessWidget {
   final CategoryItem category;
 
   const CategoryExpandableItem({super.key, required this.category});
 
   @override
-  State<CategoryExpandableItem> createState() => _CategoryExpandableItemState();
-}
-
-class _CategoryExpandableItemState extends State<CategoryExpandableItem>
-    with SingleTickerProviderStateMixin {
-  bool _isExpanded = false;
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 250),
-      vsync: this,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-              if (_isExpanded) _controller.forward();
-              else _controller.reverse();
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Row(
-              children: [
-                Icon(widget.category.icon, size: 24, color: Colors.black54),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    widget.category.label,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          children: [
+            Icon(category.icon, size: 24, color: Colors.black54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                category.label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
                 ),
-                AnimatedRotation(
-                  turns: _isExpanded ? 0.5 : 0.0,
-                  duration: const Duration(milliseconds: 250),
-                  child: const Icon(
-                    Icons.expand_more,
-                    color: Color(0xFFCCCCCC),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        ClipRect(
-          child: AnimatedAlign(
-            alignment: Alignment.topCenter,
-            heightFactor: _isExpanded ? 1 : 0,
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSubcategory('All ${widget.category.label}'),
-                  _buildSubcategory('Popular ${widget.category.label}'),
-                  _buildSubcategory('New ${widget.category.label}'),
-                  _buildSubcategory('Top Rated ${widget.category.label}'),
-                ],
               ),
             ),
-          ),
+          ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildSubcategory(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF666666)),
       ),
     );
   }

@@ -79,7 +79,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                 // Hamburger Menu Icon
                 HamburgerMenuButton(
                   onPressed: () {
-                    Scaffold.of(context).openEndDrawer();
+                    _openDrawerSlowly(context);
                   },
                 ),
               ],
@@ -89,6 +89,15 @@ class _TopBarWidgetState extends State<TopBarWidget> {
         const SizedBox(height: 24),
       ],
     );
+  }
+
+  void _openDrawerSlowly(BuildContext context) {
+    // Add longer delay to make drawer animation appear slower/more deliberate
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) {
+        Scaffold.of(context).openEndDrawer();
+      }
+    });
   }
 }
 

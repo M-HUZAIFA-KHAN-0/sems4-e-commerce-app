@@ -590,6 +590,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(color: Colors.white, child: const TopBarWidget()),
       ),
       endDrawer: const CategoriesDrawer(),
+      endDrawerEnableOpenDragGesture: false,
+      drawerScrimColor: Colors.black.withOpacity(0.4),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
