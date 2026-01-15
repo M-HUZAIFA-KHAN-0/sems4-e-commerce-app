@@ -25,3 +25,4 @@ export 'menu_section_widget.dart';
 export 'unpaid_order_carousel_widget.dart';
 export 'recent_view_display_card_widget.dart' hide ProductCard;
 export 'image_picker_cropper_module.dart';
+import 'categories_drawer_widget.dart';

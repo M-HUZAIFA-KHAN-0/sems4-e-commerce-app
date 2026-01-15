@@ -200,24 +200,33 @@ class _AddressScreenState extends State<AddressScreen> {
     {
       'label': 'Home',
       'tag': 'Default',
+      'number': '1234567890',
       'address': '61480 Outbrook Park, PC 5679',
     },
     {
       'label': 'Office',
       'tag': '',
+      'number': '1234567890',
       'address': '699 Meadow Valley Terra, PC 3637',
     },
     {
       'label': 'Apartment',
       'tag': '',
+      'number': '1234567890',
       'address': '2183 Clyde Gallagher, PC 4642',
     },
     {
       'label': "Parent's House",
       'tag': '',
+      'number': '1234567890',
       'address': '5299 Blue Bill Park, PC 4627',
     },
-    {'label': 'Town Square', 'tag': '', 'address': '5373 Summerhouse, PC 4627'},
+    {
+      'label': 'Town Square',
+      'tag': '',
+      'number': '1234567890',
+      'address': '5373 Summerhouse, PC 4627',
+    },
   ];
 
   void _showAddressForm({Map<String, String>? editingAddr, int? index}) {
@@ -265,60 +274,15 @@ class _AddressScreenState extends State<AddressScreen> {
                         ),
                         if (editingAddr != null) ...[
                           Center(
-                            // child: TextButton(
-                            //   onPressed: () {
-                            //     showDialog(
-                            //       context: context,
-                            //       builder: (dialogContext) {
-                            //         return DeleteConfirmationDialog(
-                            //           title: 'Delete Address', // Pass heading
-                            //           content:
-                            //               'Are you sure you want to delete this address?', // Pass content
-                            //           onConfirm: () {
-                            //             setState(() {
-                            //               addresses.removeAt(
-                            //                 index!,
-                            //               ); // Perform deletion
-                            //             });
-                            //             Navigator.pop(context);
-                            //           },
-                            //         );
-                            //       },
-                            //     );
-                            //   },
-                            //   child: Container(
-                            //     padding: const EdgeInsets.symmetric(
-                            //       horizontal: 12,
-                            //       vertical: 8,
-                            //     ),
-                            //     decoration: BoxDecoration(
-                            //       color: const Color.fromARGB(
-                            //         255,
-                            //         221,
-                            //         221,
-                            //         221,
-                            //       ),
-                            //       borderRadius: BorderRadius.circular(8),
-                            //     ),
-                            //     child: const Text(
-                            //       'Delete Address',
-                            //       style: TextStyle(
-                            //         fontSize: 12,
-                            //         fontWeight: FontWeight.w600,
-                            //         color: Colors.red,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             child: IconButton(
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (dialogContext) {
                                     return DeleteConfirmationDialog(
-                                      title: 'Delete Address', // Pass heading
+                                      title: 'Delete Address',
                                       content:
-                                          'Are you sure you want to delete this address?', // Pass content
+                                          'Are you sure you want to delete this address?',
                                       onConfirm: () {
                                         setState(() {
                                           addresses.removeAt(index!);
@@ -385,7 +349,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Address')),
+      appBar: AppBar(title: const Text('Address Book')),
       body: Column(
         children: [
           Expanded(
@@ -396,6 +360,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 return AddressItem(
                   label: addr['label']!,
                   tag: addr['tag']!,
+                  phoneNumber: addr['number'],
                   address: addr['address']!,
                   onEdit: () => _showAddressForm(
                     editingAddr: Map.from(addr),

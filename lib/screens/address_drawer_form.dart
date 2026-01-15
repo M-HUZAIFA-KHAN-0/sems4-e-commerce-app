@@ -13,6 +13,7 @@ class AddressForm extends StatefulWidget {
 
 class _AddressFormState extends State<AddressForm> {
   final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _phoneCtrl = TextEditingController();
   final TextEditingController _addrCtrl = TextEditingController();
   bool _isDefault = false;
 
@@ -21,6 +22,7 @@ class _AddressFormState extends State<AddressForm> {
     super.initState();
     if (widget.existing != null) {
       _nameCtrl.text = widget.existing!['label'] ?? '';
+      _phoneCtrl.text = widget.existing!['number'] ?? '';
       _addrCtrl.text = widget.existing!['address'] ?? '';
       _isDefault = widget.existing!['tag'] == 'Default';
     }
@@ -29,6 +31,7 @@ class _AddressFormState extends State<AddressForm> {
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _phoneCtrl.dispose();
     _addrCtrl.dispose();
     super.dispose();
   }
@@ -49,6 +52,16 @@ class _AddressFormState extends State<AddressForm> {
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Name',
+          ),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _phoneCtrl,
+          keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Phone Number',
+            suffixIcon: Icon(Icons.phone),
           ),
         ),
         const SizedBox(height: 16),
@@ -78,7 +91,7 @@ class _AddressFormState extends State<AddressForm> {
         ),
 
         const SizedBox(height: 16),
-        
+
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
           child: SizedBox(
@@ -86,9 +99,12 @@ class _AddressFormState extends State<AddressForm> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                if (_nameCtrl.text.isNotEmpty && _addrCtrl.text.isNotEmpty) {
+                if (_nameCtrl.text.isNotEmpty &&
+                    _phoneCtrl.text.isNotEmpty &&
+                    _addrCtrl.text.isNotEmpty) {
                   final Map<String, String> newMap = {
                     'label': _nameCtrl.text,
+                    'number': _phoneCtrl.text,
                     'address': _addrCtrl.text,
                   };
                   widget.onSave(newMap, _isDefault);
@@ -111,9 +127,7 @@ class _AddressFormState extends State<AddressForm> {
             ),
           ),
         ),
-        
       ],
     );
   }
 }
-

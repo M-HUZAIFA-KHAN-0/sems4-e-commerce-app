@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TopBarWidget extends StatelessWidget {
+class TopBarWidget extends StatefulWidget {
   const TopBarWidget({super.key});
 
+  @override
+  State<TopBarWidget> createState() => _TopBarWidgetState();
+}
+
+class _TopBarWidgetState extends State<TopBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -41,33 +46,6 @@ class TopBarWidget extends StatelessWidget {
               ],
             ),
 
-            // Row(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: [
-            //     IconButton(
-            //       icon: const Icon(Icons.search),
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => const SearchPage(),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //     IconButton(
-            //       icon: const Icon(Icons.favorite_border),
-            //       onPressed: () {},
-            //     ),
-            //     IconButton(
-            //       padding: EdgeInsets.zero,
-            //       icon: const Icon(Icons.menu_outlined),
-            //       onPressed: () {},
-            //     ),
-            //   ],
-            // ),
-
-
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -98,24 +76,53 @@ class TopBarWidget extends StatelessWidget {
                   icon: const Icon(Icons.favorite_border),
                   onPressed: () {},
                 ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.menu_outlined),
-                  onPressed: () {},
+                // Hamburger Menu Icon
+                HamburgerMenuButton(
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
                 ),
               ],
             ),
-
-
           ],
         ),
         const SizedBox(height: 24),
       ],
+    );
+  }
+}
+
+/// Hamburger Menu Button Widget
+class HamburgerMenuButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const HamburgerMenuButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 20, minHeight: 32),
+      visualDensity: VisualDensity.compact,
+      icon: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 24,
+            height: 2,
+            color: Colors.black,
+            margin: const EdgeInsets.only(bottom: 4),
+          ),
+          Container(
+            width: 24,
+            height: 2,
+            color: Colors.black,
+            margin: const EdgeInsets.only(bottom: 4),
+          ),
+          Container(width: 24, height: 2, color: Colors.black),
+        ],
+      ),
+      onPressed: onPressed,
     );
   }
 }

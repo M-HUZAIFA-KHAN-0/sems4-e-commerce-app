@@ -1,9 +1,6 @@
-import 'package:first/screens/notification_page.dart';
-import 'package:first/screens/profile_page.dart';
-import 'package:first/screens/wishlist_page.dart';
+import 'package:first/screens/address_book_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
-import 'package:first/main-home.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -20,7 +17,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final String userPhone = "3154699890";
   final String userAddress =
       "R196 sector 11c2 north karachi, Sector 11 - C 2, Karachi - North Karachi, Sindh";
-  final String storeName = "Yaseen Traders YT";
+  final String storeName = "Order Items";
 
   List<CartProductItem> checkoutItems = [
     CartProductItem(
@@ -81,51 +78,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   const _VoucherSection(),
 
                   // Invoice Section
-                  const _InvoiceSection(),
-
-                  // Total and Pay Button
-                  _TotalPaymentSection(items: checkoutItems),
-
-                  const SizedBox(height: 20),
+                  // const _InvoiceSection(),
+                  const SizedBox(height: 80),
                 ],
               ),
             ),
           ),
+
+          // Sticky Total and Pay Button Section
+          _TotalPaymentSection(items: checkoutItems),
         ],
-      ),
-      bottomNavigationBar: BottomBarWidget(
-        isLoggedIn: false,
-        currentIndex: _selectedBottomIndex,
-        onIndexChanged: (index) {
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MyHomePage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NotificationPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const WishlistPage()),
-            );
-          } else if (index == 4) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
-          } else {
-            setState(() {
-              _selectedBottomIndex = index;
-            });
-          }
-          setState(() {
-            _selectedBottomIndex = index;
-          });
-        },
       ),
     );
   }
@@ -187,15 +149,37 @@ class _AddressSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddressScreen(),
+                              ),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.edit,
+                            size: 20,
+                            color: Color(0xFFCCCCCC),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
+                    // const SizedBox(height: 4),
                     Text(
                       phone,
                       style: const TextStyle(
@@ -216,7 +200,7 @@ class _AddressSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC)),
+              // const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC)),
             ],
           ),
         ],
@@ -234,19 +218,19 @@ class _StoreProductsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 12),
+      margin: const EdgeInsets.only(top: 10),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                const Icon(Icons.store, color: Colors.black, size: 20),
+                const Icon(Icons.shopping_bag, color: Colors.black, size: 20),
                 const SizedBox(width: 8),
                 const Text(
-                  "Yaseen Traders YT",
+                  "Order Items",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -267,13 +251,24 @@ class _StoreProductsSection extends StatelessWidget {
           const Divider(height: 1, color: Color(0xFFEEEEEE)),
           Column(
             children: items
+                .asMap()
+                .entries
                 .map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    child: _CheckoutProductCard(item: item),
+                  (entry) => Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 12,
+                        ),
+                        child: _CheckoutProductCard(item: entry.value),
+                      ),
+                      if (entry.key < items.length - 1)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Divider(height: 1, color: Color(0xFFEEEEEE)),
+                        ),
+                    ],
                   ),
                 )
                 .toList(),
@@ -325,21 +320,21 @@ class _CheckoutProductCard extends StatelessWidget {
               Text(
                 item.title,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 3),
               Text(
                 item.variantText,
                 style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -381,30 +376,6 @@ class _DeliverySection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Delivery or Pickup",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () {},
-              child: const Text(
-                "Click for self pick-up >",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF2196F3),
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFEEEEEE)),
@@ -498,7 +469,7 @@ class _SummarySection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Merchandise Subtotal (${items.length} items)",
+                "Subtotal (${items.length} items)",
                 style: const TextStyle(fontSize: 13, color: Color(0xFF666666)),
               ),
               Text(
@@ -511,12 +482,14 @@ class _SummarySection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
+          const Divider(height: 1, color: Color(0xFFEEEEEE)),
+          const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Shipping Fee Subtotal",
+                "Shipping Fee",
                 style: TextStyle(fontSize: 13, color: Color(0xFF666666)),
               ),
               Text(
@@ -536,44 +509,22 @@ class _SummarySection extends StatelessWidget {
 }
 
 // Voucher Section Widget
-class _VoucherSection extends StatelessWidget {
+class _VoucherSection extends StatefulWidget {
   const _VoucherSection();
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 12),
-      color: Colors.white,
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          const Icon(Icons.card_giftcard, color: Color(0xFFFF6B6B), size: 20),
-          const SizedBox(width: 8),
-          const Text(
-            "Voucher & Code",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: () {},
-            child: const Text(
-              "Enter your voucher code >",
-              style: TextStyle(fontSize: 12, color: Color(0xFFCCCCCC)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  State<_VoucherSection> createState() => _VoucherSectionState();
 }
 
-// Invoice Section Widget
-class _InvoiceSection extends StatelessWidget {
-  const _InvoiceSection();
+class _VoucherSectionState extends State<_VoucherSection> {
+  bool _showVoucherInput = false;
+  final TextEditingController _voucherController = TextEditingController();
+
+  @override
+  void dispose() {
+    _voucherController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -581,49 +532,145 @@ class _InvoiceSection extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12),
       color: Colors.white,
       padding: const EdgeInsets.all(16),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE3F2FD),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.receipt,
-              color: Color(0xFF2196F3),
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                "Invoice and Contact Info",
+              const Icon(
+                Icons.card_giftcard,
+                color: Color(0xFFFF6B6B),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                "Voucher & Code",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 2),
-              Text(
-                "Manage your invoice details",
-                style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
-              ),
+              const Spacer(),
+              if (!_showVoucherInput)
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showVoucherInput = true;
+                    });
+                  },
+                  child: const Text(
+                    "Enter your voucher code >",
+                    style: TextStyle(fontSize: 12, color: Color(0xFF2196F3)),
+                  ),
+                ),
+              if (_showVoucherInput)
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showVoucherInput = false;
+                      _voucherController.clear();
+                    });
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Color(0xFFCCCCCC),
+                    size: 20,
+                  ),
+                ),
             ],
           ),
-          const Spacer(),
-          const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC)),
+          if (_showVoucherInput) ...[
+            const SizedBox(height: 12),
+            TextField(
+              controller: _voucherController,
+              decoration: InputDecoration(
+                hintText: "Enter voucher code",
+                hintStyle: const TextStyle(color: Color(0xFFCCCCCC)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                suffixIcon: _voucherController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _voucherController.clear();
+                          });
+                        },
+                        child: const Icon(
+                          Icons.clear,
+                          color: Color(0xFFCCCCCC),
+                          size: 18,
+                        ),
+                      )
+                    : null,
+              ),
+              onChanged: (value) {
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: _voucherController.text.isEmpty
+                    ? null
+                    : () {
+                        // Handle voucher code submission
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Voucher code applied: ${_voucherController.text}',
+                            ),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                        setState(() {
+                          _showVoucherInput = false;
+                        });
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _voucherController.text.isEmpty
+                      ? const Color(0xFFEEEEEE)
+                      : const Color.fromARGB(255, 0, 0, 0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  "Apply",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
-// Total and Payment Section Widget
+// Total and Payment Section Widget (Sticky Bottom Bar)
 class _TotalPaymentSection extends StatelessWidget {
   final List<CartProductItem> items;
 
@@ -657,58 +704,42 @@ class _TotalPaymentSection extends StatelessWidget {
     final total = merchandiseTotal + shippingFee;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Total: :",
-                style: TextStyle(fontSize: 14, color: Color(0xFF999999)),
-              ),
-              Text(
-                "Rs. ${total.toStringAsFixed(0)}",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFFFF6B3B),
+          // Total text section
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Total: ",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF999999),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            "VAT included, where applicable",
-            style: TextStyle(fontSize: 11, color: Color(0xFFCCCCCC)),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF6B3B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                const SizedBox(width: 4),
+                Text(
+                  "RS ${total.toStringAsFixed(0)}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFFFF6B3B),
+                  ),
                 ),
-                elevation: 0,
-              ),
-              child: const Text(
-                "Proceed to Pay",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+              ],
             ),
+          ),
+          // Place Order Button
+          PrimaryBtnWidget(
+            onPressed: () {},
+            buttonText: "Place order",
+            width: 150,
+            height: 40,
           ),
         ],
       ),

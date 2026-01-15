@@ -5,6 +5,7 @@ class AddressItem extends StatelessWidget {
   final String label;
   final String tag;
   final String address;
+  final String? phoneNumber;
   final IconData icon;
   final VoidCallback? onEdit;
 
@@ -13,6 +14,7 @@ class AddressItem extends StatelessWidget {
     required this.label,
     this.tag = '',
     required this.address,
+    this.phoneNumber,
     this.icon = Icons.location_on,
     this.onEdit,
   });
@@ -23,7 +25,7 @@ class AddressItem extends StatelessWidget {
       leading: CircleAvatar(
         radius: 28,
         backgroundColor: Colors.grey[200],
-        child: Icon(icon, color: Colors.black, size: 34,),
+        child: Icon(icon, color: Colors.black, size: 34),
       ),
       title: Row(
         children: [
@@ -41,7 +43,31 @@ class AddressItem extends StatelessWidget {
           ],
         ],
       ),
-      subtitle: Text(address, style: const TextStyle(color: Color.fromARGB(255, 109, 109, 109), fontSize: 13)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (phoneNumber != null && phoneNumber!.isNotEmpty) ...[
+            Text(
+              phoneNumber!,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 109, 109, 109),
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
+          Text(
+            address,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 109, 109, 109),
+              fontSize: 13,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
       trailing: IconButton(
         icon: const Icon(Icons.chevron_right),
         onPressed: onEdit,

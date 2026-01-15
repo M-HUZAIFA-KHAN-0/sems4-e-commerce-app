@@ -512,6 +512,7 @@
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/profile_page.dart';
 import 'package:first/screens/wishlist_page.dart';
+import 'package:first/widgets/categories_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
 import 'screens/add_to_card_page.dart';
@@ -588,6 +589,7 @@ class _MyHomePageState extends State<MyHomePage> {
         preferredSize: const Size.fromHeight(90),
         child: Container(color: Colors.white, child: const TopBarWidget()),
       ),
+      endDrawer: const CategoriesDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
