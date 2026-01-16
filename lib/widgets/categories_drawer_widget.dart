@@ -532,13 +532,360 @@
 // //   }
 // // }
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-/// Slow Drawer Animation Configuration
-class SlowDrawerConfig {
-  static const Duration animationDuration = Duration(milliseconds: 600);
-  static const Curve animationCurve = Curves.easeInOut;
-}
+// /// Slow Drawer Animation Configuration
+// class SlowDrawerConfig {
+//   static const Duration animationDuration = Duration(milliseconds: 600);
+//   static const Curve animationCurve = Curves.easeInOut;
+// }
+
+// class CategoriesDrawer extends StatefulWidget {
+//   const CategoriesDrawer({super.key});
+
+//   @override
+//   State<CategoriesDrawer> createState() => _CategoriesDrawerState();
+// }
+
+// class _CategoriesDrawerState extends State<CategoriesDrawer> {
+//   final List<MenuItemData> topMenuItems = [
+//     MenuItemData(label: 'My Account', icon: Icons.person),
+//     MenuItemData(label: 'Track my Order', icon: Icons.location_on),
+//     MenuItemData(label: 'Launch a Complaint', icon: Icons.assignment),
+//     MenuItemData(label: 'Notifications', icon: Icons.notifications),
+//     MenuItemData(label: 'Logout', icon: Icons.logout),
+//   ];
+
+//   final List<CategoryItem> categories = [
+//     CategoryItem(label: 'Mobiles', icon: Icons.phone_android),
+//     CategoryItem(label: 'Smart Watches', icon: Icons.watch),
+//     CategoryItem(label: 'Wireless Earbuds', icon: Icons.headset),
+//     CategoryItem(label: 'Air Purifiers', icon: Icons.air),
+//     CategoryItem(label: 'Personal Cares', icon: Icons.health_and_safety),
+//     CategoryItem(label: 'Mobiles Accessories', icon: Icons.cable),
+//     CategoryItem(label: 'Bluetooth Speakers', icon: Icons.speaker),
+//     CategoryItem(label: 'Power Banks', icon: Icons.power_input),
+//     CategoryItem(label: 'Tablets', icon: Icons.tablet),
+//     CategoryItem(label: 'Laptops', icon: Icons.laptop),
+//   ];
+
+//   final List<PopularListItem> popularLists = [
+//     PopularListItem(label: 'Best Mobiles Under 10000'),
+//     PopularListItem(label: 'Best Mobiles Under 15000'),
+//     PopularListItem(label: 'Best Mobiles Under 20000'),
+//     PopularListItem(label: 'Best Mobiles Under 30000'),
+//     PopularListItem(label: 'Best Mobiles Under 40000'),
+//     PopularListItem(label: 'Best Mobiles Under 50000'),
+//   ];
+
+//   final List<MenuItemData> bottomMenuItems = [
+//     MenuItemData(label: 'About'),
+//     MenuItemData(label: 'FAQs'),
+//     MenuItemData(label: 'Contact'),
+//     MenuItemData(label: 'Privacy Policy'),
+//   ];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Theme(
+//       data: Theme.of(context).copyWith(
+//         drawerTheme: DrawerThemeData(
+//           elevation: 0,
+//           shape: const RoundedRectangleBorder(
+//             borderRadius: BorderRadius.only(
+//               topRight: Radius.circular(1),
+//               bottomRight: Radius.circular(1),
+//             ),
+//           ),
+//         ),
+//       ),
+//       child: Drawer(
+//         child: Container(
+//           color: Colors.white,
+//           child: Column(
+//             children: [
+//               // Header
+//               Container(
+//                 color: const Color(0xFF2196F3),
+//                 padding: const EdgeInsets.symmetric(
+//                   horizontal: 16,
+//                   vertical: 16,
+//                 ),
+//                 child: Row(
+//                   children: [
+//                     const SizedBox(width: 48),
+//                     const Expanded(
+//                       child: Text(
+//                         'Priceøye',
+//                         textAlign: TextAlign.center,
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 24,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                     ),
+//                     IconButton(
+//                       icon: const Icon(Icons.close, color: Colors.white),
+//                       onPressed: () => Navigator.pop(context),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+
+//               // Body
+//               Expanded(
+//                 child: SingleChildScrollView(
+//                   physics: const BouncingScrollPhysics(),
+//                   child: Column(
+//                     children: [
+//                       // Top Menu
+//                       Container(
+//                         color: const Color(0xFF2196F3),
+//                         padding: const EdgeInsets.symmetric(
+//                           horizontal: 16,
+//                           vertical: 12,
+//                         ),
+//                         child: Column(
+//                           children: List.generate(
+//                             topMenuItems.length,
+//                             (i) => MenuItemWidget(
+//                               item: topMenuItems[i],
+//                               onTap: () => Navigator.pop(context),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+
+//                       // Categories
+//                       Padding(
+//                         padding: const EdgeInsets.all(16),
+//                         child: Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             const Text(
+//                               'CATEGORIES',
+//                               style: TextStyle(
+//                                 fontSize: 12,
+//                                 fontWeight: FontWeight.w600,
+//                                 color: Color(0xFF999999),
+//                                 letterSpacing: 1.2,
+//                               ),
+//                             ),
+//                             const SizedBox(height: 16),
+//                             ...List.generate(
+//                               categories.length,
+//                               (i) => CategoryExpandableItem(
+//                                 category: categories[i],
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+
+//                       const Divider(thickness: 1, color: Color(0xFFEEEEEE)),
+
+//                       // Popular Lists
+//                       Padding(
+//                         padding: const EdgeInsets.all(16),
+//                         child: Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             const Text(
+//                               'POPULAR LISTS',
+//                               style: TextStyle(
+//                                 fontSize: 12,
+//                                 fontWeight: FontWeight.w600,
+//                                 color: Color(0xFF999999),
+//                                 letterSpacing: 1.2,
+//                               ),
+//                             ),
+//                             const SizedBox(height: 16),
+//                             ...List.generate(
+//                               popularLists.length,
+//                               (i) =>
+//                                   PopularListItemWidget(item: popularLists[i]),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+
+//                       const Divider(thickness: 1, color: Color(0xFFEEEEEE)),
+
+//                       // Bottom Menu (Main Navigation)
+//                       Container(
+//                         color: const Color(0xFF2196F3),
+//                         padding: const EdgeInsets.symmetric(
+//                           horizontal: 16,
+//                           vertical: 12,
+//                         ),
+//                         child: Column(
+//                           children: List.generate(
+//                             bottomMenuItems.length,
+//                             (i) => MenuItemWidget(
+//                               item: bottomMenuItems[i],
+//                               onTap: () => Navigator.pop(context),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// /// Custom drawer wrapper to control animation timing
+// class SlowDrawerAnimation extends StatelessWidget {
+//   final Widget child;
+
+//   const SlowDrawerAnimation({super.key, required this.child});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return child;
+//   }
+// }
+
+// /* ===================== DATA CLASSES ===================== */
+// class MenuItemData {
+//   final String label;
+//   final IconData? icon;
+//   MenuItemData({required this.label, this.icon});
+// }
+
+// class CategoryItem {
+//   final String label;
+//   final IconData icon;
+//   CategoryItem({required this.label, required this.icon});
+// }
+
+// class PopularListItem {
+//   final String label;
+//   PopularListItem({required this.label});
+// }
+
+// /* ===================== WIDGETS ===================== */
+
+// // Menu Item Widget (Used for Top & Bottom Menus)
+// class MenuItemWidget extends StatelessWidget {
+//   final MenuItemData item;
+//   final VoidCallback onTap;
+
+//   const MenuItemWidget({super.key, required this.item, required this.onTap});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: onTap,
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(vertical: 14),
+//         child: Row(
+//           children: [
+//             if (item.icon != null)
+//               Icon(item.icon, size: 24, color: Colors.white),
+//             const SizedBox(width: 16),
+//             Text(
+//               item.label,
+//               style: const TextStyle(
+//                 fontSize: 14,
+//                 fontWeight: FontWeight.w500,
+//                 color: Colors.white,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// // Category Item Widget (Simple - No Dropdown)
+// class CategoryExpandableItem extends StatelessWidget {
+//   final CategoryItem category;
+
+//   const CategoryExpandableItem({super.key, required this.category});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: () {
+//         Navigator.pop(context);
+//       },
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(vertical: 12),
+//         child: Row(
+//           children: [
+//             Icon(category.icon, size: 24, color: Colors.black54),
+//             const SizedBox(width: 12),
+//             Expanded(
+//               child: Text(
+//                 category.label,
+//                 style: const TextStyle(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w500,
+//                   color: Colors.black87,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// // Popular List Item Widget
+// class PopularListItemWidget extends StatelessWidget {
+//   final PopularListItem item;
+
+//   const PopularListItemWidget({super.key, required this.item});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 12),
+//       child: GestureDetector(
+//         onTap: () => Navigator.pop(context),
+//         child: Container(
+//           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+//           decoration: BoxDecoration(
+//             border: Border.all(color: const Color(0xFFE0E0E0)),
+//             borderRadius: BorderRadius.circular(8),
+//           ),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Expanded(
+//                 child: Text(
+//                   item.label,
+//                   style: const TextStyle(
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w500,
+//                     color: Color(0xFF666666),
+//                   ),
+//                 ),
+//               ),
+//               const Icon(
+//                 Icons.chevron_right,
+//                 size: 20,
+//                 color: Color(0xFFCCCCCC),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+import 'package:flutter/material.dart';
 
 class CategoriesDrawer extends StatefulWidget {
   const CategoriesDrawer({super.key});
@@ -556,13 +903,20 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
     MenuItemData(label: 'Logout', icon: Icons.logout),
   ];
 
+  final List<MenuItemData> bottomMenuItems = [
+    MenuItemData(label: 'About'),
+    MenuItemData(label: 'FAQs'),
+    MenuItemData(label: 'Contact'),
+    MenuItemData(label: 'Privacy Policy'),
+  ];
+
   final List<CategoryItem> categories = [
     CategoryItem(label: 'Mobiles', icon: Icons.phone_android),
     CategoryItem(label: 'Smart Watches', icon: Icons.watch),
     CategoryItem(label: 'Wireless Earbuds', icon: Icons.headset),
     CategoryItem(label: 'Air Purifiers', icon: Icons.air),
     CategoryItem(label: 'Personal Cares', icon: Icons.health_and_safety),
-    CategoryItem(label: 'Mobiles Accessories', icon: Icons.cable),
+    CategoryItem(label: 'Mobile Accessories', icon: Icons.cable),
     CategoryItem(label: 'Bluetooth Speakers', icon: Icons.speaker),
     CategoryItem(label: 'Power Banks', icon: Icons.power_input),
     CategoryItem(label: 'Tablets', icon: Icons.tablet),
@@ -578,37 +932,25 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
     PopularListItem(label: 'Best Mobiles Under 50000'),
   ];
 
-  final List<MenuItemData> bottomMenuItems = [
-    MenuItemData(label: 'About'),
-    MenuItemData(label: 'FAQs'),
-    MenuItemData(label: 'Contact'),
-    MenuItemData(label: 'Privacy Policy'),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        drawerTheme: DrawerThemeData(
-          elevation: 0,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(8),
-              bottomRight: Radius.circular(8),
-            ),
-          ),
+    return Drawer(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(1),
+          bottomLeft: Radius.circular(1),
         ),
-      ),
-      child: Drawer(
         child: Container(
           color: Colors.white,
           child: Column(
             children: [
-              // Header
+              // HEADER
               Container(
                 color: const Color(0xFF2196F3),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: 4,
                   vertical: 16,
                 ),
                 child: Row(
@@ -633,102 +975,41 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                 ),
               ),
 
-              // Body
+              // BODY
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      // Top Menu
-                      Container(
-                        color: const Color(0xFF2196F3),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
+                      // TOP MENU
+                      _blueMenu(topMenuItems),
+
+                      // CATEGORIES
+                      _section(
+                        title: 'CATEGORIES',
                         child: Column(
-                          children: List.generate(
-                            topMenuItems.length,
-                            (i) => MenuItemWidget(
-                              item: topMenuItems[i],
-                              onTap: () => Navigator.pop(context),
-                            ),
-                          ),
+                          children: categories
+                              .map((c) => CategoryItemWidget(category: c))
+                              .toList(),
                         ),
                       ),
 
-                      // Categories
-                      Padding(
-                        padding: const EdgeInsets.all(16),
+                      const Divider(),
+
+                      // POPULAR LISTS
+                      _section(
+                        title: 'POPULAR LISTS',
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'CATEGORIES',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF999999),
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            ...List.generate(
-                              categories.length,
-                              (i) => CategoryExpandableItem(
-                                category: categories[i],
-                              ),
-                            ),
-                          ],
+                          children: popularLists
+                              .map((p) => PopularListItemWidget(item: p))
+                              .toList(),
                         ),
                       ),
 
-                      const Divider(thickness: 1, color: Color(0xFFEEEEEE)),
+                      const Divider(),
 
-                      // Popular Lists
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'POPULAR LISTS',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF999999),
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            ...List.generate(
-                              popularLists.length,
-                              (i) =>
-                                  PopularListItemWidget(item: popularLists[i]),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const Divider(thickness: 1, color: Color(0xFFEEEEEE)),
-
-                      // Bottom Menu (Main Navigation)
-                      Container(
-                        color: const Color(0xFF2196F3),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        child: Column(
-                          children: List.generate(
-                            bottomMenuItems.length,
-                            (i) => MenuItemWidget(
-                              item: bottomMenuItems[i],
-                              onTap: () => Navigator.pop(context),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // BOTTOM MENU
+                      _blueMenu(bottomMenuItems),
                     ],
                   ),
                 ),
@@ -739,21 +1020,49 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
       ),
     );
   }
-}
 
-/// Custom drawer wrapper to control animation timing
-class SlowDrawerAnimation extends StatelessWidget {
-  final Widget child;
+  Widget _blueMenu(List<MenuItemData> items) {
+    return Container(
+      color: const Color(0xFF2196F3),
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+      child: Column(
+        children: items
+            .map(
+              (item) => MenuItemWidget(
+                item: item,
+                onTap: () => Navigator.pop(context),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
 
-  const SlowDrawerAnimation({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return child;
+  Widget _section({required String title, required Widget child}) {
+    return Padding(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF999999),
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    );
   }
 }
 
-/* ===================== DATA CLASSES ===================== */
+/* ================= DATA ================= */
+
 class MenuItemData {
   final String label;
   final IconData? icon;
@@ -771,9 +1080,8 @@ class PopularListItem {
   PopularListItem({required this.label});
 }
 
-/* ===================== WIDGETS ===================== */
+/* ================= WIDGETS ================= */
 
-// Menu Item Widget (Used for Top & Bottom Menus)
 class MenuItemWidget extends StatelessWidget {
   final MenuItemData item;
   final VoidCallback onTap;
@@ -785,12 +1093,12 @@ class MenuItemWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
             if (item.icon != null)
               Icon(item.icon, size: 24, color: Colors.white),
-            const SizedBox(width: 16),
+            if (item.icon != null) const SizedBox(width: 16),
             Text(
               item.label,
               style: const TextStyle(
@@ -806,18 +1114,15 @@ class MenuItemWidget extends StatelessWidget {
   }
 }
 
-// Category Item Widget (Simple - No Dropdown)
-class CategoryExpandableItem extends StatelessWidget {
+class CategoryItemWidget extends StatelessWidget {
   final CategoryItem category;
 
-  const CategoryExpandableItem({super.key, required this.category});
+  const CategoryItemWidget({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
+      onTap: () => Navigator.pop(context),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
@@ -841,7 +1146,6 @@ class CategoryExpandableItem extends StatelessWidget {
   }
 }
 
-// Popular List Item Widget
 class PopularListItemWidget extends StatelessWidget {
   final PopularListItem item;
 
@@ -850,8 +1154,8 @@ class PopularListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: GestureDetector(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
         onTap: () => Navigator.pop(context),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -860,7 +1164,6 @@ class PopularListItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(

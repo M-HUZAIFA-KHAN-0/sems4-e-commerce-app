@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+// class FAQs {
+//   final String? title;
+//   final String? description;
+
+//   FAQs({this.title = "FAQ's", this.description});
+// }
+
 /// Model for FAQ Item
 class FAQItem {
   final String id;
@@ -12,8 +19,9 @@ class FAQItem {
 /// FAQ Widget with Expandable Items
 class FAQWidget extends StatefulWidget {
   final List<FAQItem> faqs;
+  final String? title;
 
-  const FAQWidget({super.key, required this.faqs});
+  const FAQWidget({super.key, required this.faqs, this.title});
 
   @override
   State<FAQWidget> createState() => _FAQWidgetState();
@@ -39,21 +47,22 @@ class _FAQWidgetState extends State<FAQWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // FAQ Title
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "FAQ's",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
+        // FAQ Title (Only if provided from parent)
+        if (widget.title != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                widget.title!,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
-        ),
         // FAQ Items List
         ListView.builder(
           shrinkWrap: true,

@@ -1,6 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/address_book_page.dart';
+import 'package:first/screens/contact_page.dart';
 import 'package:first/screens/edit_profile_page.dart';
 import 'package:first/screens/faqs_page.dart';
 import 'package:first/screens/logout_drawer.dart';
@@ -356,7 +357,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.phone_outlined,
                     label: 'Contact',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ContactUsPage(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

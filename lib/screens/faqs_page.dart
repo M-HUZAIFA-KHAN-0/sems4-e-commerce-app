@@ -87,7 +87,7 @@ class _FAQsPageState extends State<FAQsPage> {
           ),
         ),
         title: const Text(
-          'Help & Support',
+          'FAQs',
           style: TextStyle(
             color: Colors.black87,
             fontSize: 18,
