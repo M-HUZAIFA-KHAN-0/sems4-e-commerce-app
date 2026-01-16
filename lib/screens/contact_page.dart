@@ -379,7 +379,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             child: Row(
               children: [
                 const Text(
-                  'Priceøye',
+                  'laptop harbour',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
