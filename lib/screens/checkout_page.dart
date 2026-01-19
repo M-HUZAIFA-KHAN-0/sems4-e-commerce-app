@@ -1179,7 +1179,7 @@ class _VoucherSectionState extends State<_VoucherSection> {
                     });
                   },
                   child: const Text(
-                    "Enter your voucher code >",
+                    "Voucher code >",
                     style: TextStyle(fontSize: 12, color: Color(0xFF2196F3)),
                   ),
                 ),

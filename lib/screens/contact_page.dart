@@ -226,7 +226,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             children: [
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                   borderRadius: BorderRadius.circular(12),
@@ -235,8 +235,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 child: Row(
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 54,
+                      height: 54,
                       decoration: BoxDecoration(
                         color: const Color(0xFF2196F3).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -244,51 +244,57 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       child: const Icon(
                         Icons.location_on,
                         color: Color(0xFF2196F3),
-                        size: 28,
+                        size: 42,
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Karachi',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black87,
+
+                    // 🔑 THIS IS THE FIX
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Karachi',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '456, Shahrah-e-Faisal, Karachi, Pakistan',
-                          textAlign: TextAlign.start,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                          const SizedBox(height: 4),
+                          Text(
+                            '456, Shahrah-e-Faisal, Karachi, Pakistan',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                              height: 1.2,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'contact@laptophorbour.com',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                          const SizedBox(height: 4),
+                          Text(
+                            'contact@laptophorbour.com',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '1234567890',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                          const SizedBox(height: 4),
+                          Text(
+                            '1234567890',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -371,33 +377,37 @@ class _ContactUsPageState extends State<ContactUsPage> {
           // Footer with Priceøye branding
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
               color: const Color(0xFF2196F3),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Row(
-              children: [
-                const Text(
-                  'laptop harbour',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Laptop Harbour',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSocialIconWhite(Icons.facebook),
-                    const SizedBox(width: 16),
-                    _buildSocialIconWhite(Icons.camera_alt),
-                    const SizedBox(width: 16),
-                    _buildSocialIconWhite(Icons.music_note),
-                  ],
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildSocialIconWhite(Icons.facebook),
+                      const SizedBox(width: 12),
+                      _buildSocialIconWhite(Icons.camera_alt),
+                      const SizedBox(width: 12),
+                      _buildSocialIconWhite(Icons.music_note),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           // const SizedBox(height: 20),
@@ -420,8 +430,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Widget _buildSocialIconWhite(IconData icon) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 30,
+      height: 30,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),

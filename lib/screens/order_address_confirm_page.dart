@@ -197,43 +197,60 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: selectedAddress,
-            hint: const Text("Select delivery address"),
-            isExpanded: true,
-            items: addresses.map((e) {
-              return DropdownMenuItem<String>(
-                value: e['label'],
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        e['label'] ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        e['address'] ?? '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() => selectedAddress = value);
-            },
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
+  value: selectedAddress,
+  hint: const Text("Select delivery address"),
+  isExpanded: true,
+
+  // 👇 Dropdown items (label + address)
+  items: addresses.map((e) {
+    return DropdownMenuItem<String>(
+      value: e['label'],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            e['label'] ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          Text(
+            e['address'] ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }).toList(),
+
+  // 👇 Selected item (ONLY address)
+  selectedItemBuilder: (context) {
+    return addresses.map((e) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          e['address'] ?? '',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 13),
+        ),
+      );
+    }).toList();
+  },
+
+  onChanged: (value) {
+    setState(() => selectedAddress = value);
+  },
+
+  decoration: const InputDecoration(
+    border: OutlineInputBorder(),
+    isDense: true,
+  ),
+),
+
         ],
       ),
     );

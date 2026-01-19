@@ -461,7 +461,7 @@ class _RecentlyViewedCarouselWidgetState
         const SizedBox(height: 8),
         // Carousel
         SizedBox(
-          height: 185, // ✅ increased height to avoid bottom overflow
+          height: 178, // ✅ increased height to avoid bottom overflow
           child: widget.products.isEmpty
               ? Center(
                   child: Text(
@@ -586,47 +586,48 @@ class RecentlyViewedProductCard extends StatelessWidget {
             ],
           ),
           // Product Details — Fixed height
-          SizedBox(
-            height: 70, // ✅ ensures bottom overflow doesn't happen
-            child: Padding(
-              padding: const EdgeInsets.all(6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(221, 32, 32, 32),
-                      height: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Rs${product.currentPrice.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 1),
-                  Text(
-                    'Rs${product.originalPrice.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey[500],
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          Padding(
+  padding: const EdgeInsets.all(6),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min, // 🔑 important
+    children: [
+      Flexible(
+        child: Text(
+          product.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: Color.fromARGB(221, 32, 32, 32),
+            height: 1.1, // 👈 thoda safe
           ),
+        ),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        'Rs ${product.currentPrice.toStringAsFixed(0)}',
+        style: const TextStyle(
+          fontSize: 11.5,
+          fontWeight: FontWeight.w700,
+          color: Colors.black,
+        ),
+      ),
+      const SizedBox(height: 2),
+      Text(
+        'Rs ${product.originalPrice.toStringAsFixed(0)}',
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+          color: Colors.grey[500],
+          decoration: TextDecoration.lineThrough,
+        ),
+      ),
+    ],
+  ),
+),
+
         ],
       ),
     );
