@@ -1,6 +1,7 @@
 import 'package:first/main-home.dart';
 import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/address_book_page.dart';
+import 'package:first/screens/complaints_page.dart';
 import 'package:first/screens/contact_page.dart';
 import 'package:first/screens/edit_profile_page.dart';
 import 'package:first/screens/faqs_page.dart';
@@ -352,7 +353,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icons.edit_document,
                     // icon: Icons.assignment_outlined,
                     label: 'Complaints',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ComplaintsListPage(),
+                        ),
+                      );
+                    },
                   ),
                   MenuItemData(
                     icon: Icons.phone_outlined,

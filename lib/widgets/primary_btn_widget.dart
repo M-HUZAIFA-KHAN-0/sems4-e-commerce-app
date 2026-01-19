@@ -6,6 +6,7 @@ class PrimaryBtnWidget extends StatelessWidget {
   final Color? backgroundColor;
   final double? height;
   final double? width;
+  final double? fontSize;
 
   const PrimaryBtnWidget({
     super.key,
@@ -14,6 +15,7 @@ class PrimaryBtnWidget extends StatelessWidget {
     this.backgroundColor = Colors.black,
     this.height = 48,
     this.width,
+    this.fontSize = 14,
   });
 
   @override
@@ -32,8 +34,8 @@ class PrimaryBtnWidget extends StatelessWidget {
         ),
         child: Text(
           buttonText,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: fontSize,
             fontWeight: FontWeight.w800,
             color: Colors.white,
           ),

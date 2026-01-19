@@ -645,33 +645,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 16),
 
-            Container(
-              child: Column(
-                children: [
-                  ShopMoreCategoriesWidget(
-                    title: "Shop More Categories",
-                    items: const [
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Wireless\nEarbuds",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Smart\nWatches",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Bluetooth\nSpeakers",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Tablets",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   child: Column(
+            //     children: [
+            //       ShopMoreCategoriesWidget(
+            //         title: "Shop More Categories",
+            //         items: const [
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Wireless\nEarbuds",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Smart\nWatches",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Bluetooth\nSpeakers",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Tablets",
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
+            CategoryViewCard(),
 
             const SizedBox(height: 24),
 
@@ -811,7 +813,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Specs',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -836,7 +838,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Review',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -861,7 +863,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Compare',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -871,7 +873,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               const SizedBox(width: 8),
 
               SizedBox(
-                width: 140,
+                width: 150,
                 height: 48,
                 child: ElevatedButton.icon(
                   onPressed: () {

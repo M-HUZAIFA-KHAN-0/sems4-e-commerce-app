@@ -10,24 +10,25 @@ class TopBarWidget extends StatefulWidget {
 class _TopBarWidgetState extends State<TopBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-
-        /// HEADER WITH PROFILE
-        Row(
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            /// LEFT PROFILE
             Row(
               children: [
                 CircleAvatar(
-                  radius: 24,
+                  radius: 22,
                   backgroundColor: Colors.grey[300],
                   child: const Icon(Icons.person, color: Colors.grey),
                 ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text(
                       'Good Morning 👋',
@@ -46,16 +47,12 @@ class _TopBarWidgetState extends State<TopBarWidget> {
               ],
             ),
 
+            /// RIGHT ACTIONS
             Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
                   icon: const Icon(Icons.search),
                   onPressed: () {
                     Navigator.push(
@@ -67,27 +64,17 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                   },
                 ),
                 IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () {},
-                ),
-                // Hamburger Menu Icon
-                HamburgerMenuButton(
+                  padding: EdgeInsets.zero, 
+                  icon: const Icon(Icons.menu),
                   onPressed: () {
-                    _openDrawerSlowly(context);
+                    Scaffold.of(context).openEndDrawer();
                   },
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 24),
-      ],
+      ),
     );
   }
 
@@ -98,41 +85,6 @@ class _TopBarWidgetState extends State<TopBarWidget> {
         Scaffold.of(context).openEndDrawer();
       }
     });
-  }
-}
-
-/// Hamburger Menu Button Widget
-class HamburgerMenuButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const HamburgerMenuButton({super.key, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 20, minHeight: 32),
-      visualDensity: VisualDensity.compact,
-      icon: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 24,
-            height: 2,
-            color: Colors.black,
-            margin: const EdgeInsets.only(bottom: 4),
-          ),
-          Container(
-            width: 24,
-            height: 2,
-            color: Colors.black,
-            margin: const EdgeInsets.only(bottom: 4),
-          ),
-          Container(width: 24, height: 2, color: Colors.black),
-        ],
-      ),
-      onPressed: onPressed,
-    );
   }
 }
 

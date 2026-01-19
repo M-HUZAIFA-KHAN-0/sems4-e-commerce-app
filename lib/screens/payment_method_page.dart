@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:first/widgets/widgets.dart';
 
 class PaymentMethodPage extends StatefulWidget {
   const PaymentMethodPage({super.key});
@@ -224,7 +225,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
           _buildCreditCardDisplay(),
           const SizedBox(height: 24),
           // Name on Card Field
-          _buildFormField(
+          buildFormField(
             controller: _nameController,
             label: 'Name on the card',
             icon: Icons.person,
@@ -232,7 +233,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
           ),
           const SizedBox(height: 16),
           // Card Number Field
-          _buildFormField(
+          buildFormField(
             controller: _cardNumberController,
             label: 'Card number',
             icon: Icons.credit_card,
@@ -244,7 +245,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
           Row(
             children: [
               Expanded(
-                child: _buildFormField(
+                child: buildFormField(
                   controller: _monthYearController,
                   label: 'Month / Year',
                   icon: Icons.calendar_today,
@@ -254,7 +255,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildFormField(
+                child: buildFormField(
                   controller: _cvvController,
                   label: 'CVV',
                   icon: Icons.lock,
@@ -475,66 +476,6 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
         color: Colors.white,
         letterSpacing: 2,
       ),
-    );
-  }
-
-  Widget _buildFormField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-    bool isPassword = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 18, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF999999),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          onChanged: (value) {
-            setState(() {});
-          },
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: const TextStyle(color: Color(0xFFCCCCCC)),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFF2196F3)),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
-            ),
-          ),
-        ),
-      ],
     );
   }
 

@@ -1,3 +1,5 @@
+import 'package:first/screens/category_view_page.dart';
+import 'package:first/widgets/categories_drawer_widget.dart';
 import 'package:flutter/material.dart';
 
 class BrandBoxesWidget extends StatelessWidget {
@@ -60,10 +62,18 @@ class BrandIcon extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icons[brand] ?? Icons.directions_car,
+            child: IconButton(
+              icon: Icon(icons[brand] ?? Icons.directions_car),
               color: Colors.black54,
-              size: 30,
+              iconSize: 28,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryViewPage(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 3),

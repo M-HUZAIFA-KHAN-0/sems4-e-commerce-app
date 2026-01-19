@@ -4,19 +4,14 @@ class ShopCategoryCardData {
   const ShopCategoryCardData({
     required this.image,
     required this.title, // use "\n" for 2 lines exactly like SS
+    this.onTap,
   });
 
   final ImageProvider image;
   final String title;
+  final VoidCallback? onTap;
 }
 
-/// ✅ Reproduces the "Shop More Categories" section exactly like the SS:
-/// - Title on top (left aligned)
-/// - Light grey outer background
-/// - Light pink panel background
-/// - 2x2 grid cards
-/// - Purple border + rounded corners
-/// - White image area + purple bottom label with white text
 class ShopMoreCategoriesWidget extends StatelessWidget {
   const ShopMoreCategoriesWidget({
     super.key,
@@ -29,8 +24,6 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   final List<ShopCategoryCardData> items;
   final void Function(int index)? onTap;
 
-  // Colors sampled/matched to the screenshot style
-  static const Color _outerBg = Color(0xFFF2F3F5); // light grey
   static const Color _panelBg = Color(0xFFF6D5FB); // light pink
   static const Color _purple = Color(0xFF8902A4);  // border + bottom bar
 
@@ -38,12 +31,12 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Expecting 4 cards (2x2) like SS, but will still render if more/less.
     return Container(
-      color: _outerBg,
+      color: _panelBg,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 18),
+          const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Text(
@@ -55,7 +48,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 4),
           Container(
             width: double.infinity,
             color: _panelBg,
@@ -79,7 +72,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
         ],
       ),
     );
