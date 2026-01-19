@@ -9,17 +9,20 @@ class ProductCardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      // physics: const NeverScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(), // ✅ mobile scroll
       itemCount: items.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.82,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 4,
+        childAspectRatio: 0.70, // ✅ overflow fix
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 7,
       ),
       itemBuilder: (context, index) {
         final item = items[index];
-        return ProductCard(item: item, onTap: item.onTap);
+        return ProductCard(
+          item: item,
+          onTap: item.onTap, // ✅ SAME AS BEFORE
+        );
       },
     );
   }
@@ -49,7 +52,7 @@ class ProductItem {
 
 class ProductCard extends StatefulWidget {
   final ProductItem item;
-  final VoidCallback? onTap;
+  final VoidCallback? onTap; // ✅ KEEP THIS
 
   const ProductCard({super.key, required this.item, this.onTap});
 
@@ -65,32 +68,37 @@ class _ProductCardState extends State<ProductCard> {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: widget.item.onTap,
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(8),
+      child: InkWell(
+        // ✅ handles tap + scroll properly
+        borderRadius: BorderRadius.circular(8),
+        onTap: widget.onTap, // ✅ SAME CALLBACK
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// IMAGE AREA
+            Expanded(
+              // ✅ overflow fix
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(8),
+                    ),
+                    child: Image.network(
+                      widget.item.imageUrl,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: Image.network(
-                    widget.item.imageUrl,
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                if (widget.item.discount != null)
+
+                  /// DISCOUNT
                   Positioned(
                     top: 6,
                     left: 6,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 3,
-                        vertical: 1,
+                        horizontal: 4,
+                        vertical: 2,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.black,
@@ -99,7 +107,7 @@ class _ProductCardState extends State<ProductCard> {
                       child: Text(
                         '↓ ${widget.item.discount}%',
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -107,41 +115,37 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
 
-                Positioned(
-  top: 6,
-  right: 6,
-  child: Container(
-    width: 32,
-    height: 32,
-    decoration: BoxDecoration(
-      color: const Color(0xFFF2F3FA), // 👈 BG same as border color
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: const Color(0xFFF2F3FA)),
-    ),
-    child: Center( // 👈 ensures icon is centered
-      child: GestureDetector(
-        onTap: () {
-          setState(() => _favorited = !_favorited);
-          widget.item.onHeartToggled?.call(_favorited);
-        },
-        child: Icon(
-          _favorited ? Icons.favorite : Icons.favorite_border,
-          color: _favorited ? Colors.red : const Color.fromARGB(255, 0, 0, 0),
-          size: 25, // 👈 adjust size to fit nicely
-        ),
-      ),
-    ),
-  ),
-)
-
-              ],
+                  /// HEART
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() => _favorited = !_favorited);
+                        widget.item.onHeartToggled?.call(_favorited);
+                      },
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF2F3FA),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          _favorited ? Icons.favorite : Icons.favorite_border,
+                          color: _favorited ? Colors.red : Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          GestureDetector(
-            onTap: widget.item.onTap,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(6.0, 0, 6.0, 6),
+
+            /// DETAILS
+            Padding(
+              padding: const EdgeInsets.all(6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,12 +156,10 @@ class _ProductCardState extends State<ProductCard> {
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      height: 1,
                     ),
                   ),
+                  // const SizedBox(height: 2),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Column(
@@ -166,15 +168,14 @@ class _ProductCardState extends State<ProductCard> {
                             Text(
                               widget.item.price,
                               style: const TextStyle(
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
                               ),
                             ),
                             Text(
                               widget.item.originalPrice,
                               style: const TextStyle(
-                                fontSize: 11,
+                                fontSize: 10,
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough,
                               ),
@@ -182,27 +183,22 @@ class _ProductCardState extends State<ProductCard> {
                           ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          // Handle add to cart action
-                        },
-                        child: Container(
-                          width: 35,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: const Color(0xFFE7E9EE)),
-                          ),
-                          child: const Icon(Icons.add_shopping_cart),
+                      Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: const Color(0xFFE7E9EE)),
                         ),
+                        child: const Icon(Icons.add_shopping_cart, size: 18),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

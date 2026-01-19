@@ -5,7 +5,6 @@ class AddressItem extends StatelessWidget {
   final String label;
   final String tag;
   final String address;
-  final String? phoneNumber;
   final IconData icon;
   final VoidCallback? onEdit;
 
@@ -14,7 +13,6 @@ class AddressItem extends StatelessWidget {
     required this.label,
     this.tag = '',
     required this.address,
-    this.phoneNumber,
     this.icon = Icons.location_on,
     this.onEdit,
   });
@@ -47,16 +45,6 @@ class AddressItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (phoneNumber != null && phoneNumber!.isNotEmpty) ...[
-            Text(
-              phoneNumber!,
-              style: const TextStyle(
-                color: Color.fromARGB(255, 109, 109, 109),
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
           Text(
             address,
             style: const TextStyle(

@@ -13,7 +13,6 @@ class AddressForm extends StatefulWidget {
 
 class _AddressFormState extends State<AddressForm> {
   final TextEditingController _nameCtrl = TextEditingController();
-  final TextEditingController _phoneCtrl = TextEditingController();
   final TextEditingController _addrCtrl = TextEditingController();
   bool _isDefault = false;
 
@@ -22,7 +21,6 @@ class _AddressFormState extends State<AddressForm> {
     super.initState();
     if (widget.existing != null) {
       _nameCtrl.text = widget.existing!['label'] ?? '';
-      _phoneCtrl.text = widget.existing!['number'] ?? '';
       _addrCtrl.text = widget.existing!['address'] ?? '';
       _isDefault = widget.existing!['tag'] == 'Default';
     }
@@ -31,7 +29,6 @@ class _AddressFormState extends State<AddressForm> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _phoneCtrl.dispose();
     _addrCtrl.dispose();
     super.dispose();
   }
@@ -43,7 +40,7 @@ class _AddressFormState extends State<AddressForm> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          ' Address Details',
+          'Address Details',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
@@ -51,29 +48,20 @@ class _AddressFormState extends State<AddressForm> {
           controller: _nameCtrl,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Name',
-          ),
-        ),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _phoneCtrl,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Phone Number',
-            suffixIcon: Icon(Icons.phone),
+            labelText: 'Label (e.g., Home, Office)',
           ),
         ),
         const SizedBox(height: 16),
         TextField(
           controller: _addrCtrl,
+          maxLines: 3,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Address Details',
             suffixIcon: Icon(Icons.location_on),
           ),
         ),
-
+        const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -89,9 +77,7 @@ class _AddressFormState extends State<AddressForm> {
             ),
           ],
         ),
-
         const SizedBox(height: 16),
-
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
           child: SizedBox(
@@ -100,11 +86,9 @@ class _AddressFormState extends State<AddressForm> {
             child: ElevatedButton(
               onPressed: () {
                 if (_nameCtrl.text.isNotEmpty &&
-                    _phoneCtrl.text.isNotEmpty &&
                     _addrCtrl.text.isNotEmpty) {
                   final Map<String, String> newMap = {
                     'label': _nameCtrl.text,
-                    'number': _phoneCtrl.text,
                     'address': _addrCtrl.text,
                   };
                   widget.onSave(newMap, _isDefault);
@@ -118,7 +102,7 @@ class _AddressFormState extends State<AddressForm> {
               ),
               child: Text(
                 widget.existing == null ? 'Add' : 'Update',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
                   color: Colors.white,

@@ -184,7 +184,6 @@
 //   }
 // }
 
-import 'package:first/screens/address_drawer_form.dart';
 import 'package:first/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -200,31 +199,31 @@ class _AddressScreenState extends State<AddressScreen> {
     {
       'label': 'Home',
       'tag': 'Default',
-      'number': '1234567890',
+      // 'number': '1234567890',
       'address': '61480 Outbrook Park, PC 5679',
     },
     {
       'label': 'Office',
       'tag': '',
-      'number': '1234567890',
+      // 'number': '1234567890',
       'address': '699 Meadow Valley Terra, PC 3637',
     },
     {
       'label': 'Apartment',
       'tag': '',
-      'number': '1234567890',
+      // 'number': '1234567890',
       'address': '2183 Clyde Gallagher, PC 4642',
     },
     {
       'label': "Parent's House",
       'tag': '',
-      'number': '1234567890',
+      // 'number': '1234567890',
       'address': '5299 Blue Bill Park, PC 4627',
     },
     {
       'label': 'Town Square',
       'tag': '',
-      'number': '1234567890',
+      // 'number': '1234567890',
       'address': '5373 Summerhouse, PC 4627',
     },
   ];
@@ -235,112 +234,11 @@ class _AddressScreenState extends State<AddressScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.7,
-          minChildSize: 0.4,
-          maxChildSize: 1.0,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-              child: ListView(
-                controller: scrollController,
-                children: [
-                  // Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Expanded(
-                          child: Text(
-                            editingAddr == null
-                                ? 'Add New Address'
-                                : 'Edit Address',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        if (editingAddr != null) ...[
-                          Center(
-                            child: IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (dialogContext) {
-                                    return DeleteConfirmationDialog(
-                                      title: 'Delete Address',
-                                      content:
-                                          'Are you sure you want to delete this address?',
-                                      onConfirm: () {
-                                        setState(() {
-                                          addresses.removeAt(index!);
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                size: 34,
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              style: IconButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                  255,
-                                  255,
-                                  255,
-                                  255,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  // Form
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: AddressForm(
-                      existing: editingAddr,
-                      onSave: (newMap, isDefault) {
-                        setState(() {
-                          if (isDefault) {
-                            for (var addr in addresses) {
-                              addr['tag'] = '';
-                            }
-                            newMap['tag'] = 'Default';
-                          } else {
-                            newMap['tag'] = '';
-                          }
-                          if (index != null) {
-                            addresses[index] = newMap;
-                          } else {
-                            addresses.add(newMap);
-                          }
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+        return AddressFormDialog(
+          editingAddr: editingAddr,
+          index: index,
+          addresses: addresses,
+          onSave: () => setState(() {}),
         );
       },
     );
@@ -360,7 +258,6 @@ class _AddressScreenState extends State<AddressScreen> {
                 return AddressItem(
                   label: addr['label']!,
                   tag: addr['tag']!,
-                  phoneNumber: addr['number'],
                   address: addr['address']!,
                   onEdit: () => _showAddressForm(
                     editingAddr: Map.from(addr),

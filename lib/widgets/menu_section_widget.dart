@@ -31,7 +31,7 @@ class MenuSectionWidget extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.fromLTRB(17, 17, 17, 0),
+      padding: const EdgeInsets.fromLTRB(15, 17, 15, 1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -43,13 +43,13 @@ class MenuSectionWidget extends StatelessWidget {
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 16),
           GridView.count(
             crossAxisCount: 3,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 0,
-            crossAxisSpacing: 16,
+            crossAxisSpacing: 1,
             children: [for (final item in menuItems) _buildMenuItem(item)],
           ),
         ],
@@ -76,8 +76,8 @@ class MenuSectionWidget extends StatelessWidget {
               ),
               if (item.badgeCount > 0)
                 Container(
-                  width: 28,
-                  height: 28,
+                  width: 18,
+                  height: 18,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: const Color(0xFF2196F3),
@@ -87,8 +87,8 @@ class MenuSectionWidget extends StatelessWidget {
                       '${item.badgeCount}',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -100,7 +100,7 @@ class MenuSectionWidget extends StatelessWidget {
             item.label,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
