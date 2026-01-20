@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
         titleSpacing: 0,
         title: const TopBarWidget(),
       ),
-      // endDrawer: const CategoriesDrawer(),
+      endDrawer: const CategoriesDrawer(),
       endDrawerEnableOpenDragGesture: false,
       drawerScrimColor: Colors.black.withOpacity(0.4),
       body: SingleChildScrollView(

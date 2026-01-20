@@ -63,13 +63,13 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                     );
                   },
                 ),
-                IconButton(
-                  padding: EdgeInsets.zero, 
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                ),
+                // IconButton(
+                //   padding: EdgeInsets.zero, 
+                //   icon: const Icon(Icons.menu),
+                //   onPressed: () {
+                //     Scaffold.of(context).openEndDrawer();
+                //   },
+                // ),
               ],
             ),
           ],
