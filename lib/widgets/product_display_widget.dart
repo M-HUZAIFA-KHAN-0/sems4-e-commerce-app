@@ -234,6 +234,7 @@
 
 import 'package:flutter/material.dart';
 import '../screens/product_detail_page.dart';
+import '../app_colors.dart';
 
 class ProductDisplayWidget extends StatelessWidget {
   final List<Map<String, dynamic>> cars;
@@ -493,15 +494,15 @@ Widget build(BuildContext context) {
                       child: Container(
                         width: 32,
                         height: 32,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF2F3FA),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                      decoration: BoxDecoration(
+                        color: AppColors.productCardBackground,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                         child: Icon(
                           _favorited
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color: _favorited ? Colors.red : Colors.black,
+                          color: _favorited ? AppColors.accentRed : AppColors.textBlack,
                           size: 20,
                         ),
                       ),
@@ -548,7 +549,7 @@ Widget build(BuildContext context) {
                       'reviews:',
                       style: TextStyle(
                         fontSize: 9,
-                        color: Color.fromARGB(255, 97, 96, 96),
+                        color: AppColors.formGrey96,
                       ),
                     ),
                     const SizedBox(width: 2),
@@ -588,7 +589,7 @@ Widget build(BuildContext context) {
                   style: const TextStyle(
                     fontSize: 9,
                     decoration: TextDecoration.lineThrough,
-                    color: Colors.grey,
+                    color: AppColors.textGrey,
                   ),
                 ),
               ],

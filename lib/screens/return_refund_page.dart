@@ -154,29 +154,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
 
           // Return Requests List
           if (_returnRequests.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.inbox_outlined,
-                      size: 48,
-                      color: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No Return Requests',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            const EmptyTabStateWidget(message: 'No Return Requests')
           else
             Column(
               children: _returnRequests.map((request) {
@@ -213,29 +191,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
       child: Column(
         children: [
           if (_approvedRequests.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.inbox_outlined,
-                      size: 48,
-                      color: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No Approved Requests',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            const EmptyTabStateWidget(message: 'No Approved Requests')
           else
             Column(
               children: _approvedRequests.map((request) {
@@ -272,29 +228,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
       child: Column(
         children: [
           if (_returnedRefunded.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.inbox_outlined,
-                      size: 48,
-                      color: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No Returned/Refunded Items',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            const EmptyTabStateWidget(message: 'No Returned/Refunded Items')
           else
             Column(
               children: _returnedRefunded.map((item) {
@@ -323,29 +257,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
       child: Column(
         children: [
           if (_cancelledReturns.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.inbox_outlined,
-                      size: 48,
-                      color: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No Cancelled Returns',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            const EmptyTabStateWidget(message: 'No Cancelled Returns')
           else
             Column(
               children: _cancelledReturns.map((item) {

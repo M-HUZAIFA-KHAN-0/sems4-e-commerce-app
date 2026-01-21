@@ -755,40 +755,10 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:first/screens/order_shipping_method_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
+import '../widgets/outline_input_decoration_helper.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -1203,42 +1173,36 @@ class _VoucherSectionState extends State<_VoucherSection> {
             const SizedBox(height: 12),
             TextField(
               controller: _voucherController,
-              decoration: InputDecoration(
-                hintText: "Enter voucher code",
-                hintStyle: const TextStyle(color: Color(0xFFCCCCCC)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
+              decoration:
+                  OutlineInputDecorationHelper.createInputDecoration(
+                    labelText: 'Voucher Code',
+                    hintText: "Enter voucher code",
+                    borderColor: const Color(0xFFEEEEEE),
+                    focusedBorderColor: const Color.fromARGB(255, 0, 0, 0),
+                    hintColor: const Color(0xFFCCCCCC),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    suffixIcon: _voucherController.text.isNotEmpty
+                        ? Icons.clear
+                        : null,
+                  ).copyWith(
+                    suffixIcon: _voucherController.text.isNotEmpty
+                        ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _voucherController.clear();
+                              });
+                            },
+                            child: const Icon(
+                              Icons.clear,
+                              color: Color(0xFFCCCCCC),
+                              size: 18,
+                            ),
+                          )
+                        : null,
                   ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                suffixIcon: _voucherController.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _voucherController.clear();
-                          });
-                        },
-                        child: const Icon(
-                          Icons.clear,
-                          color: Color(0xFFCCCCCC),
-                          size: 18,
-                        ),
-                      )
-                    : null,
-              ),
               onChanged: (value) {
                 setState(() {});
               },

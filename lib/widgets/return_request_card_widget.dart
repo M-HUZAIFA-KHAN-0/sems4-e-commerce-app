@@ -1,5 +1,6 @@
 import 'package:first/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import '../app_colors.dart';
 
 class ReturnRequestCardWidget extends StatelessWidget {
   final String productId;
@@ -37,25 +38,25 @@ class ReturnRequestCardWidget extends StatelessWidget {
 
   Color _getStatusBoxColor() {
     if (status == 'Approved') {
-      return const Color(0xFFE8F5E9); // Light green
+      return AppColors.statusGreenLight;
     } else {
-      return const Color(0xFFFFF3E0); // Light orange
+      return AppColors.statusOrangeLight;
     }
   }
 
   Color _getStatusBorderColor() {
     if (status == 'Approved') {
-      return const Color(0xFF4CAF50); // Green
+      return AppColors.statusGreen;
     } else {
-      return const Color(0xFFFF9800); // Orange
+      return AppColors.statusOrange;
     }
   }
 
   Color _getStatusTextColor() {
     if (status == 'Approved') {
-      return const Color(0xFF2E7D32); // Dark green
+      return AppColors.statusGreenDark;
     } else {
-      return const Color(0xFFE65100); // Dark orange
+      return AppColors.statusOrangeDark;
     }
   }
 

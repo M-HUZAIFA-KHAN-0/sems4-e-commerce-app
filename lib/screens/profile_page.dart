@@ -26,7 +26,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: 
+    Scaffold(
       // appBar: AppBar(
       //   title: const Text('Profile'),
       //   backgroundColor: Colors.white,
@@ -492,6 +493,7 @@ class _ProfilePageState extends State<ProfilePage> {
           }
         },
       ),
+    ),
     );
   }
 }

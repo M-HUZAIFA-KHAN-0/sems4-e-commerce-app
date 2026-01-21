@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../app_colors.dart';
 
 class ShopByPriceWidget extends StatelessWidget {
   // Click hone par kya hona chahiye, uska function yahan pass hoga
@@ -22,7 +23,7 @@ class ShopByPriceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 24, 10, 24),
-      color: Color(0xFFFFE66D), // Yellow Background
+      color: AppColors.primaryYellow,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,11 +83,11 @@ class PriceButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isHighlighted ? Colors.white : Color(0xFFFF0090), // Pink color
+          color: isHighlighted ? AppColors.backgroundWhite : AppColors.primaryPink,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: AppColors.textBlack.withOpacity(0.1),
               blurRadius: 4,
               offset: Offset(0, 2),
             ),

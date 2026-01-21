@@ -2,6 +2,7 @@ import 'package:first/screens/add_to_card_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import 'comparison_page.dart';
+import '../app_colors.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -893,7 +894,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF7941D),
+                    backgroundColor: AppColors.primaryOrange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -913,16 +914,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     switch (color) {
       case 'Gold':
-        colorValue = const Color(0xFFD4AF37);
+        colorValue = AppColors.accentGold;
         break;
       case 'Silver':
-        colorValue = const Color(0xFFC0C0C0);
+        colorValue = AppColors.accentSilver;
         break;
       case 'Black':
-        colorValue = Colors.black;
+        colorValue = AppColors.textBlack;
         break;
       default:
-        colorValue = Colors.grey;
+        colorValue = AppColors.textGrey;
     }
 
     return GestureDetector(

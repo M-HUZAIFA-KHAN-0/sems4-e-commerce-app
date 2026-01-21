@@ -5,6 +5,7 @@ import 'package:first/widgets/categories_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
 import 'screens/add_to_card_page.dart';
+import 'app_colors.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -74,9 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         toolbarHeight: 70,
         automaticallyImplyLeading: false,
@@ -94,22 +95,21 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               /// SPECIAL OFFERS TITLE
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 16, 10, 4),
+                padding: const EdgeInsets.fromLTRB(10, 16, 10, 0),
                 child: const Text(
                   'Special Offers',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
 
-              // const SizedBox(height: 12),
 
               /// 🔥 SPECIAL OFFERS CAROUSEL
               Padding(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(8),
                 child: const CarouselWidget(),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
               /// BRANDS
               Padding(
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50], // light blue background
+                  color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50], // light blue background
+                  color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(
@@ -282,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50], // light blue background
+                  color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(
@@ -361,7 +361,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50], // light blue background
+                  color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(

@@ -5,6 +5,7 @@ import 'package:first/screens/profile_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
+import '../app_colors.dart';
 
 class CartPageExample extends StatefulWidget {
   const CartPageExample({super.key});
@@ -127,7 +128,7 @@ class _CartPageExampleState extends State<CartPageExample> {
     final totalText = _formatMoney(totalSelected);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: AppColors.backgroundGreyLighter,
       appBar: AppBar(
         title: const Text("Cart"),
         backgroundColor: Colors.white,
@@ -556,7 +557,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                            color: AppColors.formBlack,
                           ),
                         ),
                       ),

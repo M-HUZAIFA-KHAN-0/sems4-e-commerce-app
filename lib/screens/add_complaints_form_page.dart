@@ -172,6 +172,7 @@
 // }
 
 import 'dart:io';
+import 'package:first/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:first/widgets/widgets.dart';
@@ -362,23 +363,13 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
           ],
         ),
         const SizedBox(height: 6),
-        TextField(
+        MultilineTextFieldWidget(
           controller: _messageController,
-          keyboardType: TextInputType.multiline,
-          minLines: 1, // start with one line
-          maxLines: null, // auto expand
-          decoration: InputDecoration(
-            hintText: 'Write your message',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 14,
-            ),
-          ),
+          labelText: 'Message',
+          hintText: 'Write your message',
+          maxLines: 10,
+          minLines: 1,
+          borderColor: Colors.grey.shade300,
         ),
       ],
     );

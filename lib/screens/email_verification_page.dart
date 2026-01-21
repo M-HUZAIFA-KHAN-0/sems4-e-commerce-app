@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../widgets/outline_input_decoration_helper.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   const EmailVerificationPage({super.key});
@@ -63,20 +64,18 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         maxLength: 1,
-        decoration: InputDecoration(
-          counterText: '',
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.zero,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 153, 153, 153), width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.black, width: 1.5),
-          ),
-        ),
+        decoration:
+            OutlineInputDecorationHelper.createCompactInputDecoration(
+              labelText: 'Code',
+              borderColor: const Color.fromARGB(255, 153, 153, 153),
+              focusedBorderColor: Colors.black,
+              borderRadius: 8,
+            ).copyWith(
+              counterText: '',
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.zero,
+            ),
         onChanged: (v) {
           if (v.isNotEmpty) {
             if (next != null) {

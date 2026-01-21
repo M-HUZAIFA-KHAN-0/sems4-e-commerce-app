@@ -1,6 +1,7 @@
 import 'package:first/screens/order_address_confirm_page.dart';
 import 'package:first/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import '../app_colors.dart';
 
 class ShippingOption {
   final String id;
@@ -52,7 +53,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: AppColors.backgroundGreyLight,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -142,8 +143,8 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF4CAF50)
-                : const Color(0xFFE0E0E0),
+                ? AppColors.primaryGreen
+                : AppColors.borderGrey,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
@@ -173,7 +174,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
                       margin: const EdgeInsets.all(3),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0xFF4CAF50),
+                        color: AppColors.primaryGreen,
                       ),
                     )
                   : null,

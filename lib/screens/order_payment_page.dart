@@ -36,7 +36,7 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
                   const SizedBox(height: 16),
                   _buildProgressIndicator(),
                   const SizedBox(height: 16),
-                  _card(
+                  CardContainerWidget(
                     child: PaymentOptionSelector(
                       value: paymentType,
                       onChanged: (v) {
@@ -49,7 +49,7 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
                       },
                     ),
                   ),
-                  _card(
+                  CardContainerWidget(
                     child: PaymentMethodSelector(
                       paymentType: paymentType,
                       value: paymentMethod,
@@ -58,7 +58,7 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
                       },
                     ),
                   ),
-                  _card(
+                  CardContainerWidget(
                     child: paymentMethod == "bank"
                         ? const BankTransferSection()
                         : const CreditCardSection(),
@@ -87,9 +87,9 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
       child: Row(
         children: const [
           StepCircle(active: true, label: "DELIVERY", done: true),
-          _StepLine(active: true),
+          StepLineWidget(isActive: true),
           StepCircle(active: true, label: "ADDRESS", done: true),
-          _StepLine(active: true),
+          StepLineWidget(isActive: true),
           StepCircle(active: true, label: "PAYMENT", stepNumber: 3),
         ],
       ),
@@ -113,7 +113,7 @@ class PaymentOptionSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitle("Choose Payment Option"),
+        SectionTitleWidget(text: "Choose Payment Option"),
         _radioTile("Full Payment", "full"),
         _radioTile("Advance Payment", "advance"),
       ],
@@ -121,9 +121,10 @@ class PaymentOptionSelector extends StatelessWidget {
   }
 
   Widget _radioTile(String title, String val) {
-    return GestureDetector(
+    return RadioTileWidget(
+      label: title,
+      isSelected: value == val,
       onTap: () => onChanged(val),
-      child: _radioBox(title, value == val),
     );
   }
 }
@@ -146,7 +147,7 @@ class PaymentMethodSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitle("Payment Method"),
+        SectionTitleWidget(text: "Payment Method"),
         _methodTile("Bank Transfer", "bank"),
         if (paymentType == "full") _methodTile("Credit Card", "card"),
       ],
@@ -154,9 +155,10 @@ class PaymentMethodSelector extends StatelessWidget {
   }
 
   Widget _methodTile(String title, String val) {
-    return GestureDetector(
+    return RadioTileWidget(
+      label: title,
+      isSelected: value == val,
       onTap: () => onChanged(val),
-      child: _radioBox(title, value == val),
     );
   }
 }
@@ -194,7 +196,7 @@ class _BankTransferSectionState extends State<BankTransferSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitle("Payment Details"),
+        SectionTitleWidget(text: "Payment Details"),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -210,38 +212,15 @@ class _BankTransferSectionState extends State<BankTransferSection> {
                 "Account Number: 1234567890",
                 style: TextStyle(fontSize: 14),
               ),
-
               const SizedBox(height: 12),
-
-              /// 🔔 NOTE BOX
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50, // 👈 NOTE BG COLOR
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.orange.shade300),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      size: 18,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "In case of non-payment, your order will be automatically cancelled after 4 hours.",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.orange.shade900,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              NoteBoxWidget(
+                message:
+                    "In case of non-payment, your order will be automatically cancelled after 4 hours.",
+                backgroundColor: Colors.orange.shade50,
+                textColor: Colors.orange.shade900,
+                borderColor: Colors.orange.shade300,
+                icon: Icons.info_outline,
+                iconColor: Colors.orange,
               ),
             ],
           ),
@@ -294,144 +273,30 @@ class CreditCardSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    const _SectionTitle("Card Details"),
-
-    /// 🔔 NOTE BOX
-    Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: Colors.orange.shade300,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(
-            Icons.info_outline,
-            size: 18,
-            color: Colors.orange,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              "Processing fee of 2% will be applied for credit card payments.",
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.orange.shade900,
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-    const SizedBox(height: 16),
-    TextField(
-      decoration: const InputDecoration(
-        labelText: "Card Number",
-      ),
-    ),
-    const SizedBox(height: 12),
-
-    TextField(
-      decoration: const InputDecoration(
-        labelText: "Expiry Date (MM/YY)",
-      ),
-    ),
-    const SizedBox(height: 12),
-
-    TextField(
-      decoration: const InputDecoration(
-        labelText: "CVV",
-      ),
-    ),
-  ],
-);
-
-  }
-}
-
-/// ================= REUSABLE =================
-Widget _card({required Widget child}) {
-  return Container(
-    // margin: const EdgeInsets.all(12),
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: child,
-  );
-}
-
-Widget _radioBox(String title, bool active) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      border: Border.all(
-        color: active ? Colors.blue : Colors.grey.shade300,
-        width: active ? 2 : 1,
-      ),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 18,
-          height: 18,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.blue),
-          ),
-          child: active
-              ? const Center(
-                  child: CircleAvatar(radius: 4, backgroundColor: Colors.blue),
-                )
-              : null,
+        SectionTitleWidget(text: "Card Details"),
+        NoteBoxWidget(
+          message:
+              "Processing fee of 2% will be applied for credit card payments.",
+          backgroundColor: Colors.orange.shade50,
+          textColor: Colors.orange.shade900,
+          borderColor: Colors.orange.shade300,
+          icon: Icons.info_outline,
+          iconColor: Colors.orange,
+          padding: const EdgeInsets.all(12),
         ),
-        const SizedBox(width: 12),
-        Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        const SizedBox(height: 16),
+        TextField(decoration: const InputDecoration(labelText: "Card Number")),
+        const SizedBox(height: 12),
+        TextField(
+          decoration: const InputDecoration(labelText: "Expiry Date (MM/YY)"),
+        ),
+        const SizedBox(height: 12),
+        TextField(decoration: const InputDecoration(labelText: "CVV")),
       ],
-    ),
-  );
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String text;
-  const _SectionTitle(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
     );
   }
 }
 
-class _StepLine extends StatelessWidget {
-  final bool active;
-  const _StepLine({required this.active});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 2,
-        margin: const EdgeInsets.only(bottom: 18),
-        color: active ? Colors.green : Colors.grey.shade300,
-      ),
-    );
-  }
-}
+/// End of file

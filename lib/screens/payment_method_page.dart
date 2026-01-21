@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:first/widgets/widgets.dart';
+import '../app_colors.dart';
 
 class PaymentMethodPage extends StatefulWidget {
   const PaymentMethodPage({super.key});
@@ -31,7 +32,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -47,26 +48,27 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             color: Colors.black87,
             fontSize: 18,
             fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            // Progress Indicator
-            _buildProgressIndicator(),
-            const SizedBox(height: 24),
-            // Payment Methods Selection
-            _buildPaymentMethodSelection(),
-            const SizedBox(height: 24),
-            // Payment Form
-            _buildPaymentForm(),
-            const SizedBox(height: 24),
-          ],
         ),
       ),
+      centerTitle: false,
+    ),
+    body:
+    SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          // Progress Indicator
+          _buildProgressIndicator(),
+          const SizedBox(height: 24),
+          // Payment Methods Selection
+          _buildPaymentMethodSelection(),
+          const SizedBox(height: 24),
+          // Payment Form
+          _buildPaymentForm(),
+          const SizedBox(height: 24),
+        ],
+      ),
+    )
     );
   }
 
@@ -82,10 +84,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4CAF50),
+                  color: AppColors.primaryGreen,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: Colors.white, size: 18),
+                child: const Icon(Icons.check, color: AppColors.backgroundWhite, size: 18),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -99,7 +101,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             child: Container(
               height: 2,
               margin: const EdgeInsets.only(top: 16),
-              color: const Color(0xFF4CAF50),
+              color: AppColors.primaryGreen,
             ),
           ),
           // Address Step
@@ -109,10 +111,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4CAF50),
+                  color: AppColors.primaryGreen,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: Colors.white, size: 18),
+                child: const Icon(Icons.check, color: AppColors.backgroundWhite, size: 18),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -126,7 +128,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             child: Container(
               height: 2,
               margin: const EdgeInsets.only(top: 16),
-              color: const Color(0xFF4CAF50),
+              color: AppColors.primaryGreen,
             ),
           ),
           // Payment Step
@@ -136,7 +138,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4CAF50),
+                  color: AppColors.primaryGreen,
                   shape: BoxShape.circle,
                 ),
                 child: const Text(
@@ -154,7 +156,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF4CAF50),
+                  color: AppColors.primaryGreen,
                 ),
               ),
             ],
@@ -191,7 +193,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
               color: isSelected ? const Color(0xFF2196F3) : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? const Color(0xFF2196F3) : Colors.grey[300]!,
+                color: isSelected ? AppColors.primaryBlue : Colors.grey[300]!,
                 width: 2,
               ),
             ),
@@ -208,7 +210,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: isSelected ? const Color(0xFF2196F3) : Colors.grey[700],
+              color: isSelected ? AppColors.primaryBlue : Colors.grey[700],
             ),
           ),
         ],
@@ -318,7 +320,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.backgroundWhite,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -380,10 +382,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: AppColors.backgroundWhite.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.credit_card, color: Colors.white),
+                child: const Icon(Icons.credit_card, color: AppColors.backgroundWhite),
               ),
             ],
           ),
@@ -397,10 +399,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColors.backgroundWhite.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.payment, color: Colors.white),
+                    child: const Icon(Icons.payment, color: AppColors.backgroundWhite),
                   ),
                 ],
               ),
@@ -428,7 +430,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                 ],
@@ -452,7 +454,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                 ],
@@ -487,7 +489,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all fields'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.accentRed,
         ),
       );
       return;

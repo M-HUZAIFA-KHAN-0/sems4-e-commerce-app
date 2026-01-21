@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/faq_widget.dart';
+import '../app_colors.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -71,20 +72,20 @@ class _ContactUsPageState extends State<ContactUsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             size: 20,
           ),
         ),
         title: const Text(
           'Contact Us',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -116,7 +117,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 8),
@@ -125,7 +126,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 20),
@@ -136,7 +137,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 16),
@@ -151,7 +152,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   color: const Color(0xFF2196F3),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.phone, color: Colors.white, size: 20),
+                child: const Icon(Icons.phone, color: AppColors.backgroundWhite, size: 20),
               ),
               const SizedBox(width: 12),
               Column(
@@ -162,13 +163,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: AppColors.textBlack87,
                     ),
                   ),
                   SizedBox(height: 4),
                   Text(
                     '9:00AM to 5:00PM [Mon-Sun]',
-                    style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
+                    style: TextStyle(fontSize: 12, color: AppColors.formGrey),
                   ),
                 ],
               ),
@@ -197,13 +198,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: AppColors.textBlack87,
                     ),
                   ),
                   SizedBox(height: 4),
                   Text(
                     '9:00AM to 5:00PM [Mon-Sat]',
-                    style: TextStyle(fontSize: 12, color: Color(0xFF999999)),
+                    style: TextStyle(fontSize: 12, color: AppColors.formGrey),
                   ),
                 ],
               ),
@@ -217,7 +218,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 16),
@@ -228,7 +229,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
+                  border: Border.all(color: AppColors.borderGrey),
                   borderRadius: BorderRadius.circular(12),
                   color: Colors.grey[50],
                 ),
@@ -243,7 +244,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       ),
                       child: const Icon(
                         Icons.location_on,
-                        color: Color(0xFF2196F3),
+                        color: AppColors.primaryBlue,
                         size: 42,
                       ),
                     ),
@@ -259,7 +260,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -270,7 +271,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                               height: 1.2,
                             ),
                           ),
@@ -281,7 +282,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -290,7 +291,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                         ],

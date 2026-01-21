@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../app_colors.dart';
 
 class ReviewedProductWidget extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -61,9 +62,9 @@ class ReviewedProductWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: AppColors.backgroundGrey,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+        border: Border.all(color: AppColors.borderGrey, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +104,7 @@ class ReviewedProductWidget extends StatelessWidget {
                       'Received At: ${product['receivedDate'] ?? 'Jan 15, 2026'}',
                       style: const TextStyle(
                         fontSize: 10,
-                        color: Color(0xFF999999),
+                        color: AppColors.formGrey,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -143,8 +144,8 @@ class ReviewedProductWidget extends StatelessWidget {
                                     ? Icons.star
                                     : Icons.star_outline,
                                 color: index < rating
-                                    ? const Color(0xFFFFC107)
-                                    : const Color(0xFFD0D0D0),
+                                    ? AppColors.ratingFilled
+                                    : AppColors.ratingEmpty,
                                 size: 16,
                               ),
                             );
@@ -222,7 +223,7 @@ class ReviewedProductWidget extends StatelessWidget {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8E8E8),
+                              color: AppColors.borderGreyLight,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: const Icon(

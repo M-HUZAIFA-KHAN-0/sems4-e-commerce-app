@@ -707,9 +707,20 @@ class ComplaintDetailPage extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black87,
+            size: 20,
+          ),
         ),
-        title: const Text('Complaint Details', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 18)),
+        title: const Text(
+          'Complaint Details',
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../app_colors.dart';
 
 class AddReviewWidget extends StatefulWidget {
   final String productId;
@@ -124,7 +125,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
                 child: ElevatedButton(
                   onPressed: _submitReview,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2196F3),
+                    backgroundColor: AppColors.primaryBlue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -160,7 +161,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8E8E8),
+                color: AppColors.borderGreyLight,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.image, color: Colors.grey),
@@ -179,7 +180,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
               // const SizedBox(height: 4),
@@ -220,8 +221,8 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
                 child: Icon(
                   index < _rating ? Icons.star : Icons.star_outline,
                   color: index < _rating
-                      ? const Color(0xFFFFC107)
-                      : const Color(0xFFD0D0D0),
+                      ? AppColors.ratingFilled
+                      : AppColors.ratingEmpty,
                   size: 32,
                 ),
               ),
@@ -241,7 +242,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF999999),
+            color: AppColors.formGrey,
           ),
         ),
         const SizedBox(height: 12),
@@ -261,7 +262,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
         const SizedBox(width: 8),
         Text(
           text,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF888888)),
+          style: const TextStyle(fontSize: 13, color: AppColors.textGreyLighter),
         ),
       ],
     );
@@ -280,7 +281,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF999999),
+                color: AppColors.formGrey,
               ),
             ),
           ],
@@ -293,7 +294,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
           maxLines: null,
           decoration: InputDecoration(
             hintText: 'Write Your Product Review Here',
-            hintStyle: const TextStyle(color: Color(0xFFCCCCCC)),
+            hintStyle: const TextStyle(color: AppColors.textGreyLightest),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -335,12 +336,12 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF2196F3), width: 2),
+              border: Border.all(color: AppColors.primaryBlue, width: 2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               children: const [
-                Icon(Icons.photo_camera, color: Color(0xFF2196F3), size: 32),
+                Icon(Icons.photo_camera, color: AppColors.primaryBlue, size: 32),
                 SizedBox(height: 8),
                 Text(
                   'Add Images',
@@ -367,7 +368,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
           style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF666666),
+            color: AppColors.textGreyMedium,
           ),
         ),
         const SizedBox(height: 8),
@@ -402,7 +403,7 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
                         padding: const EdgeInsets.all(4),
                         child: const Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: AppColors.backgroundWhite,
                           size: 14,
                         ),
                       ),

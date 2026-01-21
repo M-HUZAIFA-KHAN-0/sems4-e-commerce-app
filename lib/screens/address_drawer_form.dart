@@ -1,5 +1,6 @@
 // address_form.dart
 import 'package:flutter/material.dart';
+import '../widgets/widgets.dart';
 
 class AddressForm extends StatefulWidget {
   final Map<String, String>? existing;
@@ -52,14 +53,12 @@ class _AddressFormState extends State<AddressForm> {
           ),
         ),
         const SizedBox(height: 16),
-        TextField(
+        MultilineTextFieldWidget(
           controller: _addrCtrl,
+          labelText: 'Address Details',
           maxLines: 3,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Address Details',
-            suffixIcon: Icon(Icons.location_on),
-          ),
+          minLines: 3,
+          prefixIcon: Icons.location_on,
         ),
         const SizedBox(height: 16),
         Row(
@@ -85,8 +84,7 @@ class _AddressFormState extends State<AddressForm> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                if (_nameCtrl.text.isNotEmpty &&
-                    _addrCtrl.text.isNotEmpty) {
+                if (_nameCtrl.text.isNotEmpty && _addrCtrl.text.isNotEmpty) {
                   final Map<String, String> newMap = {
                     'label': _nameCtrl.text,
                     'address': _addrCtrl.text,
