@@ -604,35 +604,21 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
-import '../widgets/order_group_card_widget.dart';
+import '../widgets/widgets.dart';
+import 'order_tracking_page.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int initialTabIndex;
 
-  const OrderHistoryPage({
-    super.key,
-    this.initialTabIndex = 0,
-  });
+  const OrderHistoryPage({super.key, this.initialTabIndex = 0});
 
   @override
   State<OrderHistoryPage> createState() => _OrderHistoryPageState();
 }
 
-
 class _OrderHistoryPageState extends State<OrderHistoryPage>
     with SingleTickerProviderStateMixin {
-
   late final TabController _tabController;
 
   // ---------------- SAMPLE DATA ----------------
@@ -647,14 +633,74 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       'variant': 'Grey',
       'quantity': 1,
       'price': '\$ 1999,99',
-      'status': 'To pay',
+      'status': 'Pending',
     },
   ];
 
-  final List<Map<String, dynamic>> _toShipOrders = [];
-  final List<Map<String, dynamic>> _toReceiveOrders = [];
-  final List<Map<String, dynamic>> _toReviewOrders = [];
-  final List<Map<String, dynamic>> _cancelledOrders = [];
+  // final List<Map<String, dynamic>> _toShipOrders = [];
+  final List<Map<String, dynamic>> _toReceiveOrders = [
+    {
+      'orderNumber': 'ORD-1001',
+      'placedDate': 'Jan 07, 2026',
+      'imageUrl': 'https://picsum.photos/200?10',
+      'productName': 'AirPods Max by Apple',
+      'variant': 'Grey',
+      'quantity': 1,
+      'price': '\$ 1999,99',
+      'status': 'To pay',
+    },
+  ];
+  // final List<Map<String, dynamic>> _toReviewOrders = [];
+  final List<Map<String, dynamic>> _cancelledOrders = [
+    {
+      'orderNumber': 'ORD-1001',
+      'placedDate': 'Jan 07, 2026',
+      'imageUrl': 'https://picsum.photos/200?10',
+      'productName': 'AirPods Max by Apple',
+      'variant': 'Grey',
+      'quantity': 1,
+      'price': '\$ 1999,99',
+      'status': 'Cancelled',
+    },
+  ];
+
+  // Review related data
+  final List<Map<String, dynamic>> _pendingReviewProducts = [
+    {
+      'productName': 'Apple iPhone 15',
+      'imageUrl': 'https://picsum.photos/200?1',
+      'price': 'Rs. 79,999',
+      'quantity': 1,
+    },
+    {
+      'productName': 'Samsung Galaxy Watch',
+      'imageUrl': 'https://picsum.photos/200?2',
+      'price': 'Rs. 24,999',
+      'quantity': 1,
+    },
+  ];
+
+  final List<Map<String, dynamic>> _reviewedProducts = [
+    {
+      'productName': 'Sony WH-1000XM4 Headphones',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'rating': 5,
+      'reviewText':
+          'Excellent sound quality and very comfortable to wear. Battery life is impressive.',
+      'reviewImages': [
+        'https://picsum.photos/60?4',
+        'https://picsum.photos/60?5',
+      ],
+    },
+    {
+      'productName': 'iPad Pro 12.9',
+      'imageUrl': 'https://picsum.photos/200?6',
+      'rating': 4,
+      'reviewText':
+          'Great tablet for productivity and entertainment. Screen is beautiful.',
+      'reviewImages': [],
+    },
+  ];
 
   // ------------------------------------------------
 
@@ -664,17 +710,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   //   _tabController = TabController(length: 6, vsync: this);
   // }
 
-
-@override
-void initState() {
-  super.initState();
-  _tabController = TabController(
-    length: 6,
-    vsync: this,
-    initialIndex: widget.initialTabIndex,
-  );
-}
-
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 6,
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
+  }
 
   @override
   void dispose() {
@@ -711,10 +755,7 @@ void initState() {
             const SizedBox(height: 18),
             Text(
               text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ],
         ),
@@ -723,7 +764,10 @@ void initState() {
   }
 
   // ---------------- ORDER LIST BUILDER ----------------
-  Widget _buildList(List<Map<String, dynamic>>? items) {
+  Widget _buildList(
+    List<Map<String, dynamic>>? items, {
+    bool isOrderTracking = false,
+  }) {
     if (items == null || items.isEmpty) {
       return _emptyState('There are no orders yet');
     }
@@ -756,8 +800,96 @@ void initState() {
           placedDate: g['placedDate'],
           status: g['status'],
           items: List<Map<String, dynamic>>.from(g['items']),
+          isOrderTracking: isOrderTracking,
+          onTrackClick: isOrderTracking
+              ? () => _navigateToTracking(
+                  g['orderNumber'],
+                  '${g['items'].length}',
+                  _calculateTotal(g['items']),
+                  g['placedDate'],
+                )
+              : null,
         );
       },
+    );
+  }
+
+  double _calculateTotal(List<dynamic> items) {
+    double total = 0.0;
+    for (var item in items) {
+      String price = (item['price'] ?? '0') as String;
+      var s = price.replaceAll(RegExp(r"[^0-9,\.]"), '');
+      if (s.isNotEmpty) {
+        if (s.contains(',') && !s.contains('.')) {
+          final parts = s.split(',');
+          if (parts.last.length == 3) {
+            s = s.replaceAll(',', '');
+          } else {
+            s = s.replaceAll(',', '.');
+          }
+        } else {
+          s = s.replaceAll(',', '');
+        }
+        total += double.tryParse(s) ?? 0.0;
+      }
+    }
+    return total;
+  }
+
+  void _navigateToTracking(
+    String orderId,
+    String itemsCount,
+    double price,
+    String placedDate,
+  ) {
+    // Create sample tracking steps
+    final trackingSteps = [
+      OrderTrackingStatus(title: 'Order Placed', isCompleted: true),
+      OrderTrackingStatus(title: 'Order Confirmed', isCompleted: true),
+      OrderTrackingStatus(title: 'Order Shipped', isCompleted: true),
+      OrderTrackingStatus(title: 'Out for Delivery', isCompleted: false),
+      OrderTrackingStatus(title: 'Order Delivered', isCompleted: false),
+    ];
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderTrackingPage(
+          orderId: orderId,
+          itemsCount: itemsCount,
+          totalPrice: 'Rs. ${price.toStringAsFixed(2)}',
+          trackingSteps: trackingSteps,
+          placedDate: placedDate,
+        ),
+      ),
+    );
+  }
+
+  // ---------------- REVIEW TAB BUILDER ----------------
+  Widget _buildReviewTab() {
+    final hasPending = _pendingReviewProducts.isNotEmpty;
+    final hasReviewed = _reviewedProducts.isNotEmpty;
+
+    // If both are empty, show empty state
+    if (!hasPending && !hasReviewed) {
+      return _emptyState('No reviews yet');
+    }
+
+    return SingleChildScrollView(
+      child: Container(
+        color: const Color(0xFFF5F5F5),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            // Pending Reviews Widget
+            if (hasPending)
+              PendingReviewWidget(products: _pendingReviewProducts),
+
+            // Reviewed Products Widget
+            if (hasReviewed) ReviewedProductWidget(products: _reviewedProducts),
+          ],
+        ),
+      ),
     );
   }
 
@@ -785,10 +917,9 @@ void initState() {
               labelColor: Colors.black87,
               tabs: const [
                 Tab(text: 'All'),
-                Tab(text: 'To pay'),
-                Tab(text: 'To ship'),
-                Tab(text: 'To receive'),
-                Tab(text: 'To review'),
+                Tab(text: 'Orders'),
+                Tab(text: 'Received'),
+                Tab(text: 'Reviews'),
                 Tab(text: 'Cancellation'),
               ],
             ),
@@ -798,7 +929,6 @@ void initState() {
 
       body: Column(
         children: [
-
           // ---------- DEMO BUTTONS (REMOVE LATER) ----------
           // Padding(
           //   padding: const EdgeInsets.all(8.0),
@@ -827,17 +957,16 @@ void initState() {
               controller: _tabController,
               children: [
                 _buildList(_allOrders),
-                _buildList(_toPayOrders),
-                _buildList(_toShipOrders),
+                _buildList(_toPayOrders, isOrderTracking: true),
+                // _buildList(_toShipOrders),
                 _buildList(_toReceiveOrders),
-                _buildList(_toReviewOrders),
+                _buildReviewTab(),
                 _buildList(_cancelledOrders),
               ],
             ),
           ),
         ],
       ),
-    
     );
   }
 }

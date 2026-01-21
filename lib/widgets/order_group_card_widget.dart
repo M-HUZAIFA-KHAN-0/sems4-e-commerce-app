@@ -5,6 +5,8 @@ class OrderGroupCard extends StatelessWidget {
   final String? placedDate;
   final String? status;
   final List<Map<String, dynamic>> items;
+  final bool isOrderTracking;
+  final VoidCallback? onTrackClick;
 
   const OrderGroupCard({
     super.key,
@@ -12,6 +14,8 @@ class OrderGroupCard extends StatelessWidget {
     this.placedDate,
     this.status,
     required this.items,
+    this.isOrderTracking = false,
+    this.onTrackClick,
   });
 
   double _parsePriceToDouble(String rawPrice) {
@@ -251,7 +255,7 @@ class OrderGroupCard extends StatelessWidget {
                 // ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: isOrderTracking ? onTrackClick : () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF7A00),
                     elevation: 0, // shadow/border feel remove
@@ -266,9 +270,9 @@ class OrderGroupCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
-                    'Buy again',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  child: Text(
+                    isOrderTracking ? 'Track Now' : 'Buy again',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
               ],

@@ -496,12 +496,12 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
     return Stack(
       children: [
         Container(
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: _borderGrey),
           ),
-          padding: const EdgeInsets.all(10),
           child: Row(
             children: [
               ClipRRect(
@@ -649,7 +649,8 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                           // ),
                         ),
 
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 8),
+                        // const Spacer(),
 
                         InkWell(
                           onTap: widget.onCartTap,
@@ -674,10 +675,10 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
 
         /// 🔥 NEW RIBBON (Card-based – top-left → left-center)
         Positioned(
-          top: 14,
+          top: 11,
           left: -48,
           child: Transform.rotate(
-            angle: -0.55, // diagonal slash angle
+            angle: -0.65, // diagonal slash angle
             child: Container(
               width: 160,
               height: 26,
@@ -693,7 +694,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                 ],
               ),
               child: const Text(
-                "NEW",
+                "NEW ",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,

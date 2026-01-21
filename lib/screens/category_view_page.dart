@@ -89,28 +89,6 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// SPECIAL OFFERS TITLE
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const Text(
-              //       'Special Offers',
-              //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              //     ),
-              //   ],
-              // ),
-
-              // const SizedBox(height: 12),
-
-              // /// 🔥 SPECIAL OFFERS CAROUSEL
-              // const CarouselWidget(),
-
-              // const SizedBox(height: 24),
-
-              // /// BRANDS
-              // const BrandBoxesWidget(),
-
-              // const SizedBox(height: 24),
 
               /// TOP DEALS
               const TopDealsWidget(

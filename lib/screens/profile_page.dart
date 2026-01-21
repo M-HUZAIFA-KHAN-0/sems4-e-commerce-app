@@ -9,6 +9,7 @@ import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/notification_page.dart';
 import 'package:first/screens/order_history_page.dart';
 import 'package:first/screens/recent_view_more_page.dart';
+import 'package:first/screens/return_refund_page.dart';
 import 'package:first/screens/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
@@ -138,8 +139,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: 'My orders',
                 menuItems: [
                   MenuItemData(
-                    icon: Icons.credit_card_outlined,
-                    label: 'To Pay',
+                    // icon: Icons.view_in_ar_sharp,
+                    icon: Icons.inventory_2_sharp,
+                    label: 'Orders',
                     onTap: () {
                       Navigator.push(
                         context,
@@ -150,9 +152,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
+                  // MenuItemData(
+                  //   icon: Icons.business_center_outlined,
+                  //   label: 'To Ship',
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) =>
+                  //             const OrderHistoryPage(initialTabIndex: 2),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   MenuItemData(
-                    icon: Icons.business_center_outlined,
-                    label: 'To Ship',
+                    icon: Icons.local_shipping_outlined,
+                    label: 'Received',
                     onTap: () {
                       Navigator.push(
                         context,
@@ -164,27 +179,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   MenuItemData(
-                    icon: Icons.local_shipping_outlined,
-                    label: 'To Receive',
+                    icon: Icons.message_outlined,
+                    label: 'Reviews',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
                               const OrderHistoryPage(initialTabIndex: 3),
-                        ),
-                      );
-                    },
-                  ),
-                  MenuItemData(
-                    icon: Icons.message_outlined,
-                    label: 'To Review',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const OrderHistoryPage(initialTabIndex: 4),
                         ),
                       );
                     },
@@ -199,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              const OrderHistoryPage(initialTabIndex: 5),
+                              const OrderHistoryPage(initialTabIndex: 4),
                         ),
                       );
                     },
@@ -207,8 +209,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   MenuItemData(
                     icon: Icons.assignment_return_outlined,
                     // icon: Icons.assignment_outlined,
-                    label: 'Returns',
-                    onTap: () {},
+                    label: 'Returns & Refunds',
+                    onTap: () {
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReturnRefundPage(),
+                    ),
+                  );
+                    },
                   ),
                 ],
               ),
