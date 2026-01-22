@@ -1,7 +1,4 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:first/widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class OrderPaymentPage extends StatefulWidget {
   const OrderPaymentPage({super.key});
@@ -17,11 +14,11 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: AppColors.backgroundGreyLight,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: const BackButton(color: AppColors.textBlack),
         title: const Text(
           "Order Payment",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -253,7 +250,9 @@ class _BankTransferSectionState extends State<BankTransferSection> {
                     proofName ?? "Payment Proof (Screenshot)",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: proofName == null ? Colors.grey : Colors.black,
+                      color: proofName == null
+                          ? Colors.grey
+                          : AppColors.textBlack,
                     ),
                   ),
                 ),

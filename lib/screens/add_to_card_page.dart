@@ -1,11 +1,4 @@
-import 'package:first/main-home.dart';
-import 'package:first/screens/checkout_page.dart';
-import 'package:first/screens/notification_page.dart';
-import 'package:first/screens/profile_page.dart';
-import 'package:first/screens/wishlist_page.dart';
-import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class CartPageExample extends StatefulWidget {
   const CartPageExample({super.key});
@@ -131,8 +124,8 @@ class _CartPageExampleState extends State<CartPageExample> {
       backgroundColor: AppColors.backgroundGreyLighter,
       appBar: AppBar(
         title: const Text("Cart"),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.backgroundWhite,
+        foregroundColor: AppColors.textBlack87,
         elevation: 0,
       ),
       body: Column(
@@ -240,9 +233,8 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
     with SingleTickerProviderStateMixin {
   bool _expanded = false;
 
-  static const Color _divider = Color(0xFFE7E9EE);
-  static const Color _labelGrey = Color(0xFF9AA0A6);
-  static const Color _buttonGreen = Color(0xFF63C7A8);
+  static const Color _divider = AppColors.borderGreyLighter;
+  static const Color _labelGrey = AppColors.color9AA0A6;
 
   void _toggle() {
     setState(() => _expanded = !_expanded);
@@ -255,10 +247,10 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
       curve: Curves.easeOut,
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         boxShadow: [
           BoxShadow(
-            color: Color(0x22000000),
+            color: AppColors.shadowBlack,
             blurRadius: 12,
             offset: Offset(0, -3),
           ),
@@ -282,7 +274,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
           //             style: TextStyle(
           //               fontSize: 14,
           //               fontWeight: FontWeight.w700,
-          //               color: Colors.black87,
+          //               color: AppColors.textBlack87,
           //             ),
           //           ),
           //         ),
@@ -328,7 +320,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -414,7 +406,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                                           style: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
+                                            color: AppColors.textBlack87,
                                           ),
                                         ),
                                         const SizedBox(height: 2),
@@ -457,7 +449,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.black87,
+                                      color: AppColors.textBlack87,
                                     ),
                                   ),
                                 ],
@@ -492,7 +484,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
+                                        color: AppColors.textBlack87,
                                       ),
                                     ),
                                     const SizedBox(height: 2),
@@ -535,7 +527,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                             ],
@@ -566,7 +558,7 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: Colors.black87,
+                          color: AppColors.textBlack87,
                         ),
                       ),
                     ],

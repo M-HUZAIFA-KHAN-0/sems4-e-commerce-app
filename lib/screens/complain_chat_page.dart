@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import '../app_colors.dart';
-import '../widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -87,22 +85,22 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 1,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             size: 20,
           ),
         ),
         title: const Text(
           'Customer Support',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -139,8 +137,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: msg.isUser
-                                ? Colors.blue[400]
-                                : Colors.grey[300],
+                                ? AppColors.primaryBlue
+                                : AppColors.borderGreyLight,
                             borderRadius: BorderRadius.only(
                               topLeft: const Radius.circular(12),
                               topRight: const Radius.circular(12),
@@ -151,7 +149,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Text(
                             msg.message,
                             style: TextStyle(
-                              color: msg.isUser ? Colors.white : Colors.black87,
+                              color: msg.isUser
+                                  ? AppColors.backgroundWhite
+                                  : AppColors.textBlack87,
                               fontSize: 14,
                             ),
                           ),
@@ -161,7 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           msg.time,
                           style: const TextStyle(
                             fontSize: 10,
-                            color: Colors.grey,
+                            color: AppColors.textGreyIcon,
                           ),
                         ),
                       ],
@@ -174,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // Input box
           Container(
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
@@ -185,7 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     hintText: 'Type a message...',
                     minLines: 1,
                     maxLines: 5,
-                    borderColor: Colors.grey[200]!,
+                    borderColor: AppColors.borderGreyLighter,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 12,
@@ -198,12 +198,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue[400],
+                      color: AppColors.primaryBlue,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.send,
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                       size: 20,
                     ),
                   ),

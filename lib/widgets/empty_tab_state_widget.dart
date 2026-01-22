@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class EmptyTabStateWidget extends StatelessWidget {
   final String message;
@@ -25,7 +25,11 @@ class EmptyTabStateWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: verticalPadding),
         child: Column(
           children: [
-            Icon(icon, size: iconSize, color: iconColor ?? Colors.grey[300]),
+            Icon(
+              icon,
+              size: iconSize,
+              color: iconColor ?? AppColors.backgroundGreyLight,
+            ),
             const SizedBox(height: 12),
             Text(
               message,

@@ -1,5 +1,4 @@
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class PendingReviewWidget extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -16,7 +15,7 @@ class PendingReviewWidget extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12, bottom: 18),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -29,7 +28,7 @@ class PendingReviewWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 12),
@@ -60,7 +59,7 @@ class PendingReviewWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFEEEEEE), width: 1),
+        border: Border.all(color: AppColors.borderGreyDivider, width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +76,7 @@ class PendingReviewWidget extends StatelessWidget {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8E8E8),
+                  color: AppColors.borderGreyLight,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Icon(Icons.image, color: Colors.grey),
@@ -96,7 +95,7 @@ class PendingReviewWidget extends StatelessWidget {
                   'Received At: ${product['receivedDate'] ?? 'Jan 15, 2026'}',
                   style: const TextStyle(
                     fontSize: 10,
-                    color: Color(0xFF999999),
+                    color: AppColors.textGreyLight,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -109,7 +108,7 @@ class PendingReviewWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -122,7 +121,7 @@ class PendingReviewWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -130,7 +129,7 @@ class PendingReviewWidget extends StatelessWidget {
                       'Qty: ${product['quantity'] ?? 1}',
                       style: const TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF666666),
+                        color: AppColors.textGreyMedium,
                       ),
                     ),
                   ],
@@ -143,7 +142,7 @@ class PendingReviewWidget extends StatelessWidget {
                   buttonText: 'Add My Review',
                   height: 32,
                   fontSize: 11,
-                  width: 130,
+                  width: 140,
                 ),
               ],
             ),

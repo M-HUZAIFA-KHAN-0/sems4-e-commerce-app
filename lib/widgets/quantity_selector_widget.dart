@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class QuantitySelectorWidget extends StatelessWidget {
   final int quantity;

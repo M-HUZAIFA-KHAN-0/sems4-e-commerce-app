@@ -1,6 +1,6 @@
 import 'package:first/screens/category_view_page.dart';
 import 'package:first/widgets/categories_drawer_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class BrandBoxesWidget extends StatelessWidget {
   const BrandBoxesWidget({super.key});

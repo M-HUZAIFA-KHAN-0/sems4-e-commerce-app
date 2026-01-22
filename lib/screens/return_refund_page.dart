@@ -1,5 +1,4 @@
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 import 'return_refund_prod_form.dart';
 
 class ReturnRefundPage extends StatefulWidget {
@@ -116,7 +115,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
           //   height: 44,
           //   child: ElevatedButton(
           //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: const Color(0xFF2196F3),
+          //       backgroundColor:  AppColors.primaryBlue,
           //       shape: RoundedRectangleBorder(
           //         borderRadius: BorderRadius.circular(8),
           //       ),
@@ -131,7 +130,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
           //     child: const Text(
           //       'Request Return / Refund Product',
           //       style: TextStyle(
-          //         color: Colors.white,
+          //         color: AppColors.backgroundWhite,
           //         fontSize: 14,
           //         fontWeight: FontWeight.w600,
           //       ),
@@ -283,11 +282,11 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: AppColors.textBlack87,
         title: const Text(
           'Return / Refund',
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -299,8 +298,8 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
             child: TabBar(
               controller: _tabController,
               isScrollable: true,
-              indicatorColor: const Color(0xFF2196F3),
-              labelColor: Colors.black87,
+              indicatorColor: AppColors.primaryBlue,
+              labelColor: AppColors.textBlack87,
               tabs: const [
                 Tab(text: 'Requests'),
                 Tab(text: 'Approved'),
@@ -323,3 +322,33 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

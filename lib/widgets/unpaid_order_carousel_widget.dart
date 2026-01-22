@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:first/core/app_imports.dart';
 
 /// Model for Unpaid Order
 class UnpaidOrder {
@@ -100,7 +99,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
@@ -147,7 +146,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
           //             borderRadius: BorderRadius.circular(3),
           //             color: _currentPage == index
           //                 ? const Color(0xFFFF4757)
-          //                 : Colors.grey[300],
+          //                 : AppColors.backgroundGreyLight,
           //           ),
           //         ),
           //       ),
@@ -188,7 +187,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -211,7 +210,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                             letterSpacing: 0.3,
                           ),
                         ),
@@ -227,7 +226,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
             onPressed: order.onPayNowPressed,
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              backgroundColor: Colors.black,
+              backgroundColor: AppColors.textBlack,
               padding: const EdgeInsets.symmetric(horizontal: 18),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(26),
@@ -238,7 +237,7 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
               ),
             ),
           ),

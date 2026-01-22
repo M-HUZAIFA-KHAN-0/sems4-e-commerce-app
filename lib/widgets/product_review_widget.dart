@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ProductReview extends StatelessWidget {
   final String name;
@@ -71,7 +71,7 @@ class ProductReview extends StatelessWidget {
                     child: IconButton(
                       icon: const Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: AppColors.backgroundWhite,
                         size: 28,
                       ),
                       onPressed: () => Navigator.of(ctx).pop(),
@@ -140,7 +140,7 @@ class ProductReview extends StatelessWidget {
             child: Text(
               '+$remaining',
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -166,7 +166,7 @@ class ProductReview extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 22,
-              backgroundColor: Colors.grey[300],
+              backgroundColor: AppColors.backgroundGreyLight,
               child: Text(
                 (avatarInitials ??
                         name
@@ -176,7 +176,7 @@ class ProductReview extends StatelessWidget {
                             .join())
                     .toUpperCase(),
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: AppColors.textBlack,
                   fontWeight: FontWeight.w600,
                 ),
               ),

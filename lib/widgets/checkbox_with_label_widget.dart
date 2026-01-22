@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class CheckboxWithLabelWidget extends StatefulWidget {
   final String label;
@@ -62,7 +62,7 @@ class _CheckboxWithLabelWidgetState extends State<CheckboxWithLabelWidget> {
                   widget.labelStyle ??
                   TextStyle(
                     fontSize: widget.labelFontSize ?? 14,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
             ),
           ),

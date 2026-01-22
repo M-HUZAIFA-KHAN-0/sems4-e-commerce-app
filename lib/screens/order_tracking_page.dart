@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import '../widgets/order_tracking_widget.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class OrderTrackingPage extends StatefulWidget {
   final String orderId;
@@ -28,20 +26,20 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
-        foregroundColor: Colors.black87,
+        foregroundColor: AppColors.textBlack87,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back, color: Colors.black87),
+          child: const Icon(Icons.arrow_back, color: AppColors.textBlack87),
         ),
         title: const Text(
           'Track Order',
-          style:  TextStyle(
-          fontWeight: FontWeight.w600,
-          color: Colors.black87,
-          fontSize: 18,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: AppColors.textBlack87,
+            fontSize: 18,
+          ),
         ),
-        ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
       ),
       body: OrderTrackingWidget(
@@ -50,7 +48,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
         price: widget.totalPrice,
         trackingSteps: widget.trackingSteps,
         placedDate: widget.placedDate,
-      )
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AppBarWithBackWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -14,8 +14,8 @@ class AppBarWithBackWidget extends StatelessWidget
     this.title,
     this.actions,
     this.onBackPressed,
-    this.backgroundColor = Colors.white,
-    this.foregroundColor = Colors.black87,
+    this.backgroundColor = AppColors.backgroundWhite,
+    this.foregroundColor = AppColors.textBlack87,
     this.titleStyle,
   });
 

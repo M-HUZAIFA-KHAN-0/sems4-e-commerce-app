@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class PrimaryBtnWidget extends StatelessWidget {
   final VoidCallback onPressed;

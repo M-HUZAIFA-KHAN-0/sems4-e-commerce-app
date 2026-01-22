@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class SquareCheckboxWidget extends StatelessWidget {
   final bool isChecked;
@@ -12,8 +12,8 @@ class SquareCheckboxWidget extends StatelessWidget {
     super.key,
     required this.isChecked,
     this.size = 14,
-    this.checkedColor = Colors.black,
-    this.borderColor = Colors.black,
+    this.checkedColor = AppColors.textBlack,
+    this.borderColor = AppColors.textBlack,
     this.borderWidth = 1.2,
     this.borderRadius = 3,
   });
@@ -24,12 +24,16 @@ class SquareCheckboxWidget extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: isChecked ? checkedColor : Colors.transparent,
+        color: isChecked ? checkedColor : AppColors.transparent,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(color: borderColor, width: borderWidth),
       ),
       child: isChecked
-          ? Icon(Icons.check, size: size * 0.85, color: Colors.white)
+          ? Icon(
+              Icons.check,
+              size: size * 0.85,
+              color: AppColors.backgroundWhite,
+            )
           : null,
     );
   }

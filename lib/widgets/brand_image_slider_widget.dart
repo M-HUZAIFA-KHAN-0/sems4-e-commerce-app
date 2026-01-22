@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 /// ✅ Widget = ONLY the horizontal image slider (no title / no extra text)
 /// Parent page passes all content (images) into this widget.

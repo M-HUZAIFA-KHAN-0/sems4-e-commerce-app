@@ -1,7 +1,5 @@
 import 'package:first/screens/order_address_confirm_page.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class ShippingOption {
   final String id;
@@ -55,7 +53,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLight,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
@@ -70,7 +68,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
         child: Column(
           children: [
             // ✅ STEPS WIDGET (UNCHANGED)
-                    const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             _buildProgressIndicator(),
 
@@ -94,8 +92,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const OrderAddressConfirmPage(),
+                      builder: (context) => const OrderAddressConfirmPage(),
                     ),
                   );
                 },
@@ -139,19 +136,14 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? AppColors.primaryGreen
-                : AppColors.borderGrey,
+            color: isSelected ? AppColors.primaryGreen : AppColors.borderGrey,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-            ),
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
           ],
         ),
         child: Row(
@@ -214,7 +206,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF4CAF50),
+                color: AppColors.primaryGreen,
               ),
             ),
           ],

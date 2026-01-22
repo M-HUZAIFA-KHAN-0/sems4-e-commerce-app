@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressCardWidget extends StatelessWidget {
   final String? label;
@@ -16,7 +16,7 @@ class AddressCardWidget extends StatelessWidget {
     required this.address,
     this.tag,
     this.backgroundColor,
-    this.borderColor = const Color(0xFFE5E5E5),
+    this.borderColor = AppColors.borderGreyLight,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -32,7 +32,7 @@ class AddressCardWidget extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.circular(12),
-          color: backgroundColor ?? Colors.grey[50],
+          color: backgroundColor ?? AppColors.backgroundGrey,
         ),
         child: Row(
           children: [
@@ -63,14 +63,14 @@ class AddressCardWidget extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue[50],
+                        color: AppColors.statusBlueLight,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         tag!,
                         style: TextStyle(
                           fontSize: 10,
-                          color: Colors.blue[700],
+                          color: AppColors.primaryBlue,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -94,7 +94,7 @@ class AddressCardWidget extends StatelessWidget {
                       child: const Icon(
                         Icons.delete,
                         size: 18,
-                        color: Colors.red,
+                        color: AppColors.accentRed,
                       ),
                     ),
                 ],

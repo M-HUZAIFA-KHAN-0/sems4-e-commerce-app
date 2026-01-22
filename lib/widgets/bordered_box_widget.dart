@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class BorderedBoxWidget extends StatelessWidget {
   final Widget child;
@@ -12,7 +12,7 @@ class BorderedBoxWidget extends StatelessWidget {
   const BorderedBoxWidget({
     super.key,
     required this.child,
-    this.borderColor = const Color(0xFFE7E9EE),
+    this.borderColor = AppColors.borderGreyLighter,
     this.borderWidth = 1,
     this.borderRadius = 8,
     this.backgroundColor,

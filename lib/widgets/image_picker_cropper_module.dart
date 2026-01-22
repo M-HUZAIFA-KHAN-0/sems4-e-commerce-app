@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:first/core/app_imports.dart';
 
 class ImagePickerCropperModule {
   static final ImagePicker _imagePicker = ImagePicker();
@@ -25,19 +23,14 @@ class ImagePickerCropperModule {
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: 'Crop Image',
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
+            toolbarColor: AppColors.textBlack,
+            toolbarWidgetColor: AppColors.backgroundWhite,
             initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: true,
             hideBottomControls: true,
           ),
-          IOSUiSettings(
-            title: 'Crop Image',
-            aspectRatioLockEnabled: true,
-          ),
-          WebUiSettings(
-            context: context,
-          ),
+          IOSUiSettings(title: 'Crop Image', aspectRatioLockEnabled: true),
+          WebUiSettings(context: context),
         ],
       );
     } catch (e) {

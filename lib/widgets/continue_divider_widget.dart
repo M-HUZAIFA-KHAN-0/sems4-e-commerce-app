@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ContinueDividerWidget extends StatelessWidget {
   final String text;
@@ -9,8 +9,8 @@ class ContinueDividerWidget extends StatelessWidget {
   const ContinueDividerWidget({
     super.key,
     required this.text,
-    this.dividerColor = const Color(0xFFE7E9EE),
-    this.textColor = const Color(0xFF9AA0A6),
+    this.dividerColor = AppColors.borderGreyLighter,
+    this.textColor = AppColors.textGreyLabel,
     this.fontSize = 11,
   });
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class LogoutDrawer extends StatelessWidget {
   final VoidCallback onLogout;
@@ -46,7 +46,7 @@ class LogoutDrawer extends StatelessWidget {
                   Navigator.pop(context); // close drawer
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
+                  backgroundColor: AppColors.backgroundGreyLight,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -71,7 +71,7 @@ class LogoutDrawer extends StatelessWidget {
                 ),
                 child: const Text(
                   'Logout',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.backgroundWhite),
                 ),
               ),
             ],

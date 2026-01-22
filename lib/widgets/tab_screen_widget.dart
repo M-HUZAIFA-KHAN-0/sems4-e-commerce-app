@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 typedef TabItem = ({String label, Widget content});
 
@@ -14,8 +14,8 @@ class TabScreenWidget extends StatefulWidget {
   const TabScreenWidget({
     super.key,
     required this.tabs,
-    this.selectedTabColor = const Color(0xFF2196F3),
-    this.unselectedTabColor = const Color(0xFF999999),
+    this.selectedTabColor = AppColors.primaryBlue,
+    this.unselectedTabColor = AppColors.formGrey,
     this.emptyStateBuilder,
     this.tabHeight = 48,
     this.selectedTabStyle,
@@ -47,7 +47,7 @@ class _TabScreenWidgetState extends State<TabScreenWidget>
     return Column(
       children: [
         Container(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           height: widget.tabHeight,
           child: TabBar(
             controller: _tabController,

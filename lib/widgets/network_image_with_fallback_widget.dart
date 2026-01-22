@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class NetworkImageWithFallbackWidget extends StatelessWidget {
   final String? imageUrl;
@@ -23,7 +23,7 @@ class NetworkImageWithFallbackWidget extends StatelessWidget {
     this.backgroundColor,
     this.fallbackIcon = Icons.image_outlined,
     this.iconSize = 40,
-    this.iconColor = const Color(0xFFBDBDBD),
+    this.iconColor = AppColors.textGreyIcon,
   });
 
   @override

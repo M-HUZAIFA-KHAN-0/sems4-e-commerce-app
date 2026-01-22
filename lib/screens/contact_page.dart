@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import '../widgets/faq_widget.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
@@ -70,7 +68,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
@@ -106,7 +104,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Widget _buildGetInTouchSection() {
     return Container(
-      color: Colors.white,
+      color: AppColors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,10 +147,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2196F3),
+                  color: AppColors.primaryBlue,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.phone, color: AppColors.backgroundWhite, size: 20),
+                child: const Icon(
+                  Icons.phone,
+                  color: AppColors.backgroundWhite,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Column(
@@ -184,10 +186,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2196F3),
+                  color: AppColors.primaryBlue,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.email, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.email,
+                  color: AppColors.backgroundWhite,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Column(
@@ -231,7 +237,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.borderGrey),
                   borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[50],
+                  color: AppColors.backgroundGreyLighter,
                 ),
                 child: Row(
                   children: [
@@ -239,7 +245,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       width: 54,
                       height: 54,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2196F3).withOpacity(0.1),
+                        color: AppColors.primaryBlue.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(
@@ -320,7 +326,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               //         ),
               //         child: const Icon(
               //           Icons.apartment,
-              //           color: Color(0xFF2196F3),
+              //           color: AppColors.primaryBlue,
               //           size: 28,
               //         ),
               //       ),
@@ -331,7 +337,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               //         style: TextStyle(
               //           fontSize: 13,
               //           fontWeight: FontWeight.w600,
-              //           color: Colors.black87,
+              //           color: AppColors.textBlack87,
               //         ),
               //       ),
               //     ],
@@ -348,7 +354,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
           //   style: TextStyle(
           //     fontSize: 16,
           //     fontWeight: FontWeight.w600,
-          //     color: Colors.black87,
+          //     color: AppColors.textBlack87,
           //   ),
           // ),
           // const SizedBox(height: 16),
@@ -356,7 +362,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
           //   'To stay up to date on what\'s new, please subscribe to our media channels:',
           //   style: TextStyle(
           //     fontSize: 13,
-          //     color: Color(0xFF666666),
+          //     color: AppColors.textGreyMedium,
           //     height: 1.5,
           //   ),
           // ),
@@ -380,7 +386,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF2196F3),
+              color: AppColors.primaryBlue,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
@@ -393,7 +399,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -434,10 +440,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
       width: 30,
       height: 30,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: AppColors.backgroundWhite.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Icon(icon, color: Colors.white, size: 20),
+      child: Icon(icon, color: AppColors.backgroundWhite, size: 20),
     );
   }
 }

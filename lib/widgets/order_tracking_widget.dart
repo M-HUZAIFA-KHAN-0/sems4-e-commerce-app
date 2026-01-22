@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 // Order Status Model
 class OrderTrackingStatus {
@@ -51,7 +51,7 @@ class OrderTrackingWidget extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -72,12 +72,12 @@ class OrderTrackingWidget extends StatelessWidget {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE8F5E9),
+                          color: AppColors.statusGreenLight,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
                           Icons.local_shipping_outlined,
-                          color: Color(0xFF4CAF50),
+                          color: AppColors.primaryGreen,
                           size: 24,
                         ),
                       ),
@@ -151,7 +151,7 @@ class OrderTrackingWidget extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -183,12 +183,12 @@ class OrderTrackingWidget extends StatelessWidget {
                                   shape: BoxShape.circle,
                                   color: step.isCompleted
                                       ? const Color(0xFF4CAF50)
-                                      : const Color(0xFFE8E8E8),
+                                      : AppColors.borderGreyLight,
                                 ),
                                 child: Icon(
                                   _getIconForStep(index),
                                   color: step.isCompleted
-                                      ? Colors.white
+                                      ? AppColors.backgroundWhite
                                       : const Color(0xFFB0B0B0),
                                   size: 24,
                                 ),
@@ -199,7 +199,7 @@ class OrderTrackingWidget extends StatelessWidget {
                                   height: 30,
                                   color: step.isCompleted
                                       ? const Color(0xFF4CAF50)
-                                      : const Color(0xFFE8E8E8),
+                                      : AppColors.borderGreyLight,
                                   // margin: const EdgeInsets.only(top: 8),
                                 ),
                             ],

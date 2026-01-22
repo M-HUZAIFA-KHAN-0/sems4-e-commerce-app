@@ -1,9 +1,4 @@
-import 'package:first/main-home.dart';
-import 'package:first/screens/add_to_card_page.dart';
-import 'package:first/screens/notification_page.dart';
-import 'package:first/screens/profile_page.dart';
-import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -56,11 +51,11 @@ class _WishlistPageState extends State<WishlistPage> {
     final selectedCount = selectedItems.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: AppColors.backgroundGreyLighter,
       appBar: AppBar(
         title: const Text("Wishlist"),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.backgroundWhite,
+        foregroundColor: AppColors.textBlack87,
         elevation: 0,
       ),
       body: Column(
@@ -81,7 +76,7 @@ class _WishlistPageState extends State<WishlistPage> {
           // Add-all button shown when more than one selected
           if (selectedCount > 1)
             Container(
-              color: Colors.white,
+              color: AppColors.backgroundWhite,
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
 
               child: PrimaryBtnWidget(
@@ -115,7 +110,7 @@ class _WishlistPageState extends State<WishlistPage> {
               //       });
               //     },
               //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: Colors.black,
+              //       backgroundColor: AppColors.textBlack,
               //       shape: RoundedRectangleBorder(
               //         borderRadius: BorderRadius.circular(26),
               //       ),
@@ -125,7 +120,7 @@ class _WishlistPageState extends State<WishlistPage> {
               //       style: TextStyle(
               //         fontSize: 14,
               //         fontWeight: FontWeight.w800,
-              //         color: Colors.white,
+              //         color: AppColors.backgroundWhite,
               //       ),
               //     ),
               //   ),
@@ -252,7 +247,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
             EmptyStateWidget(
               message: widget.emptyMessage,
               icon: Icons.favorite_border,
-              iconColor: const Color(0xFF111111),
+              iconColor: AppColors.color111111,
               backgroundColor: null,
               iconSize: 20,
               containerSize: 44,
@@ -271,7 +266,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: AppColors.textBlack,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
@@ -282,7 +277,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                   ),
                 ),
               ),
@@ -307,7 +302,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
     return Column(
       children: [
         Container(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
           child: Row(
             children: [
@@ -318,17 +313,23 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: allSelected ? Colors.black : Colors.white,
+                    color: allSelected
+                        ? AppColors.textBlack
+                        : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                       color: allSelected
-                          ? Colors.black
-                          : const Color(0xFFE7E9EE),
+                          ? AppColors.textBlack
+                          : AppColors.borderGreyLighter,
                       width: 2,
                     ),
                   ),
                   child: allSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      ? const Icon(
+                          Icons.check,
+                          color: AppColors.backgroundWhite,
+                          size: 16,
+                        )
                       : const SizedBox.shrink(),
                 ),
               ),
@@ -338,7 +339,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
               const Spacer(),
@@ -368,7 +369,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
               //       vertical: 4,
               //     ),
               //     decoration: BoxDecoration(
-              //       color: const Color.fromARGB(255, 221, 221, 221),
+              //       color:  AppColors.formGrey221,
               //       borderRadius: BorderRadius.circular(8),
               //     ),
               //     child: Text(
@@ -378,7 +379,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
               //         fontWeight: FontWeight.w600,
               //         color: anySelected
               //             ? const Color.fromARGB(221, 238, 0, 0)
-              //             : const Color(0xFF9AA0A6),
+              //             :  AppColors.textGreyLabel,
               //       ),
               //     ),
               //   ),
@@ -407,7 +408,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                     size: 34,
                     color: anySelected
                         ? const Color.fromARGB(255, 0, 0, 0)
-                        : const Color(0xFF9AA0A6),
+                        : AppColors.textGreyLabel,
                   ),
                   style: IconButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -452,17 +453,17 @@ class _WishlistRowCard extends StatelessWidget {
   final VoidCallback onToggleSelected;
   final VoidCallback onRemove;
 
-  static const Color _lightGrey = Color(0xFFF3F4F6);
-  static const Color _textGrey = Color(0xFF9AA0A6);
-  static const Color _iconGrey = Color(0xFFBDBDBD);
-  static const Color _borderGrey = Color(0xFFE7E9EE);
-  static const Color _green = Color(0xFF55C59A);
+  static const Color _lightGrey = AppColors.backgroundGreyLighter;
+  static const Color _textGrey = AppColors.color9AA0A6;
+  static const Color _iconGrey = AppColors.textGreyIcon;
+  static const Color _borderGrey = AppColors.borderGreyLighter;
+  static const Color _green = AppColors.productGreenAlt;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(14),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
@@ -477,18 +478,20 @@ class _WishlistRowCard extends StatelessWidget {
               height: 20,
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color.fromARGB(255, 0, 0, 0)
-                    : Colors.white,
+                    ? AppColors.textBlack
+                    : AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected
-                      ? const Color.fromARGB(255, 0, 0, 0)
-                      : _borderGrey,
+                  color: isSelected ? AppColors.textBlack : _borderGrey,
                   width: 2,
                 ),
               ),
               child: isSelected
-                  ? const Icon(Icons.check, color: Colors.white, size: 16)
+                  ? const Icon(
+                      Icons.check,
+                      color: AppColors.backgroundWhite,
+                      size: 16,
+                    )
                   : const SizedBox.shrink(),
             ),
           ),
@@ -523,7 +526,7 @@ class _WishlistRowCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                       ),
@@ -560,7 +563,7 @@ class _WishlistRowCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w900,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                       ),
@@ -572,14 +575,14 @@ class _WishlistRowCard extends StatelessWidget {
                           width: 36,
                           height: 36,
                           // decoration: BoxDecoration(
-                          //   color: Colors.white,
+                          //   color: AppColors.backgroundWhite,
                           //   borderRadius: BorderRadius.circular(8),
                           //   border: Border.all(color: _borderGrey, width: 1.2),
                           // ),
                           child: const Icon(
                             Icons.add_shopping_cart,
                             size: 20,
-                            color: Colors.black,
+                            color: AppColors.textBlack,
                           ),
                         ),
                       ),

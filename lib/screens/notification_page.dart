@@ -1,13 +1,4 @@
-import 'package:first/main-home.dart';
-import 'package:first/screens/add_to_card_page.dart';
-import 'package:first/screens/profile_page.dart';
-import 'package:first/screens/wishlist_page.dart';
-import 'package:first/widgets/add_to_card_prod_item_widget.dart';
-import 'package:first/widgets/bottom_bar_widget.dart';
-import 'package:first/widgets/notification_card_widget.dart';
-import 'package:first/widgets/section_title_widget.dart';
-import 'package:first/widgets/notification_card_item_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -22,11 +13,11 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F8),
+      backgroundColor: AppColors.backgroundGreyLightest,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: AppColors.textBlack87,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, size: 20),
           onPressed: () => Navigator.of(context).maybePop(),

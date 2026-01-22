@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'rating': 4.5,
       'status': 'New',
       'image': Icons.directions_car,
-      'color': Colors.grey[300],
+      'color': AppColors.backgroundGreyLight,
       'discount': 20,
     },
     {
@@ -102,7 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
-
               /// 🔥 SPECIAL OFFERS CAROUSEL
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -124,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
               //   title: 'Top Brands',
               //   items: ['All', 'Mercedes', 'Tesla', 'BMW'],
               // ),
-              
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),

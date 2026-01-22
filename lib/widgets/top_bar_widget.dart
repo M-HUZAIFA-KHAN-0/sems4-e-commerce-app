@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class TopBarWidget extends StatefulWidget {
   const TopBarWidget({super.key});
@@ -22,8 +22,8 @@ class _TopBarWidgetState extends State<TopBarWidget> {
               children: [
                 CircleAvatar(
                   radius: 22,
-                  backgroundColor: Colors.grey[300],
-                  child: const Icon(Icons.person, color: Colors.grey),
+                  backgroundColor: AppColors.textGrey.withOpacity(0.3),
+                  child: const Icon(Icons.person, color: AppColors.textGrey),
                 ),
                 const SizedBox(width: 12),
                 Column(
@@ -32,7 +32,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                   children: const [
                     Text(
                       'Good Morning 👋',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: AppColors.textGrey),
                     ),
                     SizedBox(height: 4),
                     Text(
@@ -64,7 +64,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                   },
                 ),
                 // IconButton(
-                //   padding: EdgeInsets.zero, 
+                //   padding: EdgeInsets.zero,
                 //   icon: const Icon(Icons.menu),
                 //   onPressed: () {
                 //     Scaffold.of(context).openEndDrawer();
@@ -130,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -161,7 +161,10 @@ class _SearchPageState extends State<SearchPage> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search cars...',
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppColors.textGrey,
+                      ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.close),
@@ -173,11 +176,15 @@ class _SearchPageState extends State<SearchPage> {
                           : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        borderSide: BorderSide(
+                          color: AppColors.backgroundGreyLight!,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        borderSide: BorderSide(
+                          color: AppColors.backgroundGreyLight!,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -194,7 +201,7 @@ class _SearchPageState extends State<SearchPage> {
 
             const SizedBox(height: 8),
             const Divider(
-              color: Color.fromARGB(221, 155, 155, 155), // line color
+              color: AppColors.formGrey155, // line color
               thickness: 0.5, // line thickness
             ),
             const SizedBox(height: 8),

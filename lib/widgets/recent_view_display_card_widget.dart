@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ProductCardGrid extends StatelessWidget {
   final List<ProductItem> items;
@@ -101,7 +101,7 @@ class _ProductCardState extends State<ProductCard> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: AppColors.textBlack,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
@@ -109,7 +109,7 @@ class _ProductCardState extends State<ProductCard> {
                         style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: AppColors.backgroundWhite,
                         ),
                       ),
                     ),
@@ -128,12 +128,12 @@ class _ProductCardState extends State<ProductCard> {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF2F3FA),
+                          color: AppColors.productCardBackgroundLight,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           _favorited ? Icons.favorite : Icons.favorite_border,
-                          color: _favorited ? Colors.red : Colors.black,
+                          color: _favorited ? Colors.red : AppColors.textBlack,
                           size: 20,
                         ),
                       ),
@@ -188,7 +188,9 @@ class _ProductCardState extends State<ProductCard> {
                         height: 34,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xFFE7E9EE)),
+                          border: Border.all(
+                            color: AppColors.borderGreyLighter,
+                          ),
                         ),
                         child: const Icon(Icons.add_shopping_cart, size: 18),
                       ),

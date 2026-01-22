@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class PrimaryLoginButtonWidget extends StatelessWidget {
   final String text;
@@ -16,8 +16,8 @@ class PrimaryLoginButtonWidget extends StatelessWidget {
     required this.onPressed,
     this.height = 48,
     this.borderRadius = 26,
-    this.backgroundColor = Colors.black,
-    this.textColor = Colors.white,
+    this.backgroundColor = AppColors.textBlack,
+    this.textColor = AppColors.backgroundWhite,
     this.fontSize = 12.5,
     this.fontWeight = FontWeight.w800,
   });
@@ -31,7 +31,7 @@ class PrimaryLoginButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x22000000),
+            color: AppColors.formShadow,
             blurRadius: 14,
             offset: Offset(0, 6),
           ),

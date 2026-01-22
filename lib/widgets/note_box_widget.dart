@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class NoteBoxWidget extends StatelessWidget {
   final String message;
@@ -17,7 +17,7 @@ class NoteBoxWidget extends StatelessWidget {
     this.textColor = const Color.fromARGB(255, 180, 116, 40),
     this.borderColor = const Color.fromARGB(255, 255, 152, 0),
     this.icon = Icons.info_outline,
-    this.iconColor = Colors.orange,
+    this.iconColor = AppColors.primaryOrange,
     this.padding = const EdgeInsets.all(10),
     this.borderRadius,
   });

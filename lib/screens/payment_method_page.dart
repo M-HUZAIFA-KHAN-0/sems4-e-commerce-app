@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:first/widgets/widgets.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class PaymentMethodPage extends StatefulWidget {
   const PaymentMethodPage({super.key});
@@ -30,7 +28,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
@@ -38,37 +36,36 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             size: 20,
           ),
         ),
         title: const Text(
           'Payment Method',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontSize: 18,
             fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: false,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            // Progress Indicator
+            _buildProgressIndicator(),
+            const SizedBox(height: 24),
+            // Payment Methods Selection
+            _buildPaymentMethodSelection(),
+            const SizedBox(height: 24),
+            // Payment Form
+            _buildPaymentForm(),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
-      centerTitle: false,
-    ),
-    body:
-    SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          // Progress Indicator
-          _buildProgressIndicator(),
-          const SizedBox(height: 24),
-          // Payment Methods Selection
-          _buildPaymentMethodSelection(),
-          const SizedBox(height: 24),
-          // Payment Form
-          _buildPaymentForm(),
-          const SizedBox(height: 24),
-        ],
-      ),
-    )
     );
   }
 
@@ -87,7 +84,11 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                   color: AppColors.primaryGreen,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: AppColors.backgroundWhite, size: 18),
+                child: const Icon(
+                  Icons.check,
+                  color: AppColors.backgroundWhite,
+                  size: 18,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -114,7 +115,11 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                   color: AppColors.primaryGreen,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: AppColors.backgroundWhite, size: 18),
+                child: const Icon(
+                  Icons.check,
+                  color: AppColors.backgroundWhite,
+                  size: 18,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -144,7 +149,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 child: const Text(
                   '3',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -190,16 +195,22 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFF2196F3) : Colors.white,
+              color: isSelected
+                  ? AppColors.primaryBlue
+                  : AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? AppColors.primaryBlue : Colors.grey[300]!,
+                color: isSelected
+                    ? AppColors.primaryBlue
+                    : AppColors.borderGreyLight,
                 width: 2,
               ),
             ),
             child: Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.grey[600],
+              color: isSelected
+                  ? AppColors.backgroundWhite
+                  : AppColors.textGreyDark,
               size: 32,
             ),
           ),
@@ -276,16 +287,22 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: _saveCard ? const Color(0xFF4CAF50) : Colors.white,
+                  color: _saveCard
+                      ? AppColors.primaryGreen
+                      : AppColors.backgroundWhite,
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(
                     color: _saveCard
-                        ? const Color(0xFF4CAF50)
-                        : Colors.grey[300]!,
+                        ? AppColors.primaryGreen
+                        : AppColors.borderGreyLight,
                   ),
                 ),
                 child: _saveCard
-                    ? const Icon(Icons.check, color: Colors.white, size: 16)
+                    ? const Icon(
+                        Icons.check,
+                        color: AppColors.backgroundWhite,
+                        size: 16,
+                      )
                     : null,
               ),
               const SizedBox(width: 12),
@@ -294,7 +311,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
               const Spacer(),
@@ -305,8 +322,8 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                   height: 24,
                   decoration: BoxDecoration(
                     color: _saveCard
-                        ? const Color(0xFF4CAF50)
-                        : Colors.grey[300],
+                        ? AppColors.primaryGreen
+                        : AppColors.borderGreyLight,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Stack(
@@ -339,7 +356,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
             child: ElevatedButton(
               onPressed: _processPayment,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: AppColors.primaryGreen,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -349,7 +366,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                 ),
               ),
             ),
@@ -364,7 +381,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
       height: 200,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF7CB342), Color(0xFF9CCC65)],
+          colors: [AppColors.color7CB342, AppColors.color9CCC65],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -385,7 +402,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                   color: AppColors.backgroundWhite.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.credit_card, color: AppColors.backgroundWhite),
+                child: const Icon(
+                  Icons.credit_card,
+                  color: AppColors.backgroundWhite,
+                ),
               ),
             ],
           ),
@@ -402,7 +422,10 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                       color: AppColors.backgroundWhite.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.payment, color: AppColors.backgroundWhite),
+                    child: const Icon(
+                      Icons.payment,
+                      color: AppColors.backgroundWhite,
+                    ),
                   ),
                 ],
               ),
@@ -419,7 +442,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white70,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -443,7 +466,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white70,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -475,7 +498,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         letterSpacing: 2,
       ),
     );
@@ -498,7 +521,7 @@ class _PaymentMethodPageState extends State<PaymentMethodPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Payment processed successfully!'),
-        backgroundColor: Color(0xFF4CAF50),
+        backgroundColor: AppColors.primaryGreen,
       ),
     );
 

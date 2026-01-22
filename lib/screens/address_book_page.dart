@@ -38,7 +38,7 @@
 //     showModalBottomSheet(
 //       context: context,
 //       isScrollControlled: true,
-//       backgroundColor: Colors.transparent,
+//       backgroundColor: AppColors.transparent,
 //       builder: (context) {
 //         return DraggableScrollableSheet(
 //           expand: false,
@@ -48,7 +48,7 @@
 //           builder: (context, scrollController) {
 //             return Container(
 //               decoration: const BoxDecoration(
-//                 color: Colors.white,
+//                 color: AppColors.backgroundWhite,
 //                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
 //               ),
 //               child: ListView(
@@ -162,7 +162,7 @@
 //                   _showAddressForm();
 //                 },
 //                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.black,
+//                   backgroundColor: AppColors.textBlack,
 //                   shape: RoundedRectangleBorder(
 //                     borderRadius: BorderRadius.circular(26),
 //                   ),
@@ -172,7 +172,7 @@
 //                   style: TextStyle(
 //                     fontSize: 14,
 //                     fontWeight: FontWeight.w800,
-//                     color: Colors.white,
+//                     color: AppColors.backgroundWhite,
 //                   ),
 //                 ),
 //               ),
@@ -184,8 +184,7 @@
 //   }
 // }
 
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -232,7 +231,7 @@ class _AddressScreenState extends State<AddressScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) {
         return AddressFormDialog(
           editingAddr: editingAddr,
@@ -277,7 +276,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   _showAddressForm();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: AppColors.textBlack,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(26),
                   ),
@@ -287,7 +286,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                   ),
                 ),
               ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:first/core/app_imports.dart';
 
 class CancelledReturnCardWidget extends StatelessWidget {
   final String productId;
@@ -31,7 +31,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -58,7 +58,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       'Return Request Date',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Color(0xFF999999),
+                        color: AppColors.textGreyLight,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -68,7 +68,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                   ],
@@ -168,7 +168,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE8E8E8),
+                            color: AppColors.borderGreyLight,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(Icons.image, color: Colors.grey),
@@ -190,7 +190,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -203,7 +203,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -211,7 +211,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                                 'Qty: $quantity',
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: Color(0xFF666666),
+                                  color: AppColors.textGreyMedium,
                                 ),
                               ),
                             ],
@@ -223,7 +223,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                             'Received: $receivedDate',
                             style: const TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF999999),
+                              color: AppColors.textGreyLight,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -245,7 +245,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF666666),
+                        color: AppColors.textGreyMedium,
                       ),
                     ),
                     Text(
@@ -253,7 +253,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: Color.fromARGB(255, 133, 133, 133),
+                        color: AppColors.formGrey133,
                       ),
                     ),
                   ],
@@ -267,7 +267,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF666666),
+                        color: AppColors.textGreyMedium,
                       ),
                     ),
                     Text(
@@ -275,7 +275,7 @@ class CancelledReturnCardWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF4CAF50),
+                        color: AppColors.primaryGreen,
                       ),
                     ),
                   ],

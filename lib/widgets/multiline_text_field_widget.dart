@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'outline_input_decoration_helper.dart';
+import 'package:first/core/app_imports.dart';
 
 class MultilineTextFieldWidget extends StatelessWidget {
   final String labelText;
@@ -29,8 +28,8 @@ class MultilineTextFieldWidget extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.keyboardType = TextInputType.multiline,
-    this.borderColor = const Color(0xFFE0E0E0),
-    this.focusedBorderColor = const Color(0xFF2196F3),
+    this.borderColor = AppColors.borderGrey,
+    this.focusedBorderColor = AppColors.primaryBlue,
     this.borderRadius = 8,
     this.contentPadding = const EdgeInsets.all(12),
   });

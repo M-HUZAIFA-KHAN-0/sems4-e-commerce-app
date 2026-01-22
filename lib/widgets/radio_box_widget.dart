@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class RadioBoxWidget extends StatelessWidget {
   final String title;
@@ -14,9 +14,9 @@ class RadioBoxWidget extends StatelessWidget {
     required this.title,
     required this.isActive,
     required this.onTap,
-    this.activeBorderColor = Colors.blue,
-    this.inactiveBorderColor = const Color(0xFFCECECE),
-    this.activeCircleColor = Colors.blue,
+    this.activeBorderColor = AppColors.primaryBlue,
+    this.inactiveBorderColor = AppColors.colorCECECE,
+    this.activeCircleColor = AppColors.primaryBlue,
     this.padding = const EdgeInsets.all(14),
   });
 

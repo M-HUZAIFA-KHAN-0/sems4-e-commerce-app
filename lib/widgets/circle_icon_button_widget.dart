@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class CircleIconButtonWidget extends StatelessWidget {
   final IconData icon;
@@ -14,8 +14,8 @@ class CircleIconButtonWidget extends StatelessWidget {
     required this.icon,
     this.size = 42,
     this.containerSize = 42,
-    this.backgroundColor = Colors.black,
-    this.iconColor = Colors.white,
+    this.backgroundColor = AppColors.textBlack,
+    this.iconColor = AppColors.backgroundWhite,
     this.onTap,
     this.iconSize = 28,
   });

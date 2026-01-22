@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 // Data Model taaki parent se data asani se pass ho sake
 class OrderStatus {
@@ -27,7 +27,7 @@ class OrderModel {
     required this.itemsCount,
     required this.price,
     required this.timeline,
-    required this.status
+    required this.status,
   });
 }
 
@@ -50,11 +50,11 @@ class _OrderCardState extends State<OrderCard> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: AppColors.textGrey.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 5,
           ),
@@ -85,7 +85,7 @@ class _OrderCardState extends State<OrderCard> {
                         color: _statusColor(widget.order.status),
                       ),
                     ),
-                    SizedBox(width: 6)
+                    SizedBox(width: 6),
                   ],
                 ),
                 SizedBox(height: 12),
@@ -97,12 +97,12 @@ class _OrderCardState extends State<OrderCard> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE8F5E9),
+                          color: AppColors.statusGreenLight,
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: const Icon(
                           Icons.inventory_2_outlined,
-                          color: Color(0xFF4CAF50),
+                          color: AppColors.statusGreen,
                           size: 30,
                         ),
                       ),
@@ -125,7 +125,7 @@ class _OrderCardState extends State<OrderCard> {
                             Text(
                               "Placed on ${widget.order.placedDate}",
                               style: TextStyle(
-                                color: Colors.grey[600],
+                                color: AppColors.textGreyDark.withOpacity(0.6),
                                 fontSize: 12,
                               ),
                             ),
@@ -135,7 +135,9 @@ class _OrderCardState extends State<OrderCard> {
                                 Text(
                                   "Items: ",
                                   style: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: AppColors.textGreyDark.withOpacity(
+                                      0.6,
+                                    ),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -150,7 +152,9 @@ class _OrderCardState extends State<OrderCard> {
                                 Text(
                                   "Price: ",
                                   style: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: AppColors.textGreyDark.withOpacity(
+                                      0.6,
+                                    ),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -178,7 +182,7 @@ class _OrderCardState extends State<OrderCard> {
                         isExpanded
                             ? Icons.keyboard_arrow_up
                             : Icons.keyboard_arrow_down,
-                        color: const Color(0xFF4CAF50),
+                        color: AppColors.statusGreen,
                         size: 38,
                       ),
                       onPressed: () {
@@ -214,8 +218,8 @@ class _OrderCardState extends State<OrderCard> {
                               height: 12,
                               decoration: BoxDecoration(
                                 color: status.isCompleted
-                                    ? const Color(0xFF4CAF50)
-                                    : Colors.grey[300],
+                                    ? AppColors.statusGreen
+                                    : AppColors.borderGreyLight,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -224,8 +228,8 @@ class _OrderCardState extends State<OrderCard> {
                                 child: Container(
                                   width: 2,
                                   color: status.isCompleted
-                                      ? const Color(0xFF4CAF50)
-                                      : Colors.grey[300],
+                                      ? AppColors.statusGreen
+                                      : AppColors.borderGreyLight,
                                 ),
                               ),
                           ],
@@ -243,14 +247,16 @@ class _OrderCardState extends State<OrderCard> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: status.isCompleted
-                                        ? Colors.black
-                                        : Colors.grey,
+                                        ? AppColors.textBlack
+                                        : AppColors.textGrey,
                                   ),
                                 ),
                                 Text(
                                   status.date,
                                   style: TextStyle(
-                                    color: Colors.grey[500],
+                                    color: AppColors.textGreyDark.withOpacity(
+                                      0.5,
+                                    ),
                                     fontSize: 13,
                                   ),
                                 ),
@@ -271,11 +277,11 @@ class _OrderCardState extends State<OrderCard> {
 }
 
 Color _statusColor(String s) {
-    final lower = s.toLowerCase();
-    if (lower.contains('delivered') || lower.contains('received'))
-      return const Color(0xFF55C59A);
-    if (lower.contains('pending')) return const Color(0xFFFFC107);
-    if (lower.contains('cancel') || lower.contains('rejected'))
-      return const Color(0xFFE53935);
-    return Colors.black87;
-  }
+  final lower = s.toLowerCase();
+  if (lower.contains('delivered') || lower.contains('received'))
+    return AppColors.color55C59A;
+  if (lower.contains('pending')) return AppColors.primaryYellow;
+  if (lower.contains('cancel') || lower.contains('rejected'))
+    return AppColors.statusRed;
+  return AppColors.textBlack87;
+}

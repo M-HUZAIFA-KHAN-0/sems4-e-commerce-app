@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class StepLineWidget extends StatelessWidget {
   final bool isActive;
@@ -10,8 +10,8 @@ class StepLineWidget extends StatelessWidget {
   const StepLineWidget({
     super.key,
     required this.isActive,
-    this.activeColor = Colors.green,
-    this.inactiveColor = const Color(0xFFE0E0E0),
+    this.activeColor = AppColors.statusGreen,
+    this.inactiveColor = AppColors.colorE0E0E0,
     this.height = 2,
     this.margin = const EdgeInsets.only(bottom: 18),
   });

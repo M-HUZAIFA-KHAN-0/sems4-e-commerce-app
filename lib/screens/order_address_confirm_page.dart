@@ -1,6 +1,5 @@
 import 'package:first/screens/order_payment_page.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class OrderAddressConfirmPage extends StatefulWidget {
   const OrderAddressConfirmPage({super.key});
@@ -33,7 +32,7 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) {
         return AddressFormDialog(
           editingAddr: editingAddr,
@@ -48,9 +47,9 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2), // ✅ PAGE GRAY BG
+      backgroundColor: AppColors.backgroundGreyLight, // ✅ PAGE GRAY BG
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),

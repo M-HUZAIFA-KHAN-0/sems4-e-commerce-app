@@ -1,5 +1,4 @@
-﻿import 'package:flutter/material.dart';
-import '../app_colors.dart';
+﻿import 'package:first/core/app_imports.dart';
 
 class ReturnedRefundedCardWidget extends StatelessWidget {
   final String productId;
@@ -32,11 +31,11 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.shadowBlack,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -71,7 +70,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                   ],
@@ -84,7 +83,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE8F5E9),
+                    color: AppColors.statusGreenLight,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -125,7 +124,10 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             color: AppColors.borderGreyLight,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.image, color: Colors.grey),
+                          child: const Icon(
+                            Icons.image,
+                            color: AppColors.textGrey,
+                          ),
                         ),
                       ),
                     ),
@@ -144,7 +146,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -157,7 +159,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -203,12 +205,12 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50),
+                              color: AppColors.statusGreen,
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Icon(
                               Icons.check,
-                              color: Colors.white,
+                              color: AppColors.backgroundWhite,
                               size: 18,
                             ),
                           ),
@@ -217,17 +219,17 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             'Approved',
                             style: TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF666666),
+                              color: AppColors.color666666,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            receivedDate,
-                            style: const TextStyle(
-                              fontSize: 9,
-                              color: AppColors.formGrey,
-                            ),
-                          ),
+                          // Text(
+                          //   receivedDate,
+                          //   style: const TextStyle(
+                          //     fontSize: 9,
+                          //     color: AppColors.formGrey,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -235,20 +237,20 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                     // Arrow
                     // Expanded(
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
                             height: 2,
                             width: 50,
-                            color: const Color(0xFF4CAF50),
+                            color: AppColors.statusGreen,
                           ),
                           // const SizedBox(height: 14),
                           // const Icon(
                           //   Icons.arrow_forward,
                           //   size: 18,
-                          //   color: Color(0xFF4CAF50),
+                          //   color: AppColors.primaryGreen,
                           // ),
                         ],
                       ),
@@ -264,12 +266,12 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50),
+                              color: AppColors.statusGreen,
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Icon(
                               Icons.restart_alt_rounded,
-                              color: Colors.white,
+                              color: AppColors.backgroundWhite,
                               size: 18,
                             ),
                           ),
@@ -278,37 +280,37 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             'Returned',
                             style: TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF666666),
+                              color: AppColors.color666666,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            returnedDate,
-                            style: const TextStyle(
-                              fontSize: 9,
-                              color: AppColors.formGrey,
-                            ),
-                          ),
+                          // Text(
+                          //   returnedDate,
+                          //   style: const TextStyle(
+                          //     fontSize: 9,
+                          //     color: AppColors.formGrey,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
 
                     // Arrow
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             height: 2,
                             width: 50,
-                            color: const Color(0xFF4CAF50),
+                            color: AppColors.statusGreen,
                           ),
                           // const SizedBox(height: 14),
                           // const Icon(
                           //   Icons.arrow_forward,
                           //   size: 18,
-                          //   color: Color(0xFF4CAF50),
+                          //   color: AppColors.primaryGreen,
                           // ),
                         ],
                       ),
@@ -324,12 +326,12 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50),
+                              color: AppColors.statusGreen,
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Icon(
                               Icons.account_balance_wallet_outlined,
-                              color: Colors.white,
+                              color: AppColors.backgroundWhite,
                               size: 18,
                             ),
                           ),
@@ -338,17 +340,17 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                             'Refunded',
                             style: TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF666666),
+                              color: AppColors.color666666,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            returnedDate,
-                            style: const TextStyle(
-                              fontSize: 9,
-                              color: AppColors.formGrey,
-                            ),
-                          ),
+                          // Text(
+                          //   returnedDate,
+                          //   style: const TextStyle(
+                          //     fontSize: 9,
+                          //     color: AppColors.formGrey,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -368,7 +370,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF666666),
+                        color: AppColors.color666666,
                       ),
                     ),
                     Text(
@@ -390,7 +392,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF666666),
+                        color: AppColors.color666666,
                       ),
                     ),
                     Text(
@@ -398,7 +400,7 @@ class ReturnedRefundedCardWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF4CAF50),
+                        color: AppColors.statusGreen,
                       ),
                     ),
                   ],

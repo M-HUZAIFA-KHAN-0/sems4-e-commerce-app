@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:first/widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class ComparisonPage extends StatefulWidget {
   final Map<String, dynamic>? currentProduct;
@@ -121,8 +120,8 @@ class _ComparisonPageState extends State<ComparisonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.backgroundWhite,
+        foregroundColor: AppColors.textBlack87,
         elevation: 0,
         title: const Text(
           'Comparisons',
@@ -134,7 +133,7 @@ class _ComparisonPageState extends State<ComparisonPage> {
           children: [
             // top product selection slots
             Container(
-              color: Colors.grey[50],
+              color: AppColors.backgroundGrey,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               child: Row(
                 children: [

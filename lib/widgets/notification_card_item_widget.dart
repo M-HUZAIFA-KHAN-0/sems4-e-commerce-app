@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class NotificationCardItemWidget extends StatelessWidget {
   final IconData icon;
@@ -24,7 +24,7 @@ class NotificationCardItemWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
@@ -41,10 +41,10 @@ class NotificationCardItemWidget extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: AppColors.textBlack,
               borderRadius: BorderRadius.circular(26),
             ),
-            child: Icon(icon, color: Colors.white, size: 28),
+            child: Icon(icon, color: AppColors.backgroundWhite, size: 28),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -62,7 +62,7 @@ class NotificationCardItemWidget extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
+                          color: AppColors.textBlack87,
                         ),
                       ),
                     ),
@@ -71,7 +71,7 @@ class NotificationCardItemWidget extends StatelessWidget {
                       date,
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF9AA0A6),
+                        color: AppColors.textGreyLabel,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -93,7 +93,10 @@ class NotificationCardItemWidget extends StatelessWidget {
                   OutlinedButton(
                     onPressed: onButtonPressed ?? () {},
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.black, width: 1),
+                      side: const BorderSide(
+                        color: AppColors.textBlack,
+                        width: 1,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -105,7 +108,7 @@ class NotificationCardItemWidget extends StatelessWidget {
                     child: const Text(
                       'View Details',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.textBlack,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

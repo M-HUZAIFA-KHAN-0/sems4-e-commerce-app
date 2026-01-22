@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class EmptyStateWidget extends StatelessWidget {
   final String message;
@@ -32,7 +32,7 @@ class EmptyStateWidget extends StatelessWidget {
           width: containerSize,
           height: containerSize,
           decoration: BoxDecoration(
-            color: backgroundColor ?? Colors.grey[100],
+            color: backgroundColor ?? AppColors.backgroundGrey,
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: iconColor, size: iconSize),
@@ -44,7 +44,7 @@ class EmptyStateWidget extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: fontWeight,
-            color: Colors.grey[600],
+            color: AppColors.textGreyDark.withOpacity(0.6),
           ),
         ),
       ],

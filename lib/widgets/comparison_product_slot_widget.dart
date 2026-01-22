@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ComparisonProductSlotWidget extends StatefulWidget {
   final Map<String, dynamic>? product;
@@ -72,7 +72,7 @@ class _ComparisonProductSlotWidgetState
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -97,7 +97,7 @@ class _ComparisonProductSlotWidgetState
                     width: 26,
                     height: 26,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: AppColors.backgroundGreyLight,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.close, size: 18, color: Colors.grey[600]),
@@ -149,7 +149,7 @@ class _ComparisonProductSlotWidgetState
                 style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 14,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
               if (widget.product!['discount'] != null)
@@ -171,14 +171,14 @@ class _ComparisonProductSlotWidgetState
                 //   //   ),
                 //   // ),
                 // ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
               // Add to Cart button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF7941D),
+                    backgroundColor: AppColors.primaryOrange,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -187,7 +187,7 @@ class _ComparisonProductSlotWidgetState
                   child: const Text(
                     'Add to Cart',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
@@ -195,12 +195,11 @@ class _ComparisonProductSlotWidgetState
                 ),
               ),
             ] else ...[
-              Text("Select a product to compare",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  )),
+              Text(
+                "Select a product to compare",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              ),
               // Empty state with search input
               const SizedBox(height: 24),
               GestureDetector(

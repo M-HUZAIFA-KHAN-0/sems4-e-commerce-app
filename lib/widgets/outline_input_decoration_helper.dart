@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class OutlineInputDecorationHelper {
   /// Creates a standardized OutlineInputBorder with customizable styling
@@ -7,9 +7,9 @@ class OutlineInputDecorationHelper {
     String? hintText,
     IconData? prefixIcon,
     IconData? suffixIcon,
-    Color borderColor = const Color(0xFFE0E0E0),
-    Color focusedBorderColor = const Color(0xFF2196F3),
-    Color labelColor = const Color(0xFF666666),
+    Color borderColor = AppColors.borderGrey,
+    Color focusedBorderColor = AppColors.primaryBlue,
+    Color labelColor = AppColors.textGreyMedium,
     Color hintColor = const Color(0xFFAAAAAA),
     double borderRadius = 8,
     double borderWidth = 1,
@@ -54,11 +54,11 @@ class OutlineInputDecorationHelper {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius),
-        borderSide: const BorderSide(color: Color(0xFFE53935), width: 1),
+        borderSide: const BorderSide(color: AppColors.statusRed, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius),
-        borderSide: const BorderSide(color: Color(0xFFE53935), width: 2),
+        borderSide: const BorderSide(color: AppColors.statusRed, width: 2),
       ),
     );
   }
@@ -69,8 +69,8 @@ class OutlineInputDecorationHelper {
     String? hintText,
     IconData? prefixIcon,
     IconData? suffixIcon,
-    Color borderColor = const Color(0xFFE0E0E0),
-    Color focusedBorderColor = const Color(0xFF2196F3),
+    Color borderColor = AppColors.borderGrey,
+    Color focusedBorderColor = AppColors.primaryBlue,
     double borderRadius = 8,
   }) {
     return createInputDecoration(
@@ -90,8 +90,8 @@ class OutlineInputDecorationHelper {
   static InputDecoration createSearchInputDecoration({
     String labelText = 'Search',
     String? hintText,
-    Color borderColor = const Color(0xFFE0E0E0),
-    Color focusedBorderColor = const Color(0xFF2196F3),
+    Color borderColor = AppColors.borderGrey,
+    Color focusedBorderColor = AppColors.primaryBlue,
     double borderRadius = 24,
   }) {
     return createInputDecoration(
@@ -102,7 +102,7 @@ class OutlineInputDecorationHelper {
       borderColor: borderColor,
       focusedBorderColor: focusedBorderColor,
       borderRadius: borderRadius,
-      fillColor: const Color(0xFFF5F5F5),
+      fillColor: AppColors.backgroundGrey,
       filled: true,
     );
   }

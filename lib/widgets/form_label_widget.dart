@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class FormLabelWidget extends StatelessWidget {
   final String label;
@@ -17,8 +17,8 @@ class FormLabelWidget extends StatelessWidget {
     required this.label,
     this.isRequired = false,
     this.icon,
-    this.requiredColor = const Color(0xFFE53935),
-    this.labelColor = const Color(0xFF333333),
+    this.requiredColor = AppColors.statusRed,
+    this.labelColor = AppColors.textGreyDark,
     this.fontSize = 14,
     this.fontWeight = FontWeight.w600,
     this.spacing = 4,

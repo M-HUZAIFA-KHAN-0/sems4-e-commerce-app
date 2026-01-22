@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class TitleIconRowWidget extends StatelessWidget {
   final String title;
@@ -12,7 +12,7 @@ class TitleIconRowWidget extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.onTap,
-    this.iconColor = const Color(0xFF2196F3),
+    this.iconColor = AppColors.primaryBlue,
     this.titleStyle,
   });
 

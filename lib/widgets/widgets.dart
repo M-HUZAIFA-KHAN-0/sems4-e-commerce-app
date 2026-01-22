@@ -66,3 +66,6 @@ export 'tab_screen_widget.dart';
 export 'error_message_box_widget.dart';
 export 'form_label_widget.dart';
 export 'outline_input_decoration_helper.dart';
+export 'faq_widget.dart';
+export '../app_colors.dart';
+export 'pick_multiple_img_field_widget.dart';

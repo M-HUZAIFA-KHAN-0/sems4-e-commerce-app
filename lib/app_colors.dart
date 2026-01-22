@@ -48,6 +48,7 @@ class AppColors {
   static const Color borderGreyLighter = Color(0xFFE7E9EE);
   static const Color borderGreyDivider = Color(0xFFEEEEEE);
   static const Color borderGreyMedium = Color.fromARGB(255, 158, 158, 158);
+  static const Color borderblue = Color(0xFF2196F3);
 
   // Accent Colors
   static const Color accentGold = Color(0xFFD4AF37);
@@ -76,7 +77,12 @@ class AppColors {
   static const Color productCardGrey = Color.fromARGB(183, 161, 161, 161);
   static const Color productCardBackground = Color(0xFFF2F3FA);
   static const Color productDetailGrey = Color.fromARGB(255, 97, 97, 97);
-  static const Color productDetailLightGrey = Color.fromARGB(255, 233, 233, 233);
+  static const Color productDetailLightGrey = Color.fromARGB(
+    255,
+    233,
+    233,
+    233,
+  );
   static const Color productGreen = Color(0xFF63C7A8);
   static const Color productGreenAlt = Color(0xFF55C59A);
 
@@ -97,6 +103,39 @@ class AppColors {
   // static const Color socialFacebook = Color(0xFF1877F2);
   // static const Color socialInstagram = Color(0xFFE4405F);
   // static const Color socialMusic = Color(0xFF000000);
+
+  // Error/Red Colors
+  static const Color statusRed = Color(0xFFE53935);
+  static const Color statusRedLight = Color(0xFFFFCDD2);
+  static const Color red100 = Color(0xFFFFCDD2);
+  static const Color red300 = Color(0xFFEF5350);
+
+  // Additional Status Colors
+  static const Color statusPending = Color(0xFFFFC107);
+  static const Color statusDelivered = Color(0xFF55C59A);
+  static const Color statusReturned = Color(0xFFE8F5E9);
+
+  // Opaque/Overlay Colors
+  static const Color shadowBlack = Color(0x22000000);
+  static const Color shadowBlackLight = Color(0x0A000000);
+
+  // Additional Hex Colors (Used in various places)
+  static const Color color111111 = Color(0xFF111111);
+  static const Color color2196F3 = Color(0xFF2196F3);
+  static const Color color333333 = Color(0xFF333333);
+  static const Color color4CAF50 = Color(0xFF4CAF50);
+  static const Color color55C59A = Color(0xFF55C59A);
+  static const Color color666666 = Color(0xFF666666);
+  static const Color color7CB342 = Color(0xFF7CB342);
+  static const Color color9AA0A6 = Color(0xFF9AA0A6);
+  static const Color color9CCC65 = Color(0xFF9CCC65);
+  static const Color colorCECECE = Color(0xFFCECECE);
+  static const Color colorE0E0E0 = Color(0xFFE0E0E0);
+  static const Color colorE5E5E5 = Color(0xFFE5E5E5);
+  static const Color colorE8E8E8 = Color(0xFFE8E8E8);
+  static const Color colorE8F5E9 = Color(0xFFE8F5E9);
+  static const Color colorFF4757 = Color(0xFFFF4757);
+  static const Color colorFFF3E0 = Color(0xFFFFF3E0);
 
   // Transparent
   static const Color transparent = Colors.transparent;

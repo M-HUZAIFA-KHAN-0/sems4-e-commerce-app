@@ -1,7 +1,4 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:first/widgets/widgets.dart';
+// import 'package:first/core/app_imports.dart';
 
 // class AddComplaintsFormPage extends StatefulWidget {
 //   const AddComplaintsFormPage({super.key});
@@ -36,20 +33,24 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: Colors.grey[100],
+//       backgroundColor: AppColors.backgroundGrey,
 
 //       // ================= APP BAR =================
 //       appBar: AppBar(
-//         backgroundColor: Colors.white,
+//         backgroundColor: AppColors.backgroundWhite,
 //         elevation: 0,
 //         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20),
+//           icon: const Icon(
+//             Icons.arrow_back_ios,
+//             color: AppColors.textBlack87,
+//             size: 20,
+//           ),
 //           onPressed: () => Navigator.pop(context),
 //         ),
 //         title: const Text(
 //           'Add Complaint',
 //           style: TextStyle(
-//             color: Colors.black87,
+//             color: AppColors.textBlack87,
 //             fontSize: 18,
 //             fontWeight: FontWeight.w600,
 //           ),
@@ -62,7 +63,7 @@
 //         child: Container(
 //           padding: const EdgeInsets.all(16),
 //           decoration: BoxDecoration(
-//             color: Colors.white,
+//             color: AppColors.backgroundWhite,
 //             borderRadius: BorderRadius.circular(12),
 //           ),
 //           child: Column(
@@ -88,13 +89,8 @@
 
 //               const SizedBox(height: 16),
 
-//               // Description / Message
-//               buildFormField(
-//                 controller: _messageController,
-//                 label: 'Description',
-//                 icon: Icons.message,
-//                 hintText: 'Write your message',
-//               ),
+//               // Auto Expanding Description
+//               _buildAutoExpandDescriptionField(),
 
 //               const SizedBox(height: 20),
 
@@ -104,7 +100,7 @@
 //                 style: TextStyle(
 //                   fontSize: 14,
 //                   fontWeight: FontWeight.w600,
-//                   color: Colors.black87,
+//                   color: AppColors.textBlack87,
 //                 ),
 //               ),
 //               const SizedBox(height: 8),
@@ -115,16 +111,16 @@
 //                   width: double.infinity,
 //                   padding: const EdgeInsets.symmetric(vertical: 18),
 //                   decoration: BoxDecoration(
-//                     border: Border.all(color: Colors.grey.shade300),
+//                     border: Border.all(color: AppColors.borderGreyLight),
 //                     borderRadius: BorderRadius.circular(8),
 //                   ),
 //                   child: Column(
 //                     children: const [
-//                       Icon(Icons.photo_library, color: Colors.grey),
+//                       Icon(Icons.photo_library, color: AppColors.textGreyIcon),
 //                       SizedBox(height: 6),
 //                       Text(
 //                         'Tap to select images',
-//                         style: TextStyle(color: Colors.grey),
+//                         style: TextStyle(color: AppColors.textGreyIcon),
 //                       ),
 //                     ],
 //                   ),
@@ -160,7 +156,7 @@
 //               PrimaryBtnWidget(
 //                 buttonText: 'Submit Complaint',
 //                 onPressed: () {
-//                   // API call / validation yahan aayegi
+//                   // submit logic / API yahan aayegi
 //                 },
 //               ),
 //             ],
@@ -169,13 +165,71 @@
 //       ),
 //     );
 //   }
+
+//   // ================= AUTO EXPANDING DESCRIPTION FIELD =================
+//   Widget _buildAutoExpandDescriptionField() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Row(
+//           children: [
+//             Icon(Icons.message, size: 18, color: AppColors.textGreyDark),
+//             const SizedBox(width: 8),
+//             Text(
+//               'Description',
+//               style: const TextStyle(
+//                 fontSize: 12,
+//                 fontWeight: FontWeight.w600,
+//                 color: AppColors.textGreyLight,
+//               ),
+//             ),
+//           ],
+//         ),
+//         const SizedBox(height: 6),
+//         MultilineTextFieldWidget(
+//           controller: _messageController,
+//           labelText: 'Message',
+//           hintText: 'Write your message',
+//           maxLines: 10,
+//           minLines: 1,
+//           borderColor: Colors.grey.shade300,
+//         ),
+//       ],
+//     );
+//   }
 // }
 
-import 'dart:io';
-import 'package:first/widgets/custom_app_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:first/widgets/widgets.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:first/core/app_imports.dart';
 
 class AddComplaintsFormPage extends StatefulWidget {
   const AddComplaintsFormPage({super.key});
@@ -207,19 +261,23 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
     }
   }
 
+  void _removeImage(int index) {
+    setState(() => _images.removeAt(index));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.backgroundGrey,
 
       // ================= APP BAR =================
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
@@ -227,7 +285,7 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
         title: const Text(
           'Add Complaint',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -240,7 +298,7 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -266,66 +324,17 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
 
               const SizedBox(height: 16),
 
-              // Auto Expanding Description
+              // Description
               _buildAutoExpandDescriptionField(),
 
               const SizedBox(height: 20),
 
-              // ================= IMAGE PICKER =================
-              const Text(
-                'Attach Images',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+              // ================= IMAGE PICKER (REUSABLE) =================
+              ReviewImagePicker(
+                images: _images,
+                onPickImages: _pickImages,
+                onRemoveImage: _removeImage,
               ),
-              const SizedBox(height: 8),
-
-              GestureDetector(
-                onTap: _pickImages,
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: const [
-                      Icon(Icons.photo_library, color: Colors.grey),
-                      SizedBox(height: 6),
-                      Text(
-                        'Tap to select images',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              if (_images.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 80,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _images.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(_images[index].path),
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
 
               const SizedBox(height: 24),
 
@@ -350,14 +359,14 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
       children: [
         Row(
           children: [
-            Icon(Icons.message, size: 18, color: Colors.grey[600]),
+            Icon(Icons.message, size: 18, color: AppColors.textGreyDark),
             const SizedBox(width: 8),
-            Text(
+            const Text(
               'Description',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF999999),
+                color: AppColors.textGreyLight,
               ),
             ),
           ],
@@ -369,7 +378,7 @@ class _AddComplaintsFormPageState extends State<AddComplaintsFormPage> {
           hintText: 'Write your message',
           maxLines: 10,
           minLines: 1,
-          borderColor: Colors.grey.shade300,
+          borderColor: Colors.grey,
         ),
       ],
     );

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class SocialIconButtonWidget extends StatelessWidget {
   final Widget child;
@@ -15,8 +15,8 @@ class SocialIconButtonWidget extends StatelessWidget {
     required this.onTap,
     this.width = 56,
     this.height = 44,
-    this.backgroundColor = Colors.white,
-    this.borderColor = const Color(0xFFE7E9EE),
+    this.backgroundColor = AppColors.backgroundWhite,
+    this.borderColor = AppColors.borderGreyLighter,
     this.borderRadius = 12,
   });
 

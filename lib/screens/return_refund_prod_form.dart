@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
-import '../widgets/outline_input_decoration_helper.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class ReturnRefundProdForm extends StatefulWidget {
   const ReturnRefundProdForm({super.key});
@@ -150,7 +147,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Return request submitted for Order $_selectedOrderId'),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primaryGreen,
       ),
     );
 
@@ -163,9 +160,9 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: AppColors.textBlack87,
         title: const Text(
           'Request Return / Refund',
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
@@ -178,11 +175,11 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
             // Main Form Container
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: AppColors.shadowBlack,
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -198,7 +195,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: AppColors.textBlack87,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -224,7 +221,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                                   labelText: 'Order Number',
                                   hintText:
                                       'Search order number (e.g., ORD-1001)',
-                                  borderColor: const Color(0xFFE0E0E0),
+                                  borderColor: AppColors.borderGrey,
                                   focusedBorderColor: AppColors.primaryBlue,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
@@ -288,7 +285,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -299,38 +296,41 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                           'Please explain your reason for return/refund...',
                       minLines: 6,
                       maxLines: 10,
-                      borderColor: const Color(0xFFE0E0E0),
+                      borderColor: AppColors.borderGrey,
                       focusedBorderColor: AppColors.primaryBlue,
                     ),
+
+                    const SizedBox(height: 22),
+                    Divider(
+                      height: 1,
+                      color: Color.fromARGB(255, 158, 158, 158),
+                    ),
+                    SizedBox(height: 12),
+
+                    // Step 6: Refund Amount Display
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Refund Amount',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.formBlack,
+                          ),
+                        ),
+                        Text(
+                          "222",
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textGreyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
                   ],
-
-                  const SizedBox(height: 22),
-                  Divider(height: 1, color: Color.fromARGB(255, 158, 158, 158)),
-                  SizedBox(height: 12),
-
-                  // Step 6: Refund Amount Display
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Refund Amount',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                      Text(
-                        "222",
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.textGreyMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
                 ],
               ),
             ),
@@ -367,14 +367,14 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F5),
+              color: AppColors.backgroundGrey,
               border: Border.all(color: const Color(0xFFE0E0E0)),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -412,7 +412,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: AppColors.textBlack87,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -423,7 +423,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -464,7 +464,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
           ),
         ),
         const SizedBox(height: 8),
@@ -481,10 +481,10 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
               border: Border.all(
                 color: _isProductDropdownExpanded
                     ? const Color(0xFF2196F3)
-                    : const Color(0xFFE0E0E0),
+                    : AppColors.borderGrey,
               ),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
+              color: AppColors.backgroundWhite,
             ),
             child: Row(
               children: [
@@ -516,7 +516,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -524,7 +524,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                           selectedProduct['price'],
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                       ],
@@ -615,7 +615,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -626,7 +626,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.black87,
+                                      color: AppColors.textBlack87,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -677,7 +677,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
               child: Container(
                 color: isSelected
                     ? const Color(0xFFE3F2FD)
-                    : Colors.transparent,
+                    : AppColors.transparent,
                 padding: const EdgeInsets.all(12),
 
                 child: Row(
@@ -715,7 +715,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -726,7 +726,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -760,7 +760,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: AppColors.backgroundGrey,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFFE0E0E0)),
       ),
@@ -780,7 +780,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8E8E8),
+                  color: AppColors.borderGreyLight,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Icon(Icons.image, color: Colors.grey),
@@ -810,7 +810,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -819,7 +819,7 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
                 ),
               ],
@@ -847,14 +847,14 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F5),
+              color: AppColors.backgroundGrey,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: const Color(0xFFE0E0E0)),
             ),
@@ -888,14 +888,14 @@ class _ReturnRefundProdFormState extends State<ReturnRefundProdForm> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundWhite,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: const Color(0xFFE0E0E0)),
             ),

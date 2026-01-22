@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class ComparisonSpecsWidget extends StatelessWidget {
   final Map<String, dynamic>? product1;
@@ -142,7 +141,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -167,7 +166,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                               height: 1.5,
                             ),
                           ),
@@ -190,7 +189,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                               height: 1.5,
                             ),
                           ),

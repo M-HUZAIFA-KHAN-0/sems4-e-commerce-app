@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 enum ErrorType { error, success, warning, info }
 
@@ -32,9 +32,9 @@ class ErrorMessageBoxWidget extends StatelessWidget {
     return backgroundColor ??
         switch (type) {
           ErrorType.error => const Color(0xFFFFEBEE),
-          ErrorType.success => const Color(0xFFE8F5E9),
-          ErrorType.warning => const Color(0xFFFFF3E0),
-          ErrorType.info => const Color(0xFFE3F2FD),
+          ErrorType.success => AppColors.statusGreenLight,
+          ErrorType.warning => AppColors.statusOrangeLight,
+          ErrorType.info => AppColors.statusBlueLight,
         };
   }
 
@@ -42,8 +42,8 @@ class ErrorMessageBoxWidget extends StatelessWidget {
     return textColor ??
         switch (type) {
           ErrorType.error => const Color(0xFFC62828),
-          ErrorType.success => const Color(0xFF2E7D32),
-          ErrorType.warning => const Color(0xFFE65100),
+          ErrorType.success => AppColors.statusGreenDark,
+          ErrorType.warning => AppColors.statusOrangeDark,
           ErrorType.info => const Color(0xFF1565C0),
         };
   }
@@ -51,7 +51,7 @@ class ErrorMessageBoxWidget extends StatelessWidget {
   Color _getBorderColor() {
     return borderColor ??
         switch (type) {
-          ErrorType.error => const Color(0xFFEF5350),
+          ErrorType.error => AppColors.red300,
           ErrorType.success => const Color(0xFF66BB6A),
           ErrorType.warning => const Color(0xFFFFA726),
           ErrorType.info => const Color(0xFF42A5F5),

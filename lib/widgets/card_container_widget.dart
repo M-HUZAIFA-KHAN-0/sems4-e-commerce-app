@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class CardContainerWidget extends StatelessWidget {
   final Widget child;
@@ -13,7 +13,7 @@ class CardContainerWidget extends StatelessWidget {
     required this.child,
     this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.padding = const EdgeInsets.all(16),
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = AppColors.backgroundWhite,
     this.borderRadius = 12,
     this.boxShadow,
   });
@@ -28,7 +28,7 @@ class CardContainerWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: boxShadow != null
             ? [boxShadow!]
-            : [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8)],
+            : [BoxShadow(color: AppColors.shadowBlack, blurRadius: 8)],
       ),
       child: child,
     );

@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import '../app_colors.dart';
+import 'package:first/core/app_imports.dart';
 
 class ReviewedProductWidget extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -15,7 +14,7 @@ class ReviewedProductWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -28,7 +27,7 @@ class ReviewedProductWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
           const SizedBox(height: 12),
@@ -85,7 +84,7 @@ class ReviewedProductWidget extends StatelessWidget {
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8E8E8),
+                      color: AppColors.borderGreyLight,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Icon(Icons.image, color: Colors.grey),
@@ -118,10 +117,10 @@ class ReviewedProductWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 6),
 
                     Row(
@@ -131,7 +130,7 @@ class ReviewedProductWidget extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF666666),
+                            color: AppColors.textGreyMedium,
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -173,7 +172,7 @@ class ReviewedProductWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF666666),
+                    color: AppColors.textGreyMedium,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -183,7 +182,7 @@ class ReviewedProductWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                     height: 1.4,
                   ),
                 ),
@@ -201,7 +200,7 @@ class ReviewedProductWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF666666),
+                    color: AppColors.textGreyMedium,
                   ),
                 ),
                 const SizedBox(height: 8),

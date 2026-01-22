@@ -1,6 +1,5 @@
 import 'package:first/screens/address_drawer_form.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 /// Reusable Address Form Dialog
 /// Handles both Add and Update operations for addresses
@@ -72,7 +71,7 @@ class AddressFormDialog extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
           child: ListView(
@@ -108,10 +107,10 @@ class AddressFormDialog extends StatelessWidget {
                           icon: const Icon(
                             Icons.delete,
                             size: 34,
-                            color: Colors.black,
+                            color: AppColors.textBlack,
                           ),
                           style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: AppColors.backgroundWhite,
                           ),
                         ),
                       ),

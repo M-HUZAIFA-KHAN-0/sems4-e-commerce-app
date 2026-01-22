@@ -1,139 +1,4 @@
-// import 'package:flutter/material.dart';
-
-// class TopDealsWidget extends StatefulWidget {
-//   const TopDealsWidget({super.key});
-
-//   @override
-//   State<TopDealsWidget> createState() => _TopDealsWidgetState();
-// }
-
-// class _TopDealsWidgetState extends State<TopDealsWidget> {
-//   String selectedFilter = 'All';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: const [
-//             Text(
-//               'top Brands',    
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             // Text('See All', style: TextStyle(color: Colors.blue, fontSize: 12)),
-//           ],
-//         ),
-//         const SizedBox(height: 12),
-//         SingleChildScrollView(
-//           scrollDirection: Axis.horizontal,
-//           child: Row(
-//             children: [
-//               FilterChip(
-//                 label: 'All',
-//                 isSelected: selectedFilter == 'All',
-//                 onTap: () {
-//                   setState(() {
-//                     selectedFilter = 'All';
-//                   });
-//                 },
-//               ),
-//               const SizedBox(width: 8),
-//               FilterChip(
-//                 label: 'Mercedes',
-//                 isSelected: selectedFilter == 'Mercedes',
-//                 onTap: () {
-//                   setState(() {
-//                     selectedFilter = 'Mercedes';
-//                   });
-//                 },
-//               ),
-//               const SizedBox(width: 8),
-//               FilterChip(
-//                 label: 'Tesla',
-//                 isSelected: selectedFilter == 'Tesla',
-//                 onTap: () {
-//                   setState(() {
-//                     selectedFilter = 'Tesla';
-//                   });
-//                 },
-//               ),
-//               const SizedBox(width: 8),
-//               FilterChip(
-//                 label: 'BMW',
-//                 isSelected: selectedFilter == 'BMW',
-//                 onTap: () {
-//                   setState(() {
-//                     selectedFilter = 'BMW';
-//                   });
-//                 },
-//               ),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// /// Individual Filter Chip widget
-// class FilterChip extends StatelessWidget {
-//   final String label;
-//   final bool isSelected;
-//   final VoidCallback onTap;
-
-//   const FilterChip({super.key, 
-//     required this.label,
-//     required this.isSelected,
-//     required this.onTap,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//         decoration: BoxDecoration(
-//           color: isSelected ? Colors.black : Colors.transparent,
-//           borderRadius: BorderRadius.circular(20),
-//           border: Border.all(color: isSelected ? Colors.black : Colors.grey),
-//         ),
-//         child: Text(
-//           label,
-//           style: TextStyle(
-//             color: isSelected ? Colors.white : Colors.black,
-//             fontSize: 12,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class TopDealsWidget extends StatefulWidget {
   /// Tabs / filters / navigation items
@@ -169,8 +34,7 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
   void initState() {
     super.initState();
 
-    final List<String> safeItems =
-        widget.items.whereType<String>().toList();
+    final List<String> safeItems = widget.items.whereType<String>().toList();
 
     if (safeItems.isEmpty) return;
 
@@ -184,8 +48,7 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> safeItems =
-        widget.items.whereType<String>().toList();
+    final List<String> safeItems = widget.items.whereType<String>().toList();
 
     // Agar items hi nahi hain
     if (safeItems.isEmpty) {
@@ -197,10 +60,7 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
       children: [
         Text(
           widget.title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         SingleChildScrollView(
@@ -211,7 +71,7 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
 
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
+                child: DealFilterChip(
                   label: item,
                   isSelected: isSelected,
                   onTap: () {
@@ -233,12 +93,12 @@ class _TopDealsWidgetState extends State<TopDealsWidget> {
 }
 
 /// Single chip UI (DESIGN SAME – untouched)
-class FilterChip extends StatelessWidget {
+class DealFilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const FilterChip({
+  const DealFilterChip({
     super.key,
     required this.label,
     required this.isSelected,
@@ -250,21 +110,16 @@ class FilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.black : Colors.transparent,
+          color: isSelected ? Colors.black : AppColors.transparent,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? Colors.black : Colors.grey,
-          ),
+          border: Border.all(color: isSelected ? Colors.black : Colors.grey),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected ? AppColors.backgroundWhite : AppColors.textBlack,
             fontSize: 12,
           ),
         ),
