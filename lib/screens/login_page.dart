@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 import 'signup_page.dart';
-import '../widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -64,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Icon(
                         Icons.directions_car_filled,
                         size: 74,
-                        color: Colors.black,
+                        color: AppColors.textBlack,
                       ),
                       const SizedBox(height: 16),
 
@@ -73,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: Colors.black,
+                          color: AppColors.textBlack,
                         ),
                       ),
 
@@ -131,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                                     "Remember me",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.black87,
+                                      color: AppColors.textBlack87,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -167,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                 _SocialIconButton(
                                   child: const Icon(
                                     Icons.apple,
-                                    color: Colors.black,
+                                    color: AppColors.textBlack,
                                     size: 22,
                                   ),
                                   onTap: () {},
@@ -184,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                                   "Don’t have an account? ",
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Color(0xFF9AA0A6),
+                                    color: AppColors.textGreyLabel,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -201,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                     "Sign up",
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.black,
+                                      color: AppColors.textBlack,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
@@ -221,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
       ),
-   );
+    );
   }
 }
 
@@ -235,12 +234,12 @@ class _SquareCheck extends StatelessWidget {
       width: 14,
       height: 14,
       decoration: BoxDecoration(
-        color: isChecked ? Colors.black : Colors.transparent,
+        color: isChecked ? Colors.black : AppColors.transparent,
         borderRadius: BorderRadius.circular(3),
-        border: Border.all(color: Colors.black, width: 1.2),
+        border: Border.all(color: AppColors.textBlack, width: 1.2),
       ),
       child: isChecked
-          ? const Icon(Icons.check, size: 12, color: Colors.white)
+          ? const Icon(Icons.check, size: 12, color: AppColors.backgroundWhite)
           : null,
     );
   }
@@ -260,7 +259,7 @@ class _PrimaryButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(26),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x22000000),
+            color: AppColors.formShadow,
             blurRadius: 14,
             offset: Offset(0, 6),
           ),
@@ -269,7 +268,7 @@ class _PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.textBlack,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(26),
@@ -280,7 +279,7 @@ class _PrimaryButton extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12.5,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
           ),
         ),
       ),
@@ -305,7 +304,7 @@ class _ContinueDivider extends StatelessWidget {
             text,
             style: const TextStyle(
               fontSize: 11,
-              color: Color(0xFF9AA0A6),
+              color: AppColors.textGreyLabel,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -332,9 +331,9 @@ class _SocialIconButton extends StatelessWidget {
         width: 56,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE7E9EE), width: 1),
+          border: Border.all(color: AppColors.borderGreyLighter, width: 1),
         ),
         child: Center(child: child),
       ),
@@ -361,7 +360,7 @@ class _GoogleG extends StatelessWidget {
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w900,
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
         ),
       ),
     );

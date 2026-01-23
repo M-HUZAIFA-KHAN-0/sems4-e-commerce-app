@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import '../widgets/faq_widget.dart';
+import 'package:first/core/app_imports.dart';
 
 class FAQsPage extends StatefulWidget {
   const FAQsPage({super.key});
@@ -74,22 +73,22 @@ class _FAQsPageState extends State<FAQsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             size: 20,
           ),
         ),
         title: const Text(
           'FAQs',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),

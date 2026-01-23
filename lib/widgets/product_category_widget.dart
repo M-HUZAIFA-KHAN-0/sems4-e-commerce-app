@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ShopCategoryCardData {
   const ShopCategoryCardData({
@@ -25,7 +25,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   final void Function(int index)? onTap;
 
   static const Color _panelBg = Color(0xFFF6D5FB); // light pink
-  static const Color _purple = Color(0xFF8902A4);  // border + bottom bar
+  static const Color _purple = Color(0xFF8902A4); // border + bottom bar
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: AppColors.textBlack,
               ),
             ),
           ),
@@ -80,11 +80,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
 }
 
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({
-    required this.data,
-    required this.purple,
-    this.onTap,
-  });
+  const _CategoryCard({required this.data, required this.purple, this.onTap});
 
   final ShopCategoryCardData data;
   final Color purple;
@@ -94,7 +90,7 @@ class _CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(color: purple, width: 3.5),
       ),
@@ -104,7 +100,7 @@ class _CategoryCard extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(18),
                 child: Image(
@@ -125,7 +121,7 @@ class _CategoryCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                   height: 1.15,
                 ),
               ),
@@ -137,9 +133,6 @@ class _CategoryCard extends StatelessWidget {
 
     if (onTap == null) return card;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: card,
-    );
+    return GestureDetector(onTap: onTap, child: card);
   }
 }

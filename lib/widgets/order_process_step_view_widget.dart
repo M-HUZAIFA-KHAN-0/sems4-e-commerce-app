@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-
+import 'package:first/core/app_imports.dart';
 
 class StepCircle extends StatelessWidget {
   final bool active;
@@ -23,8 +21,19 @@ class StepCircle extends StatelessWidget {
           radius: 16,
           backgroundColor: active ? Colors.green : Colors.grey.shade300,
           child: done
-              ? const Icon(Icons.check, color: Colors.white, size: 18)
-              : Text('$stepNumber', style: TextStyle(color: active ? Colors.white : Colors.black),),
+              ? const Icon(
+                  Icons.check,
+                  color: AppColors.backgroundWhite,
+                  size: 18,
+                )
+              : Text(
+                  '$stepNumber',
+                  style: TextStyle(
+                    color: active
+                        ? AppColors.backgroundWhite
+                        : AppColors.textBlack,
+                  ),
+                ),
         ),
         const SizedBox(height: 6),
         Text(label, style: TextStyle(fontSize: 10)),
@@ -32,9 +41,6 @@ class StepCircle extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class StepLine extends StatelessWidget {
   final bool active;

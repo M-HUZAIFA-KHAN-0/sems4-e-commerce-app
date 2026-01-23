@@ -1,5 +1,5 @@
 // address_form.dart
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressForm extends StatefulWidget {
   final Map<String, String>? existing;
@@ -52,14 +52,12 @@ class _AddressFormState extends State<AddressForm> {
           ),
         ),
         const SizedBox(height: 16),
-        TextField(
+        MultilineTextFieldWidget(
           controller: _addrCtrl,
+          labelText: 'Address Details',
           maxLines: 3,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Address Details',
-            suffixIcon: Icon(Icons.location_on),
-          ),
+          minLines: 3,
+          prefixIcon: Icons.location_on,
         ),
         const SizedBox(height: 16),
         Row(
@@ -67,8 +65,8 @@ class _AddressFormState extends State<AddressForm> {
           children: [
             Checkbox(
               value: _isDefault,
-              activeColor: const Color.fromARGB(255, 0, 0, 0),
-              checkColor: Colors.white,
+              activeColor: AppColors.formBlack,
+              checkColor: AppColors.backgroundWhite,
               onChanged: (val) => setState(() => _isDefault = val!),
             ),
             const Text(
@@ -85,8 +83,7 @@ class _AddressFormState extends State<AddressForm> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                if (_nameCtrl.text.isNotEmpty &&
-                    _addrCtrl.text.isNotEmpty) {
+                if (_nameCtrl.text.isNotEmpty && _addrCtrl.text.isNotEmpty) {
                   final Map<String, String> newMap = {
                     'label': _nameCtrl.text,
                     'address': _addrCtrl.text,
@@ -95,7 +92,7 @@ class _AddressFormState extends State<AddressForm> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: AppColors.textBlack,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(26),
                 ),
@@ -105,7 +102,7 @@ class _AddressFormState extends State<AddressForm> {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                 ),
               ),
             ),

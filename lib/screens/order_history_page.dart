@@ -1,638 +1,17 @@
-// import 'package:flutter/material.dart';
-
-// // Status enum for order tracking
-// enum OrderStatus { placed, confirmed, shipped, outForDelivery, delivered }
-
-// // Model for order status update
-// class OrderStatusStep {
-//   final OrderStatus status;
-//   final String label;
-//   final DateTime? date;
-//   bool isCompleted;
-
-//   OrderStatusStep({
-//     required this.status,
-//     required this.label,
-//     this.date,
-//     this.isCompleted = false,
-//   });
-// }
-
-// // Order model
-// class Order {
-//   final String orderId;
-//   final DateTime placedDate;
-//   final int itemsCount;
-//   final double price;
-//   final List<OrderStatusStep> statusSteps;
-//   OrderStatus currentStatus;
-
-//   Order({
-//     required this.orderId,
-//     required this.placedDate,
-//     required this.itemsCount,
-//     required this.price,
-//     required this.currentStatus,
-//     required this.statusSteps,
-//   });
-
-//   void updateStatus(OrderStatus newStatus) {
-//     currentStatus = newStatus;
-//     // Update completed status for all steps up to current
-//     for (var step in statusSteps) {
-//       step.isCompleted =
-//           _getStatusIndex(step.status) <= _getStatusIndex(newStatus);
-//     }
-//   }
-
-//   int _getStatusIndex(OrderStatus status) {
-//     return [
-//       OrderStatus.placed,
-//       OrderStatus.confirmed,
-//       OrderStatus.shipped,
-//       OrderStatus.outForDelivery,
-//       OrderStatus.delivered,
-//     ].indexOf(status);
-//   }
-// }
-
-// class OrderHistoryPage extends StatefulWidget {
-//   const OrderHistoryPage({super.key});
-
-//   @override
-//   State<OrderHistoryPage> createState() => _OrderHistoryPageState();
-// }
-
-// class _OrderHistoryPageState extends State<OrderHistoryPage> {
-//   late List<Order> _orders;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializeOrders();
-//   }
-
-//   void _initializeOrders() {
-//     _orders = [
-//       Order(
-//         orderId: '90B97',
-//         placedDate: DateTime(2021, 10, 28),
-//         itemsCount: 2,
-//         price: 18.90,
-//         currentStatus: OrderStatus.delivered,
-//         statusSteps: [
-//           OrderStatusStep(
-//             status: OrderStatus.placed,
-//             label: 'Order placed',
-//             date: DateTime(2021, 10, 19),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.confirmed,
-//             label: 'Order confirmed',
-//             date: DateTime(2021, 10, 20),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.shipped,
-//             label: 'Order shipped',
-//             date: DateTime(2021, 10, 22),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.outForDelivery,
-//             label: 'Out for delivery',
-//             date: DateTime(2021, 10, 23),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.delivered,
-//             label: 'Order delivered',
-//             date: DateTime(2021, 10, 24),
-//             isCompleted: true,
-//           ),
-//         ],
-//       ),
-//       Order(
-//         orderId: '90B97',
-//         placedDate: DateTime(2021, 10, 28),
-//         itemsCount: 1,
-//         price: 10.90,
-//         currentStatus: OrderStatus.shipped,
-//         statusSteps: [
-//           OrderStatusStep(
-//             status: OrderStatus.placed,
-//             label: 'Order placed',
-//             date: DateTime(2021, 10, 19),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.confirmed,
-//             label: 'Order confirmed',
-//             date: DateTime(2021, 10, 20),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.shipped,
-//             label: 'Order shipped',
-//             date: DateTime(2021, 10, 22),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.outForDelivery,
-//             label: 'Out for delivery',
-//             date: null,
-//             isCompleted: false,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.delivered,
-//             label: 'Order delivered',
-//             date: null,
-//             isCompleted: false,
-//           ),
-//         ],
-//       ),
-//       Order(
-//         orderId: '90B97',
-//         placedDate: DateTime(2021, 8, 29),
-//         itemsCount: 1,
-//         price: 10.90,
-//         currentStatus: OrderStatus.delivered,
-//         statusSteps: [
-//           OrderStatusStep(
-//             status: OrderStatus.placed,
-//             label: 'Order placed',
-//             date: DateTime(2021, 8, 25),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.confirmed,
-//             label: 'Order confirmed',
-//             date: DateTime(2021, 8, 26),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.shipped,
-//             label: 'Order shipped',
-//             date: DateTime(2021, 8, 27),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.outForDelivery,
-//             label: 'Out for delivery',
-//             date: DateTime(2021, 8, 28),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.delivered,
-//             label: 'Order delivered',
-//             date: DateTime(2021, 8, 29),
-//             isCompleted: true,
-//           ),
-//         ],
-//       ),
-//       Order(
-//         orderId: '90B97',
-//         placedDate: DateTime(2021, 8, 29),
-//         itemsCount: 2,
-//         price: 18.90,
-//         currentStatus: OrderStatus.delivered,
-//         statusSteps: [
-//           OrderStatusStep(
-//             status: OrderStatus.placed,
-//             label: 'Order placed',
-//             date: DateTime(2021, 8, 25),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.confirmed,
-//             label: 'Order confirmed',
-//             date: DateTime(2021, 8, 26),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.shipped,
-//             label: 'Order shipped',
-//             date: DateTime(2021, 8, 27),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.outForDelivery,
-//             label: 'Out for delivery',
-//             date: DateTime(2021, 8, 28),
-//             isCompleted: true,
-//           ),
-//           OrderStatusStep(
-//             status: OrderStatus.delivered,
-//             label: 'Order delivered',
-//             date: DateTime(2021, 8, 29),
-//             isCompleted: true,
-//           ),
-//         ],
-//       ),
-//     ];
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.grey[50],
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//         leading: GestureDetector(
-//           onTap: () => Navigator.pop(context),
-//           child: const Icon(
-//             Icons.arrow_back_ios,
-//             color: Colors.black87,
-//             size: 20,
-//           ),
-//         ),
-//         title: const Text(
-//           'My Order',
-//           style: TextStyle(
-//             color: Colors.black87,
-//             fontSize: 18,
-//             fontWeight: FontWeight.w600,
-//           ),
-//         ),
-//         centerTitle: false,
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.filter_list, color: Colors.black87),
-//             onPressed: () {
-//               ScaffoldMessenger.of(context).showSnackBar(
-//                 const SnackBar(
-//                   content: Text('Filter options'),
-//                   duration: Duration(milliseconds: 1000),
-//                 ),
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//       body: ListView.builder(
-//         padding: const EdgeInsets.symmetric(vertical: 16),
-//         itemCount: _orders.length,
-//         itemBuilder: (context, index) {
-//           return OrderCard(
-//             order: _orders[index],
-//             onStatusUpdate: (newStatus) {
-//               setState(() {
-//                 _orders[index].updateStatus(newStatus);
-//               });
-//             },
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// class OrderCard extends StatefulWidget {
-//   final Order order;
-//   final Function(OrderStatus) onStatusUpdate;
-
-//   const OrderCard({
-//     super.key,
-//     required this.order,
-//     required this.onStatusUpdate,
-//   });
-
-//   @override
-//   State<OrderCard> createState() => _OrderCardState();
-// }
-
-// class _OrderCardState extends State<OrderCard> {
-//   bool _isExpanded = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.05),
-//             blurRadius: 8,
-//             spreadRadius: 0,
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         children: [
-//           // Order Header
-//           GestureDetector(
-//             onTap: () => setState(() => _isExpanded = !_isExpanded),
-//             child: Padding(
-//               padding: const EdgeInsets.all(16),
-//               child: Column(
-//                 children: [
-//                   Row(
-//                     children: [
-//                       Container(
-//                         width: 40,
-//                         height: 40,
-//                         decoration: BoxDecoration(
-//                           color: const Color(0xFF7CB342).withOpacity(0.1),
-//                           borderRadius: BorderRadius.circular(8),
-//                         ),
-//                         child: const Icon(
-//                           Icons.local_shipping,
-//                           color: Color(0xFF7CB342),
-//                           size: 20,
-//                         ),
-//                       ),
-//                       const SizedBox(width: 12),
-//                       Expanded(
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text(
-//                               'Order #${order.orderId}',
-//                               style: const TextStyle(
-//                                 fontSize: 14,
-//                                 fontWeight: FontWeight.w600,
-//                                 color: Colors.black87,
-//                               ),
-//                             ),
-//                             const SizedBox(height: 4),
-//                             Text(
-//                               'Placed on ${_formatDate(order.placedDate)}',
-//                               style: TextStyle(
-//                                 fontSize: 12,
-//                                 fontWeight: FontWeight.w400,
-//                                 color: Colors.grey[600],
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       Container(
-//                         width: 32,
-//                         height: 32,
-//                         decoration: const BoxDecoration(
-//                           color: Color(0xFF4CAF50),
-//                           shape: BoxShape.circle,
-//                         ),
-//                         child: const Icon(
-//                           Icons.check,
-//                           color: Colors.white,
-//                           size: 18,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                   const SizedBox(height: 12),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Text(
-//                         'Items ${order.itemsCount}, Koroi: \$${order.price.toStringAsFixed(2)}',
-//                         style: TextStyle(
-//                           fontSize: 12,
-//                           fontWeight: FontWeight.w500,
-//                           color: Colors.grey[600],
-//                         ),
-//                       ),
-//                       Icon(
-//                         _isExpanded ? Icons.expand_less : Icons.expand_more,
-//                         color: Colors.grey[400],
-//                         size: 20,
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           // Order Status Timeline (Expanded)
-//           if (_isExpanded) ...[
-//             const Divider(height: 1, color: Color(0xFFEEEEEE)),
-//             Padding(
-//               padding: const EdgeInsets.all(16),
-//               child: Column(
-//                 children: [
-//                   _buildOrderTimeline(),
-//                   const SizedBox(height: 16),
-//                   // Update Status Buttons (for testing)
-//                   _buildStatusUpdateButtons(),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildOrderTimeline() {
-//     return Column(
-//       children: List.generate(order.statusSteps.length, (index) {
-//         final step = order.statusSteps[index];
-//         final isLast = index == order.statusSteps.length - 1;
-
-//         return Column(
-//           children: [
-//             Row(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 // Timeline dot
-//                 Column(
-//                   children: [
-//                     Container(
-//                       width: 20,
-//                       height: 20,
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         color: step.isCompleted
-//                             ? const Color(0xFF4CAF50)
-//                             : Colors.grey[300],
-//                         border: Border.all(
-//                           color: step.isCompleted
-//                               ? const Color(0xFF4CAF50)
-//                               : Colors.grey[400]!,
-//                           width: 2,
-//                         ),
-//                       ),
-//                       child: step.isCompleted
-//                           ? const Icon(
-//                               Icons.check,
-//                               color: Colors.white,
-//                               size: 12,
-//                             )
-//                           : null,
-//                     ),
-//                     if (!isLast)
-//                       Container(
-//                         width: 2,
-//                         height: 30,
-//                         color: step.isCompleted
-//                             ? const Color(0xFF4CAF50)
-//                             : Colors.grey[300],
-//                         margin: const EdgeInsets.only(top: 4),
-//                       ),
-//                   ],
-//                 ),
-//                 const SizedBox(width: 12),
-//                 // Status text
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         step.label,
-//                         style: TextStyle(
-//                           fontSize: 13,
-//                           fontWeight: FontWeight.w600,
-//                           color: step.isCompleted
-//                               ? Colors.black87
-//                               : Colors.grey[600],
-//                         ),
-//                       ),
-//                       if (step.date != null)
-//                         Padding(
-//                           padding: const EdgeInsets.only(top: 4),
-//                           child: Text(
-//                             _formatDate(step.date!),
-//                             style: TextStyle(
-//                               fontSize: 12,
-//                               fontWeight: FontWeight.w400,
-//                               color: Colors.grey[600],
-//                             ),
-//                           ),
-//                         )
-//                       else
-//                         Padding(
-//                           padding: const EdgeInsets.only(top: 4),
-//                           child: Text(
-//                             'pending',
-//                             style: TextStyle(
-//                               fontSize: 12,
-//                               fontWeight: FontWeight.w400,
-//                               color: Colors.grey[500],
-//                             ),
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         );
-//       }),
-//     );
-//   }
-
-//   Widget _buildStatusUpdateButtons() {
-//     final statuses = [
-//       OrderStatus.placed,
-//       OrderStatus.confirmed,
-//       OrderStatus.shipped,
-//       OrderStatus.outForDelivery,
-//       OrderStatus.delivered,
-//     ];
-
-//     return Wrap(
-//       spacing: 8,
-//       children: statuses.map((status) {
-//         return SizedBox(
-//           height: 32,
-//           child: ElevatedButton.icon(
-//             onPressed: () {
-//               onStatusUpdate(status);
-//               ScaffoldMessenger.of(context).showSnackBar(
-//                 SnackBar(
-//                   content: Text(
-//                     'Status updated to ${status.toString().split('.').last}',
-//                   ),
-//                   duration: const Duration(milliseconds: 1500),
-//                 ),
-//               );
-//             },
-//             style: ElevatedButton.styleFrom(
-//               backgroundColor: order.currentStatus == status
-//                   ? const Color(0xFF4CAF50)
-//                   : Colors.grey[300],
-//               padding: const EdgeInsets.symmetric(horizontal: 12),
-//             ),
-//             icon: const Icon(Icons.update, size: 14),
-//             label: Text(
-//               _statusLabel(status),
-//               style: const TextStyle(fontSize: 11),
-//             ),
-//           ),
-//         );
-//       }).toList(),
-//     );
-//   }
-
-//   String _formatDate(DateTime date) {
-//     final months = [
-//       'January',
-//       'February',
-//       'March',
-//       'April',
-//       'May',
-//       'June',
-//       'July',
-//       'August',
-//       'September',
-//       'October',
-//       'November',
-//       'December',
-//     ];
-//     return '${months[date.month - 1]} ${date.day} ${date.year}';
-//   }
-
-//   String _statusLabel(OrderStatus status) {
-//     switch (status) {
-//       case OrderStatus.placed:
-//         return 'Placed';
-//       case OrderStatus.confirmed:
-//         return 'Confirmed';
-//       case OrderStatus.shipped:
-//         return 'Shipped';
-//       case OrderStatus.outForDelivery:
-//         return 'Out';
-//       case OrderStatus.delivered:
-//         return 'Delivered';
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
-import '../widgets/order_group_card_widget.dart';
+import 'package:first/core/app_imports.dart';
+import 'order_tracking_page.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int initialTabIndex;
 
-  const OrderHistoryPage({
-    super.key,
-    this.initialTabIndex = 0,
-  });
+  const OrderHistoryPage({super.key, this.initialTabIndex = 0});
 
   @override
   State<OrderHistoryPage> createState() => _OrderHistoryPageState();
 }
 
-
 class _OrderHistoryPageState extends State<OrderHistoryPage>
     with SingleTickerProviderStateMixin {
-
   late final TabController _tabController;
 
   // ---------------- SAMPLE DATA ----------------
@@ -647,14 +26,74 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       'variant': 'Grey',
       'quantity': 1,
       'price': '\$ 1999,99',
-      'status': 'To pay',
+      'status': 'Pending',
     },
   ];
 
-  final List<Map<String, dynamic>> _toShipOrders = [];
-  final List<Map<String, dynamic>> _toReceiveOrders = [];
-  final List<Map<String, dynamic>> _toReviewOrders = [];
-  final List<Map<String, dynamic>> _cancelledOrders = [];
+  // final List<Map<String, dynamic>> _toShipOrders = [];
+  final List<Map<String, dynamic>> _toReceiveOrders = [
+    {
+      'orderNumber': 'ORD-1001',
+      'placedDate': 'Jan 07, 2026',
+      'imageUrl': 'https://picsum.photos/200?10',
+      'productName': 'AirPods Max by Apple',
+      'variant': 'Grey',
+      'quantity': 1,
+      'price': '\$ 1999,99',
+      'status': 'To pay',
+    },
+  ];
+  // final List<Map<String, dynamic>> _toReviewOrders = [];
+  final List<Map<String, dynamic>> _cancelledOrders = [
+    {
+      'orderNumber': 'ORD-1001',
+      'placedDate': 'Jan 07, 2026',
+      'imageUrl': 'https://picsum.photos/200?10',
+      'productName': 'AirPods Max by Apple',
+      'variant': 'Grey',
+      'quantity': 1,
+      'price': '\$ 1999,99',
+      'status': 'Cancelled',
+    },
+  ];
+
+  // Review related data
+  final List<Map<String, dynamic>> _pendingReviewProducts = [
+    {
+      'productName': 'Apple iPhone 15',
+      'imageUrl': 'https://picsum.photos/200?1',
+      'price': 'Rs. 79,999',
+      'quantity': 1,
+    },
+    {
+      'productName': 'Samsung Galaxy Watch',
+      'imageUrl': 'https://picsum.photos/200?2',
+      'price': 'Rs. 24,999',
+      'quantity': 1,
+    },
+  ];
+
+  final List<Map<String, dynamic>> _reviewedProducts = [
+    {
+      'productName': 'Sony WH-1000XM4 Headphones',
+      'imageUrl': 'https://picsum.photos/200?3',
+      'rating': 5,
+      'reviewText':
+          'Excellent sound quality and very comfortable to wear. Battery life is impressive.',
+      'reviewImages': [
+        'https://picsum.photos/60?4',
+        'https://picsum.photos/60?5',
+      ],
+    },
+    {
+      'productName': 'iPad Pro 12.9',
+      'imageUrl': 'https://picsum.photos/200?6',
+      'rating': 4,
+      'reviewText':
+          'Great tablet for productivity and entertainment. Screen is beautiful.',
+      'reviewImages': [],
+    },
+  ];
 
   // ------------------------------------------------
 
@@ -664,17 +103,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   //   _tabController = TabController(length: 6, vsync: this);
   // }
 
-
-@override
-void initState() {
-  super.initState();
-  _tabController = TabController(
-    length: 6,
-    vsync: this,
-    initialIndex: widget.initialTabIndex,
-  );
-}
-
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 6,
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
+  }
 
   @override
   void dispose() {
@@ -699,22 +136,19 @@ void initState() {
               width: 140,
               height: 140,
               decoration: BoxDecoration(
-                color: const Color(0xFFEBF6FF),
+                color: AppColors.statusBlueVeryLight,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
                 Icons.shopping_bag_outlined,
                 size: 72,
-                color: Color(0xFF2196F3),
+                color: AppColors.primaryBlue,
               ),
             ),
             const SizedBox(height: 18),
             Text(
               text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ],
         ),
@@ -723,7 +157,10 @@ void initState() {
   }
 
   // ---------------- ORDER LIST BUILDER ----------------
-  Widget _buildList(List<Map<String, dynamic>>? items) {
+  Widget _buildList(
+    List<Map<String, dynamic>>? items, {
+    bool isOrderTracking = false,
+  }) {
     if (items == null || items.isEmpty) {
       return _emptyState('There are no orders yet');
     }
@@ -756,8 +193,96 @@ void initState() {
           placedDate: g['placedDate'],
           status: g['status'],
           items: List<Map<String, dynamic>>.from(g['items']),
+          isOrderTracking: isOrderTracking,
+          onTrackClick: isOrderTracking
+              ? () => _navigateToTracking(
+                  g['orderNumber'],
+                  '${g['items'].length}',
+                  _calculateTotal(g['items']),
+                  g['placedDate'],
+                )
+              : null,
         );
       },
+    );
+  }
+
+  double _calculateTotal(List<dynamic> items) {
+    double total = 0.0;
+    for (var item in items) {
+      String price = (item['price'] ?? '0') as String;
+      var s = price.replaceAll(RegExp(r"[^0-9,\.]"), '');
+      if (s.isNotEmpty) {
+        if (s.contains(',') && !s.contains('.')) {
+          final parts = s.split(',');
+          if (parts.last.length == 3) {
+            s = s.replaceAll(',', '');
+          } else {
+            s = s.replaceAll(',', '.');
+          }
+        } else {
+          s = s.replaceAll(',', '');
+        }
+        total += double.tryParse(s) ?? 0.0;
+      }
+    }
+    return total;
+  }
+
+  void _navigateToTracking(
+    String orderId,
+    String itemsCount,
+    double price,
+    String placedDate,
+  ) {
+    // Create sample tracking steps
+    final trackingSteps = [
+      OrderTrackingStatus(title: 'Order Placed', isCompleted: true),
+      OrderTrackingStatus(title: 'Order Confirmed', isCompleted: true),
+      OrderTrackingStatus(title: 'Order Shipped', isCompleted: true),
+      OrderTrackingStatus(title: 'Out for Delivery', isCompleted: false),
+      OrderTrackingStatus(title: 'Order Delivered', isCompleted: false),
+    ];
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderTrackingPage(
+          orderId: orderId,
+          itemsCount: itemsCount,
+          totalPrice: 'Rs. ${price.toStringAsFixed(2)}',
+          trackingSteps: trackingSteps,
+          placedDate: placedDate,
+        ),
+      ),
+    );
+  }
+
+  // ---------------- REVIEW TAB BUILDER ----------------
+  Widget _buildReviewTab() {
+    final hasPending = _pendingReviewProducts.isNotEmpty;
+    final hasReviewed = _reviewedProducts.isNotEmpty;
+
+    // If both are empty, show empty state
+    if (!hasPending && !hasReviewed) {
+      return _emptyState('No reviews yet');
+    }
+
+    return SingleChildScrollView(
+      child: Container(
+        color: AppColors.backgroundGrey,
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            // Pending Reviews Widget
+            if (hasPending)
+              PendingReviewWidget(products: _pendingReviewProducts),
+
+            // Reviewed Products Widget
+            if (hasReviewed) ReviewedProductWidget(products: _reviewedProducts),
+          ],
+        ),
+      ),
     );
   }
 
@@ -766,9 +291,9 @@ void initState() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        foregroundColor: Colors.black87,
+        foregroundColor: AppColors.textBlack87,
         title: const Text(
           'Order History',
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -781,14 +306,13 @@ void initState() {
             child: TabBar(
               controller: _tabController,
               isScrollable: true,
-              indicatorColor: const Color(0xFF2196F3),
-              labelColor: Colors.black87,
+              indicatorColor: AppColors.primaryBlue,
+              labelColor: AppColors.textBlack87,
               tabs: const [
                 Tab(text: 'All'),
-                Tab(text: 'To pay'),
-                Tab(text: 'To ship'),
-                Tab(text: 'To receive'),
-                Tab(text: 'To review'),
+                Tab(text: 'Orders'),
+                Tab(text: 'Received'),
+                Tab(text: 'Reviews'),
                 Tab(text: 'Cancellation'),
               ],
             ),
@@ -798,7 +322,6 @@ void initState() {
 
       body: Column(
         children: [
-
           // ---------- DEMO BUTTONS (REMOVE LATER) ----------
           // Padding(
           //   padding: const EdgeInsets.all(8.0),
@@ -827,17 +350,16 @@ void initState() {
               controller: _tabController,
               children: [
                 _buildList(_allOrders),
-                _buildList(_toPayOrders),
-                _buildList(_toShipOrders),
+                _buildList(_toPayOrders, isOrderTracking: true),
+                // _buildList(_toShipOrders),
                 _buildList(_toReceiveOrders),
-                _buildList(_toReviewOrders),
+                _buildReviewTab(),
                 _buildList(_cancelledOrders),
               ],
             ),
           ),
         ],
       ),
-    
     );
   }
 }

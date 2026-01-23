@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class SpecificationHighlights extends StatelessWidget {
   final List<Map<String, dynamic>> tags;
@@ -14,15 +14,15 @@ class SpecificationHighlights extends StatelessWidget {
     if (icon is IconData) {
       leading = CircleAvatar(
         radius: 22,
-        backgroundColor: Colors.blue[50],
-        child: Icon(icon, color: Colors.blue[600], size: 29),
+        backgroundColor: AppColors.statusBlueLight,
+        child: Icon(icon, color: AppColors.primaryBlue, size: 29),
       );
     } else if (icon is String) {
       leading = Container(
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.blue[50],
+          color: AppColors.statusBlueLight,
           borderRadius: BorderRadius.circular(4),
         ),
         child: ClipRRect(
@@ -33,8 +33,8 @@ class SpecificationHighlights extends StatelessWidget {
     } else {
       leading = CircleAvatar(
         radius: 22,
-        backgroundColor: Colors.blue[50],
-        child: Icon(Icons.info_outline, color: Colors.blue[600], size: 22),
+        backgroundColor: AppColors.statusBlueLight,
+        child: Icon(Icons.info_outline, color: AppColors.primaryBlue, size: 22),
       );
     }
 
@@ -60,7 +60,10 @@ class SpecificationHighlights extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   desc.toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textGreyDark.withOpacity(0.6),
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -76,12 +79,12 @@ class SpecificationHighlights extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColors.backgroundGrey,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Wrap(
-        alignment: WrapAlignment.spaceEvenly,      // 👈 horizontal center / evenly
-        runAlignment: WrapAlignment.center,        // 👈 vertical center
+        alignment: WrapAlignment.spaceEvenly, // 👈 horizontal center / evenly
+        runAlignment: WrapAlignment.center, // 👈 vertical center
         spacing: 12,
         runSpacing: 12,
         children: tags.map((t) => _buildTag(context, t)).toList(),

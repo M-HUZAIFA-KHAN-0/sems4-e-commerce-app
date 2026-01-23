@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ComparisonSpecsWidget extends StatelessWidget {
   final Map<String, dynamic>? product1;
@@ -72,16 +72,16 @@ class ComparisonSpecsWidget extends StatelessWidget {
   Color _getSectionColor(String section) {
     switch (section) {
       case 'Memory':
-        return const Color(0xFF4CAF50); // green
+        return AppColors.primaryGreen;
       case 'Performance':
-        return const Color(0xFF9C27B0); // purple
+        return AppColors.primaryPurple;
       case 'Display':
-        return const Color(0xFF00BCD4); // cyan
+        return AppColors.primaryCyan;
       case 'Other':
-        return const Color(0xFFFF9800); // orange
+        return AppColors.primaryOrangeAlt;
       case 'General Features':
       default:
-        return const Color(0xFF1976D2); // blue
+        return AppColors.primaryBlueDark;
     }
   }
 
@@ -125,7 +125,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
             // Spec rows - new layout with centered spec name and left/right values
             for (final specKey in section.value) ...[
               Container(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 16,
@@ -141,7 +141,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -166,7 +166,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                               height: 1.5,
                             ),
                           ),
@@ -189,7 +189,7 @@ class ComparisonSpecsWidget extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: AppColors.textBlack87,
                               height: 1.5,
                             ),
                           ),

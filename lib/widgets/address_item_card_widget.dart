@@ -1,5 +1,5 @@
 // address_item.dart
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressItem extends StatelessWidget {
   final String label;
@@ -23,7 +23,7 @@ class AddressItem extends StatelessWidget {
       leading: CircleAvatar(
         radius: 28,
         backgroundColor: Colors.grey[200],
-        child: Icon(icon, color: Colors.black, size: 34),
+        child: Icon(icon, color: AppColors.textBlack, size: 34),
       ),
       title: Row(
         children: [
@@ -33,7 +33,7 @@ class AddressItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: AppColors.backgroundGreyLight,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(tag, style: const TextStyle(fontSize: 10)),

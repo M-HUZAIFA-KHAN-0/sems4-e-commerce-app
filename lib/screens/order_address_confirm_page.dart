@@ -1,6 +1,5 @@
 import 'package:first/screens/order_payment_page.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class OrderAddressConfirmPage extends StatefulWidget {
   const OrderAddressConfirmPage({super.key});
@@ -33,7 +32,7 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) {
         return AddressFormDialog(
           editingAddr: editingAddr,
@@ -48,9 +47,9 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2), // ✅ PAGE GRAY BG
+      backgroundColor: AppColors.backgroundGreyLight, // ✅ PAGE GRAY BG
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -85,7 +84,9 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const OrderPaymentPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const OrderPaymentPage(),
+                    ),
                   );
                 },
                 buttonText: "Next",
@@ -112,7 +113,6 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
       ),
     );
   }
-
 }
 
 /// ---------------- CONTACT INFO (EDITABLE) ----------------
@@ -131,12 +131,12 @@ class _ContactInfoSectionState extends State<_ContactInfoSection> {
 
   @override
   Widget build(BuildContext context) {
-    return _card(
+    return CardContainerWidget(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _titleRow(
-            "Contact Information",
+          TitleIconRowWidget(
+            title: "Contact Information",
             icon: isEditing ? Icons.save : Icons.edit,
             onTap: () => setState(() => isEditing = !isEditing),
           ),
@@ -184,12 +184,12 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
         .findAncestorStateOfType<_OrderAddressConfirmPageState>();
     final addresses = parentState?.addresses ?? [];
 
-    return _card(
+    return CardContainerWidget(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _titleRow(
-            "Delivery Information",
+          TitleIconRowWidget(
+            title: "Delivery Information",
             icon: Icons.add,
             onTap: () {
               parentState?._showAddressForm();
@@ -197,99 +197,63 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-  value: selectedAddress,
-  hint: const Text("Select delivery address"),
-  isExpanded: true,
+            value: selectedAddress,
+            hint: const Text("Select delivery address"),
+            isExpanded: true,
 
-  // 👇 Dropdown items (label + address)
-  items: addresses.map((e) {
-    return DropdownMenuItem<String>(
-      value: e['label'],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            e['label'] ?? '',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            // 👇 Dropdown items (label + address)
+            items: addresses.map((e) {
+              return DropdownMenuItem<String>(
+                value: e['label'],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      e['label'] ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      e['address'] ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+
+            // 👇 Selected item (ONLY address)
+            selectedItemBuilder: (context) {
+              return addresses.map((e) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    e['address'] ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                );
+              }).toList();
+            },
+
+            onChanged: (value) {
+              setState(() => selectedAddress = value);
+            },
+
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+            ),
           ),
-          Text(
-            e['address'] ?? '',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }).toList(),
-
-  // 👇 Selected item (ONLY address)
-  selectedItemBuilder: (context) {
-    return addresses.map((e) {
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          e['address'] ?? '',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 13),
-        ),
-      );
-    }).toList();
-  },
-
-  onChanged: (value) {
-    setState(() => selectedAddress = value);
-  },
-
-  decoration: const InputDecoration(
-    border: OutlineInputBorder(),
-    isDense: true,
-  ),
-),
-
         ],
       ),
     );
   }
 }
 
-/// ---------------- REUSABLE UI ----------------
-Widget _card({required Widget child}) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white, // ✅ CARD WHITE
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
-      ],
-    ),
-    child: child,
-  );
-}
-
-Widget _titleRow(
-  String title, {
-  required IconData icon,
-  required VoidCallback onTap,
-}) {
-  return Row(
-    children: [
-      Expanded(
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
-      GestureDetector(
-        onTap: onTap,
-        child: Icon(icon, color: const Color(0xFF2196F3)),
-      ),
-    ],
-  );
-}
+/// End of file

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ShopByPriceWidget extends StatelessWidget {
   // Click hone par kya hona chahiye, uska function yahan pass hoga
@@ -22,7 +22,7 @@ class ShopByPriceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 24, 10, 24),
-      color: Color(0xFFFFE66D), // Yellow Background
+      color: AppColors.primaryYellow,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,13 +31,14 @@ class ShopByPriceWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF333333),
+              color: AppColors.color333333,
             ),
           ),
           SizedBox(height: 20),
           GridView.builder(
             shrinkWrap: true, // Grid ko limit karne ke liye
-            physics: NeverScrollableScrollPhysics(), // Column ke andar scroll na ho
+            physics:
+                NeverScrollableScrollPhysics(), // Column ke andar scroll na ho
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // 2 columns
               childAspectRatio: 2.8, // Buttons ki shape set karne ke liye
@@ -49,7 +50,7 @@ class ShopByPriceWidget extends StatelessWidget {
               return PriceButton(
                 label: priceRanges[index],
                 // Teesri item (index 2) ko image ki tarah white rakha hai
-                isHighlighted: index == 2, 
+                isHighlighted: index == 2,
                 onTap: () {
                   if (onPriceClick != null) {
                     onPriceClick!(priceRanges[index]);
@@ -82,11 +83,11 @@ class PriceButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isHighlighted ? Colors.white : Color(0xFFFF0090), // Pink color
+          color: isHighlighted ? AppColors.color4CAF50 : AppColors.primaryPink,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: AppColors.textBlack.withOpacity(0.1),
               blurRadius: 4,
               offset: Offset(0, 2),
             ),
@@ -98,7 +99,9 @@ class PriceButton extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isHighlighted ? Color(0xFFFF0090) : Colors.white,
+              color: isHighlighted
+                  ? AppColors.primaryPink
+                  : AppColors.backgroundWhite,
               fontWeight: FontWeight.w600,
               fontSize: 11,
             ),

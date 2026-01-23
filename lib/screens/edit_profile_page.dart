@@ -1,8 +1,4 @@
-import 'dart:io' show File;
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:image_cropper/image_cropper.dart';
-import '../widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Map<String, String>? initialData;
@@ -37,14 +33,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _profileImage = CroppedFile(widget.initialProfileImagePath!);
     }
 
-    _firstNameController =
-        TextEditingController(text: widget.initialData?['firstName'] ?? '');
-    _lastNameController =
-        TextEditingController(text: widget.initialData?['lastName'] ?? '');
-    _emailController =
-        TextEditingController(text: widget.initialData?['email'] ?? '');
-    _phoneController =
-        TextEditingController(text: widget.initialData?['phone'] ?? '');
+    _firstNameController = TextEditingController(
+      text: widget.initialData?['firstName'] ?? '',
+    );
+    _lastNameController = TextEditingController(
+      text: widget.initialData?['lastName'] ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.initialData?['email'] ?? '',
+    );
+    _phoneController = TextEditingController(
+      text: widget.initialData?['phone'] ?? '',
+    );
 
     _firstNameController.addListener(_onFieldChanged);
     _lastNameController.addListener(_onFieldChanged);
@@ -61,9 +61,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _onChangeProfilePicture() async {
     final CroppedFile? pickedImage =
         await ImagePickerCropperModule.pickAndCropImage(
-      context: context,
-      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-    );
+          context: context,
+          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        );
 
     if (pickedImage != null) {
       setState(() {
@@ -130,7 +130,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -152,14 +152,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black, width: 2),
+                    border: Border.all(color: AppColors.textBlack, width: 2),
                     image: _profileImage != null
                         ? DecorationImage(
                             fit: BoxFit.cover,
                             image: kIsWeb
                                 ? NetworkImage(_profileImage!.path)
                                 : FileImage(File(_profileImage!.path))
-                                    as ImageProvider,
+                                      as ImageProvider,
                           )
                         : null,
                   ),
@@ -174,8 +174,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onTap: _onChangeProfilePicture,
                     child: const CircleAvatar(
                       radius: 18,
-                      backgroundColor: Colors.black,
-                      child: Icon(Icons.add, color: Colors.white, size: 20),
+                      backgroundColor: AppColors.textBlack,
+                      child: Icon(
+                        Icons.add,
+                        color: AppColors.backgroundWhite,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -235,10 +239,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               height: 50,
             ),
             const SizedBox(height: 12),
-            TextButton(
-              onPressed: _onCancel,
-              child: const Text('Cancel'),
-            ),
+            TextButton(onPressed: _onCancel, child: const Text('Cancel')),
           ],
         ),
       ),

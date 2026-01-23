@@ -1,11 +1,5 @@
-import 'package:first/main-home.dart';
-import 'package:first/screens/notification_page.dart';
-import 'package:first/screens/profile_page.dart';
-import 'package:first/screens/wishlist_page.dart';
+﻿import 'package:first/core/app_imports.dart';
 import 'package:first/widgets/categories_drawer_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:first/screens/add_to_card_page.dart';
 
 class CategoryViewPage extends StatefulWidget {
   const CategoryViewPage({super.key});
@@ -25,8 +19,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
       'rating': 4.5,
       'status': 'New',
       'image': Icons.directions_car,
-      'color': Colors.grey[300],
-      'discount': 20
+      'color': AppColors.backgroundGreyLight,
+      'discount': 20,
     },
     {
       'name': 'Camaro Sports',
@@ -75,43 +69,23 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
-        child: Container(color: Colors.white, child: const TopBarWidget()),
+        child: Container(
+          color: AppColors.backgroundWhite,
+          child: const TopBarWidget(),
+        ),
       ),
       endDrawer: const CategoriesDrawer(),
       endDrawerEnableOpenDragGesture: false,
-      drawerScrimColor: Colors.black.withOpacity(0.4),
+      drawerScrimColor: AppColors.textBlack.withOpacity(0.4),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// SPECIAL OFFERS TITLE
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     const Text(
-              //       'Special Offers',
-              //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              //     ),
-              //   ],
-              // ),
-
-              // const SizedBox(height: 12),
-
-              // /// 🔥 SPECIAL OFFERS CAROUSEL
-              // const CarouselWidget(),
-
-              // const SizedBox(height: 24),
-
-              // /// BRANDS
-              // const BrandBoxesWidget(),
-
-              // const SizedBox(height: 24),
-
               /// TOP DEALS
               const TopDealsWidget(
                 title: 'Top Brands',

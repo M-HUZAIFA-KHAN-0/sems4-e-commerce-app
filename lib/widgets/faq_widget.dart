@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 // class FAQs {
 //   final String? title;
@@ -58,7 +58,7 @@ class _FAQWidgetState extends State<FAQWidget> {
                 style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
             ),
@@ -75,7 +75,7 @@ class _FAQWidgetState extends State<FAQWidget> {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
@@ -104,7 +104,7 @@ class _FAQWidgetState extends State<FAQWidget> {
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: AppColors.textBlack87,
                                 height: 1.4,
                               ),
                             ),
@@ -115,7 +115,7 @@ class _FAQWidgetState extends State<FAQWidget> {
                             width: 24,
                             height: 24,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: AppColors.backgroundGreyLighter,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Center(

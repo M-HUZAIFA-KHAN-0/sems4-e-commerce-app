@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class OrderCard extends StatelessWidget {
   const OrderCard({
@@ -27,7 +27,7 @@ class OrderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -46,7 +46,7 @@ class OrderCard extends StatelessWidget {
             child: Container(
               width: 72,
               height: 72,
-              color: const Color(0xFFF3F4F6),
+              color: AppColors.backgroundGreyLighter,
               child: imageUrl.isNotEmpty
                   ? Image.network(imageUrl, fit: BoxFit.cover)
                   : const Icon(
@@ -72,7 +72,7 @@ class OrderCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
+                          color: AppColors.textBlack87,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -84,7 +84,7 @@ class OrderCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
-                        color: Colors.black87,
+                        color: AppColors.textBlack87,
                       ),
                     ),
                   ],
@@ -96,7 +96,7 @@ class OrderCard extends StatelessWidget {
                   'Variant: $variant',
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF9AA0A6),
+                    color: AppColors.textGreyLabel,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -109,7 +109,7 @@ class OrderCard extends StatelessWidget {
                       'Qty: $quantity',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF9AA0A6),
+                        color: AppColors.textGreyLabel,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -118,7 +118,7 @@ class OrderCard extends StatelessWidget {
                         'Order: $orderNumber',
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF9AA0A6),
+                          color: AppColors.textGreyLabel,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),

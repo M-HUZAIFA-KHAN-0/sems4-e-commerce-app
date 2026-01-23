@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:first/core/app_imports.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   const EmailVerificationPage({super.key});
@@ -63,20 +62,18 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         maxLength: 1,
-        decoration: InputDecoration(
-          counterText: '',
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.zero,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 153, 153, 153), width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.black, width: 1.5),
-          ),
-        ),
+        decoration:
+            OutlineInputDecorationHelper.createCompactInputDecoration(
+              labelText: 'Code',
+              borderColor: const Color.fromARGB(255, 153, 153, 153),
+              focusedBorderColor: AppColors.textBlack,
+              borderRadius: 8,
+            ).copyWith(
+              counterText: '',
+              filled: true,
+              fillColor: AppColors.backgroundWhite,
+              contentPadding: EdgeInsets.zero,
+            ),
         onChanged: (v) {
           if (v.isNotEmpty) {
             if (next != null) {
@@ -97,7 +94,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
@@ -120,7 +117,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                   const Icon(
                     Icons.email_outlined,
                     size: 74,
-                    color: Colors.black,
+                    color: AppColors.textBlack,
                   ),
 
                   const SizedBox(height: 16),
@@ -130,7 +127,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black,
+                      color: AppColors.textBlack,
                     ),
                   ),
 
@@ -176,7 +173,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        backgroundColor: AppColors.textBlack,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(26),
                         ),
@@ -186,7 +183,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                          color: AppColors.backgroundWhite,
                         ),
                       ),
                     ),

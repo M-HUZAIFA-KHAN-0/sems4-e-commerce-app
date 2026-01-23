@@ -1,7 +1,6 @@
 import 'package:first/screens/add_complaints_form_page.dart';
 import 'package:first/screens/complaint_detail_page.dart';
-import 'package:flutter/material.dart';
-import 'package:first/widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class ComplaintsListPage extends StatelessWidget {
   const ComplaintsListPage({super.key});
@@ -9,73 +8,23 @@ class ComplaintsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.backgroundGrey,
 
       // ================= APP BAR =================
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         title: const Text(
           'My Complaints',
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.textBlack87,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
-        // actions: [
-        // Padding(
-        //   padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-        //   child: PrimaryBtnWidget(
-        //           buttonText: 'Add Complaint',
-        //           height: 36,
-        //           width: 100,
-        //           fontSize: 10,
-        //           onPressed: () {
-        //             Navigator.push(
-        //               context,
-        //               MaterialPageRoute(
-        //                 builder: (context) => const AddComplaintsFormPage(),
-        //               ),
-        //             );
-        //           },
-        //         ),
-        // ),
-        // ],
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 12),
-        //     child: Center(
-        //       child: PrimaryBtnWidget(
-        //         buttonText: 'Add Complaint',
-        //         height: 36,
-        //         onPressed: () {
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => const AddComplaintsFormPage(),
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
 
       // ================= BODY =================
-
-      // body: ListView.builder(
-      //   padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-      //   itemCount: 5,
-      //   itemBuilder: (context, index) {
-      //     return _ComplaintCard(
-      //       imageUrl: 'https://picsum.photos/200?3',
-      //       orderId: 'ORD-10${index + 1}234',
-      //       date: '12 Jan 2026',
-      //     );
-      //   },
-      // ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         children: [
@@ -133,7 +82,7 @@ class _ComplaintCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -161,13 +110,16 @@ class _ComplaintCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.textBlack87,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   date,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textGreyDark.withOpacity(0.6),
+                  ),
                 ),
               ],
             ),
@@ -198,7 +150,7 @@ class _ComplaintCard extends StatelessWidget {
               );
             },
             buttonText: 'View Detail',
-            width: 110,
+            width: 120,
             height: 38,
             fontSize: 12,
           ),
@@ -209,7 +161,7 @@ class _ComplaintCard extends StatelessWidget {
           //     // View detail
           //   },
           //   style: TextButton.styleFrom(
-          //     foregroundColor: const Color(0xFF2196F3),
+          //     foregroundColor:  AppColors.primaryBlue,
           //   ),
           //   child: const Text(
           //     'View Detail',

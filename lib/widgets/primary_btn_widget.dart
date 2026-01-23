@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class PrimaryBtnWidget extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,7 +12,7 @@ class PrimaryBtnWidget extends StatelessWidget {
     super.key,
     required this.onPressed,
     this.buttonText = 'Add New Address',
-    this.backgroundColor = Colors.black,
+    this.backgroundColor = AppColors.textBlack,
     this.height = 48,
     this.width,
     this.fontSize = 14,
@@ -37,7 +37,7 @@ class PrimaryBtnWidget extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
           ),
         ),
       ),

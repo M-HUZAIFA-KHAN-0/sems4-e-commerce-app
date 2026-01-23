@@ -1,5 +1,5 @@
 // delete_confirmation_dialog.dart
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final String title;

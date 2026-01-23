@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:first/widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 
 class CategoryViewCard extends StatelessWidget {
   @override

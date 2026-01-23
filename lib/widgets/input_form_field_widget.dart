@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 Widget buildFormField({
   required TextEditingController controller,
@@ -21,7 +21,7 @@ Widget buildFormField({
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF999999),
+              color: AppColors.textGreyLight,
             ),
           ),
         ],
@@ -38,7 +38,7 @@ Widget buildFormField({
           hintText: hintText,
           hintStyle: const TextStyle(color: Color(0xFFCCCCCC)),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppColors.backgroundWhite,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
