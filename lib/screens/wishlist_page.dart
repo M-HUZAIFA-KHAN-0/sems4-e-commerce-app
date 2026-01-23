@@ -53,10 +53,17 @@ class _WishlistPageState extends State<WishlistPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLighter,
       appBar: AppBar(
-        title: const Text("Wishlist"),
         backgroundColor: AppColors.backgroundWhite,
-        foregroundColor: AppColors.textBlack87,
         elevation: 0,
+        foregroundColor: AppColors.textBlack87,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: const Text(
+          'My Wishlist',
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
       ),
       body: Column(
         children: [
@@ -93,38 +100,6 @@ class _WishlistPageState extends State<WishlistPage> {
                 },
                 buttonText: 'Add all items to cart',
               ),
-
-              // child: SizedBox(
-              //   width: double.infinity,
-              //   height: 48,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       final selectedIds = wishlistItems
-              //           .where((e) => e.isSelected)
-              //           .map((e) => e.id)
-              //           .toSet();
-              //       setState(() {
-              //         wishlistItems.removeWhere(
-              //           (e) => selectedIds.contains(e.id),
-              //         );
-              //       });
-              //     },
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: AppColors.textBlack,
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(26),
-              //       ),
-              //     ),
-              //     child: const Text(
-              //       'Add all items to cart',
-              //       style: TextStyle(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w800,
-              //         color: AppColors.backgroundWhite,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ),
         ],
       ),
@@ -313,26 +288,31 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: allSelected
-                        ? AppColors.textBlack
-                        : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: allSelected
-                          ? AppColors.textBlack
-                          : AppColors.borderGreyLighter,
-                      width: 2,
-                    ),
+                    gradient: allSelected
+                        ? AppColors.bgGradient
+                        : null, // ✅ gradient bg
+                    color: allSelected
+                        ? null
+                        : AppColors.backgroundWhite, // normal white
+                    border: allSelected
+                        ? null // gradient se border alag na karna ho to null
+                        : Border.all(
+                            color: AppColors.borderGreyLighter,
+                            width: 2,
+                          ),
                   ),
                   child: allSelected
                       ? const Icon(
                           Icons.check,
-                          color: AppColors.backgroundWhite,
+                          color: Colors
+                              .white, // gradient background pe white icon achha dikhega
                           size: 16,
                         )
                       : const SizedBox.shrink(),
                 ),
               ),
+
               const SizedBox(width: 8),
               const Text(
                 'Select all items',
@@ -344,46 +324,6 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
               ),
               const Spacer(),
 
-              // InkWell(
-              //   onTap: anySelected
-              //       ? () {
-              //           showDialog(
-              //             context: context,
-              //             builder: (dialogContext) {
-              //               return DeleteConfirmationDialog(
-              //                 title: 'Clear Selected Items',
-              //                 content:
-              //                     'Are you sure you want to clear the selected items?', // Pass content
-              //                 onConfirm: () {
-              //                   _clearSelected();
-              //                 },
-              //               );
-              //             },
-              //           );
-              //         }
-              //       : null,
-              //   borderRadius: BorderRadius.circular(8),
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(
-              //       horizontal: 9,
-              //       vertical: 4,
-              //     ),
-              //     decoration: BoxDecoration(
-              //       color:  AppColors.formGrey221,
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     child: Text(
-              //       'Clear selected items',
-              //       style: TextStyle(
-              //         fontSize: 12,
-              //         fontWeight: FontWeight.w600,
-              //         color: anySelected
-              //             ? const Color.fromARGB(221, 238, 0, 0)
-              //             :  AppColors.textGreyLabel,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               Center(
                 child: IconButton(
                   onPressed: anySelected
@@ -403,13 +343,23 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                           );
                         }
                       : null,
-                  icon: Icon(
-                    Icons.delete,
-                    size: 34,
-                    color: anySelected
-                        ? const Color.fromARGB(255, 0, 0, 0)
-                        : AppColors.textGreyLabel,
-                  ),
+
+                  icon: anySelected
+                      ? ShaderMask(
+                          shaderCallback: (bounds) =>
+                              AppColors.bgGradient.createShader(bounds),
+                          child: const Icon(
+                            Icons.delete,
+                            size: 34,
+                            color: Colors.white, // gradient ke liye white color
+                          ),
+                        )
+                      : Icon(
+                          Icons.delete,
+                          size: 34,
+                          color: AppColors.textGreyLabel,
+                        ),
+
                   style: IconButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
@@ -456,14 +406,12 @@ class _WishlistRowCard extends StatelessWidget {
   static const Color _lightGrey = AppColors.backgroundGreyLighter;
   static const Color _textGrey = AppColors.color9AA0A6;
   static const Color _iconGrey = AppColors.textGreyIcon;
-  static const Color _borderGrey = AppColors.borderGreyLighter;
-  static const Color _green = AppColors.productGreenAlt;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(14),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
@@ -471,25 +419,28 @@ class _WishlistRowCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: onToggleSelected,
+            onTap: () => onToggleSelected,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 140),
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.textBlack
-                    : AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: isSelected ? AppColors.textBlack : _borderGrey,
-                  width: 2,
-                ),
+                gradient: isSelected
+                    ? AppColors.bgGradient
+                    : null, // ✅ gradient bg
+                color: isSelected
+                    ? null
+                    : AppColors.backgroundWhite, // normal white
+                border: isSelected
+                    ? null // gradient se border alag na karna ho to null
+                    : Border.all(color: AppColors.borderGreyLighter, width: 2),
               ),
               child: isSelected
                   ? const Icon(
                       Icons.check,
-                      color: AppColors.backgroundWhite,
+                      color: Colors
+                          .white, // gradient background pe white icon achha dikhega
                       size: 16,
                     )
                   : const SizedBox.shrink(),
@@ -571,14 +522,9 @@ class _WishlistRowCard extends StatelessWidget {
                       InkWell(
                         onTap: onRemove,
                         borderRadius: BorderRadius.circular(10),
-                        child: Container(
+                        child: SizedBox(
                           width: 36,
                           height: 36,
-                          // decoration: BoxDecoration(
-                          //   color: AppColors.backgroundWhite,
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   border: Border.all(color: _borderGrey, width: 1.2),
-                          // ),
                           child: const Icon(
                             Icons.add_shopping_cart,
                             size: 20,

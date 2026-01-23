@@ -9,31 +9,69 @@ class CategoriesDrawer extends StatefulWidget {
 
 class _CategoriesDrawerState extends State<CategoriesDrawer> {
   final List<MenuItemData> topMenuItems = [
-    MenuItemData(label: 'My Account', icon: Icons.person),
-    MenuItemData(label: 'Track my Order', icon: Icons.location_on),
-    MenuItemData(label: 'Launch a Complaint', icon: Icons.assignment),
-    MenuItemData(label: 'Notifications', icon: Icons.notifications),
-    MenuItemData(label: 'Logout', icon: Icons.logout),
+    MenuItemData(
+      label: 'My Account',
+      icon: Icons.person,
+      page: const ProfilePage(),
+    ),
+    MenuItemData(
+      label: 'My Orders',
+      icon: Icons.location_on,
+      page: const OrderHistoryPage(),
+    ),
+    MenuItemData(
+      label: 'Notifications',
+      icon: Icons.notifications,
+      page: const NotificationPage(),
+    ),
+    MenuItemData(
+      label: 'Wishlist',
+      icon: Icons.favorite,
+      page: const WishlistPage(),
+    ),
+    MenuItemData(
+      label: 'Cart',
+      icon: Icons.shopping_cart,
+      page: const CartPageExample(),
+    ),
   ];
 
   final List<MenuItemData> bottomMenuItems = [
-    MenuItemData(label: 'About'),
-    MenuItemData(label: 'FAQs'),
-    MenuItemData(label: 'Contact'),
-    MenuItemData(label: 'Privacy Policy'),
+    // MenuItemData(label: 'About'),
+    MenuItemData(
+      label: 'Return & Refund',
+      icon: Icons.repeat_rounded,
+      page: const ReturnRefundPage(),
+    ),
+    MenuItemData(
+      label: 'FAQs',
+      icon: Icons.help_outline,
+      page: const FAQsPage(),
+    ),
+    MenuItemData(
+      label: 'Launch a Complaint',
+      icon: Icons.assignment,
+      page: const AddComplaintsFormPage(),
+    ),
+    MenuItemData(
+      label: 'Contact',
+      icon: Icons.phone_outlined,
+      page: const ContactUsPage(),
+    ),
+    MenuItemData(label: 'Logout', icon: Icons.logout),
   ];
 
   final List<CategoryItem> categories = [
-    CategoryItem(label: 'Mobiles', icon: Icons.phone_android),
-    CategoryItem(label: 'Smart Watches', icon: Icons.watch),
-    CategoryItem(label: 'Wireless Earbuds', icon: Icons.headset),
-    CategoryItem(label: 'Air Purifiers', icon: Icons.air),
-    CategoryItem(label: 'Personal Cares', icon: Icons.health_and_safety),
-    CategoryItem(label: 'Mobile Accessories', icon: Icons.cable),
-    CategoryItem(label: 'Bluetooth Speakers', icon: Icons.speaker),
-    CategoryItem(label: 'Power Banks', icon: Icons.power_input),
-    CategoryItem(label: 'Tablets', icon: Icons.tablet),
-    CategoryItem(label: 'Laptops', icon: Icons.laptop),
+    CategoryItem(label: 'Mobiles'),
+    CategoryItem(label: 'Smart Watches'),
+    CategoryItem(label: 'Wireless Earbuds'),
+    CategoryItem(label: 'Air Purifiers'),
+    CategoryItem(label: 'Personal Cares'),
+    CategoryItem(label: 'Mobile Accessories'),
+    CategoryItem(label: 'Bluetooth Speakers'),
+    CategoryItem(label: 'Power Banks'),
+    CategoryItem(label: 'Tablets'),
+    CategoryItem(label: 'Laptops'),
   ];
 
   final List<PopularListItem> popularLists = [
@@ -61,7 +99,10 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
             children: [
               // HEADER
               Container(
-                color: AppColors.primaryBlue,
+                color: AppColors.backgroundWhite,
+                // decoration: BoxDecoration(
+                // gradient: AppColors.bgGradient,
+                // ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 4,
                   vertical: 16,
@@ -69,21 +110,22 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                 child: Row(
                   children: [
                     const SizedBox(width: 48),
-                    const Expanded(
-                      child: Text(
-                        'Priceøye',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.backgroundWhite,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 50, // header ke hisaab se perfect
+                          child: Image.asset(
+                            '../../assets/branding/png-nav-logo.png', // apni image path
+                            fit: BoxFit.contain, // ❗ no stretch
+                          ),
                         ),
                       ),
                     ),
                     IconButton(
                       icon: const Icon(
                         Icons.close,
-                        color: AppColors.backgroundWhite,
+                        color: AppColors.textBlack87,
+                        size: 28,
                       ),
                       onPressed: () => Navigator.pop(context),
                     ),
@@ -139,7 +181,7 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
 
   Widget _blueMenu(List<MenuItemData> items) {
     return Container(
-      color: AppColors.primaryBlue,
+      decoration: BoxDecoration(gradient: AppColors.bgGradient),
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
       child: Column(
         children: items
@@ -182,13 +224,14 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
 class MenuItemData {
   final String label;
   final IconData? icon;
-  MenuItemData({required this.label, this.icon});
+  final Widget? page;
+  MenuItemData({required this.label, this.icon, this.page});
 }
 
 class CategoryItem {
   final String label;
-  final IconData icon;
-  CategoryItem({required this.label, required this.icon});
+  final IconData? icon;
+  CategoryItem({required this.label, this.icon});
 }
 
 class PopularListItem {
@@ -207,7 +250,17 @@ class MenuItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        Navigator.pop(context);
+        if (item.page != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => item.page!),
+          );
+        } else {
+          onTap();
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(

@@ -133,7 +133,7 @@ class ProductReview extends StatelessWidget {
             width: 75,
             height: 75,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.45),
+              color: Colors.black.withOpacity(0.65),
               borderRadius: BorderRadius.circular(6),
             ),
             alignment: Alignment.center,
@@ -141,7 +141,7 @@ class ProductReview extends StatelessWidget {
               '+$remaining',
               style: const TextStyle(
                 color: AppColors.backgroundWhite,
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -164,23 +164,48 @@ class ProductReview extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColors.backgroundGreyLight,
-              child: Text(
-                (avatarInitials ??
-                        name
-                            .split(' ')
-                            .map((s) => s.isNotEmpty ? s[0] : '')
-                            .take(2)
-                            .join())
-                    .toUpperCase(),
-                style: const TextStyle(
-                  color: AppColors.textBlack,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            // CircleAvatar(
+            //   radius: 22,
+            //   backgroundColor: AppColors.backgroundGreyLight,
+            //   child: Text(
+            //     (avatarInitials ??
+            //             name
+            //                 .split(' ')
+            //                 .map((s) => s.isNotEmpty ? s[0] : '')
+            //                 .take(2)
+            //                 .join())
+            //         .toUpperCase(),
+            //     style: const TextStyle(
+            //       color: AppColors.textBlack,
+            //       fontWeight: FontWeight.w600,
+            //     ),
+            //   ),
+            // ),
+            Container(
+  width: 44, // radius 22 × 2
+  height: 44,
+  decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    gradient: AppColors.bgGradient, // ✅ gradient BG
+  ),
+  child: CircleAvatar(
+    radius: 22,
+    backgroundColor: Colors.transparent, // 👈 IMPORTANT
+    child: Text(
+      (avatarInitials ??
+              name
+                  .split(' ')
+                  .map((s) => s.isNotEmpty ? s[0] : '')
+                  .take(2)
+                  .join())
+          .toUpperCase(),
+      style: const TextStyle(
+        color: Colors.white, // gradient pe white zyada readable hota hai
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ),
+),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

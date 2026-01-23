@@ -1,16 +1,6 @@
-import 'package:first/main-home.dart';
-import 'package:first/screens/add_to_card_page.dart';
 import 'package:first/screens/address_book_page.dart';
-import 'package:first/screens/complaints_page.dart';
-import 'package:first/screens/contact_page.dart';
-import 'package:first/screens/edit_profile_page.dart';
-import 'package:first/screens/faqs_page.dart';
 import 'package:first/screens/logout_drawer.dart';
-import 'package:first/screens/notification_page.dart';
-import 'package:first/screens/order_history_page.dart';
 import 'package:first/screens/recent_view_more_page.dart';
-import 'package:first/screens/return_refund_page.dart';
-import 'package:first/screens/wishlist_page.dart';
 import 'package:first/core/app_imports.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -39,16 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               // Header section with profile info
               Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primaryBlue,
-                      AppColors.primaryBlue.withOpacity(0.6),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
+                decoration: BoxDecoration(gradient: AppColors.bgGradient),
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
                 child: Stack(
                   children: [
@@ -101,23 +82,25 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: 80,
-                              height: 80,
+                              width: 90,
+                              height: 90,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: AppColors.backgroundWhite,
-                                  width: 3,
+                                  width: 2,
                                 ),
                               ),
-                              child: const Icon(
-                                Icons.person,
-                                color: AppColors.backgroundWhite,
-                                size: 50,
+                              child: ClipOval(
+                                child: Image.network(
+                                  "https://picsum.photos/200?2", // 👈 yahan apni image
+                                  fit:
+                                      BoxFit.cover, // circle fill karegi nicely
+                                ),
                               ),
                             ),
 
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
 
                             const Text(
                               'Huzaifa Khan',
@@ -125,6 +108,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w800,
+                                color: AppColors.backgroundWhite,
+                              ),
+                            ),
+                            const Text(
+                              'huzaifakhan@example.com',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
                                 color: AppColors.backgroundWhite,
                               ),
                             ),

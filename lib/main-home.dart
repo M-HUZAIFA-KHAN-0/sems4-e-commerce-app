@@ -5,7 +5,7 @@ import 'package:first/widgets/categories_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'widgets/widgets.dart';
 import 'screens/add_to_card_page.dart';
-import 'app_colors.dart';
+// import 'app_colors.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -79,13 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        toolbarHeight: 70,
+        toolbarHeight: 60,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: const TopBarWidget(),
       ),
-      endDrawer: const CategoriesDrawer(),
-      endDrawerEnableOpenDragGesture: false,
+      drawer: const CategoriesDrawer(),
+      drawerEnableOpenDragGesture: false,
       drawerScrimColor: Colors.black.withOpacity(0.4),
       body: SingleChildScrollView(
         child: Padding(
@@ -96,10 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               /// SPECIAL OFFERS TITLE
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 16, 10, 0),
-                child: const Text(
-                  'Special Offers',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                child: GradientText(text: 'Special Offers'),
               ),
 
               /// 🔥 SPECIAL OFFERS CAROUSEL
@@ -113,79 +110,14 @@ class _MyHomePageState extends State<MyHomePage> {
               /// BRANDS
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: const BrandBoxesWidget(),
+                child: const CategoriesDisplayWidget(),
               ),
 
               const SizedBox(height: 24),
 
-              /// TOP DEALS
-              // const TopDealsWidget(
-              //   title: 'Top Brands',
-              //   items: ['All', 'Mercedes', 'Tesla', 'BMW'],
-              // ),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Heighest Discounted Products",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    ProductDisplayWidget(
-                      cars: [
-                        {
-                          'name': 'BMW M4 Series',
-                          'price': '\$155,000',
-                          'rating': 4.5,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.grey,
-                        },
-                        {
-                          'name': 'Camaro Sports',
-                          'price': '\$170,000',
-                          'rating': 4.7,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.amber,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                      ],
-                    ),
-                  ],
-                ),
+              BGColorProdDisplayCard(
+                heading: "Heighest Discounted Products",
+                cars: cars,
               ),
 
               const SizedBox(height: 20),
@@ -197,78 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
 
               const SizedBox(height: 20),
-
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Latest Laptops",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        PrimaryBtnWidget(
-                          onPressed: () {},
-                          buttonText: "View All",
-                          width: 100,
-                          height: 36,
-                          fontSize: 12,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    ProductDisplayWidget(
-                      cars: [
-                        {
-                          'name': 'BMW M4 Series',
-                          'price': '\$155,000',
-                          'rating': 4.5,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.grey,
-                        },
-                        {
-                          'name': 'Camaro Sports',
-                          'price': '\$170,000',
-                          'rating': 4.7,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.amber,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                      ],
-                    ),
-                  ],
-                ),
+              
+              BGColorProdDisplayCard(
+                heading: "Latest Laptops",
+                cars: cars,
               ),
 
               const SizedBox(height: 24),
@@ -276,77 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
               CategoryViewCard(),
               const SizedBox(height: 24),
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Latest Earbuds",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
 
-                        PrimaryBtnWidget(
-                          onPressed: () {},
-                          buttonText: "View All",
-                          width: 100,
-                          height: 36,
-                          fontSize: 12,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    ProductDisplayWidget(
-                      cars: [
-                        {
-                          'name': 'BMW M4 Series',
-                          'price': '\$155,000',
-                          'rating': 4.5,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.grey,
-                        },
-                        {
-                          'name': 'Camaro Sports',
-                          'price': '\$170,000',
-                          'rating': 4.7,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.amber,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                      ],
-                    ),
-                  ],
-                ),
+              BGColorProdDisplayCard(
+                heading: "Latest Earbuds",
+                cars: cars,
               ),
 
               const SizedBox(height: 24),
@@ -355,77 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
               const SizedBox(height: 24),
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Latest Watches",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        PrimaryBtnWidget(
-                          onPressed: () {},
-                          buttonText: "View All",
-                          width: 100,
-                          height: 36,
-                          fontSize: 12,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    ProductDisplayWidget(
-                      cars: [
-                        {
-                          'name': 'BMW M4 Series',
-                          'price': '\$155,000',
-                          'rating': 4.5,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.grey,
-                        },
-                        {
-                          'name': 'Camaro Sports',
-                          'price': '\$170,000',
-                          'rating': 4.7,
-                          'status': 'New',
-                          'image': Icons.directions_car,
-                          'color': Colors.amber,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                        {
-                          'name': 'Audi Sports',
-                          'price': '\$133,000',
-                          'rating': 4.1,
-                          'status': 'Used',
-                          'image': Icons.directions_car,
-                          'color': Colors.red,
-                        },
-                      ],
-                    ),
-                  ],
-                ),
+              BGColorProdDisplayCard(
+                heading: "Latest Watches",
+                cars: cars,
               ),
 
               const SizedBox(height: 24),

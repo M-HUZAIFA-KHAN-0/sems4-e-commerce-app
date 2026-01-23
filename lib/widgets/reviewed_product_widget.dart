@@ -22,14 +22,16 @@ class ReviewedProductWidget extends StatelessWidget {
         children: [
           SizedBox(height: 6),
           // Heading
-          const Text(
-            ' Your Reviews',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textBlack87,
-            ),
-          ),
+          GradientText(text: " Reviewed Products"),
+          // const Text(
+          // const Text(
+          //   ' Your Reviews',
+          //   style: TextStyle(
+          //     fontSize: 18,
+          //     fontWeight: FontWeight.w700,
+          //     color: AppColors.textBlack87,
+          //   ),
+          // ),
           const SizedBox(height: 12),
 
           // Reviewed Product Cards
@@ -61,7 +63,8 @@ class ReviewedProductWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.backgroundGrey,
+        // color: AppColors.backgroundGrey,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.borderGrey, width: 1),
       ),

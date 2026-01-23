@@ -57,12 +57,6 @@ class CartProductItem {
     );
   }
 }
-
-/// Reusable cart widget
-/// - Accepts items from parent (multiple product cards)
-/// - If no items, shows centered empty message
-/// - Handles internal state: selection, qty changes, item removal, clear selected
-/// - Notifies parent on every change via onChanged
 class CartListWidget extends StatefulWidget {
   const CartListWidget({
     super.key,
@@ -89,11 +83,6 @@ class _CartListWidgetState extends State<CartListWidget> {
   // Per-item "stock not available" message
   final Map<String, String?> _stockMsgById = {};
   final Map<String, Timer?> _timers = {};
-
-  static const Color _green = Color(0xFF55C59A);
-  static const Color _lightGrey = Color(0xFFF3F4F6);
-  static const Color _textGrey = Color(0xFF9AA0A6);
-  static const Color _iconGrey = Color(0xFFBDBDBD);
 
   @override
   void initState() {
@@ -317,21 +306,25 @@ class _CartListWidgetState extends State<CartListWidget> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: allSelected
-                        ? Colors.black
-                        : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: allSelected
-                          ? Colors.black
-                          : AppColors.borderGreyLighter,
-                      width: 2,
-                    ),
+                    gradient: allSelected
+                        ? AppColors.bgGradient
+                        : null, // ✅ gradient bg
+                    color: allSelected
+                        ? null
+                        : AppColors.backgroundWhite, // normal white
+                    border: allSelected
+                        ? null // gradient se border alag na karna ho to null
+                        : Border.all(
+                            color: AppColors.borderGreyLighter,
+                            width: 2,
+                          ),
                   ),
                   child: allSelected
                       ? const Icon(
                           Icons.check,
-                          color: AppColors.backgroundWhite,
+                          color: Colors
+                              .white, // gradient background pe white icon achha dikhega
                           size: 16,
                         )
                       : const SizedBox.shrink(),
@@ -347,43 +340,6 @@ class _CartListWidgetState extends State<CartListWidget> {
                 ),
               ),
               const Spacer(),
-
-              // InkWell(
-              //   // onTap: anySelected ? _clearSelected : null,
-              //   onTap: anySelected ? () {
-              //     showDialog(context: context, builder: (dialogContext){
-              //       return DeleteConfirmationDialog(
-              //         title: "Clear selected items",
-              //         content:
-              //         "Are you sure you want to remove the selected items from your cart?",
-              //         onConfirm: () {
-              //           _clearSelected();
-              //         },
-              //       );
-              //     });
-              //   } : null,
-              //   borderRadius: BorderRadius.circular(8),
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(
-              //       horizontal: 9,
-              //       vertical: 4,
-              //     ),
-              //     decoration: BoxDecoration(
-              //       color:  AppColors.formGrey221,
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     child: Text(
-              //       'Clear selected items',
-              //       style: TextStyle(
-              //         fontSize: 12,
-              //         fontWeight: FontWeight.w600,
-              //         color: anySelected
-              //             ? const Color.fromARGB(221, 238, 0, 0)
-              //             :  AppColors.textGreyLabel,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               Center(
                 child: IconButton(
                   onPressed: anySelected
@@ -403,13 +359,20 @@ class _CartListWidgetState extends State<CartListWidget> {
                           );
                         }
                       : null,
-                  icon: Icon(
-                    Icons.delete,
-                    size: 34,
-                    color: anySelected
-                        ? const Color.fromARGB(255, 0, 0, 0)
-                        : AppColors.textGreyLabel,
-                  ),
+                  icon: anySelected
+    ? ShaderMask(
+        shaderCallback: (bounds) => AppColors.bgGradient.createShader(bounds),
+        child: const Icon(
+          Icons.delete,
+          size: 34,
+          color: Colors.white, // gradient ke liye white color
+        ),
+      )
+    : Icon(
+        Icons.delete,
+        size: 34,
+        color: AppColors.textGreyLabel,
+      ),
                   style: IconButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
@@ -463,11 +426,9 @@ class _CartRowCard extends StatelessWidget {
   final VoidCallback onMinus;
   final VoidCallback onPlus;
 
-  static const Color _green = Color(0xFF55C59A);
   static const Color _lightGrey = Color(0xFFF3F4F6);
   static const Color _textGrey = Color(0xFF9AA0A6);
   static const Color _iconGrey = Color(0xFFBDBDBD);
-  static const Color _borderGrey = Color(0xFFE7E9EE);
 
   @override
   Widget build(BuildContext context) {
@@ -475,14 +436,13 @@ class _CartRowCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(14),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Select checkbox
           GestureDetector(
             onTap: onToggleSelected,
             child: AnimatedContainer(
@@ -490,21 +450,22 @@ class _CartRowCard extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: isSelected
-                    ? const Color.fromARGB(255, 0, 0, 0)
-                    : AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color.fromARGB(255, 0, 0, 0)
-                      : _borderGrey,
-                  width: 2,
-                ),
+                gradient: isSelected
+                    ? AppColors.bgGradient
+                    : null, // ✅ gradient bg
+                color: isSelected
+                    ? null
+                    : AppColors.backgroundWhite, // normal white
+                border: isSelected
+                    ? null // gradient se border alag na karna ho to null
+                    : Border.all(color: AppColors.borderGreyLighter, width: 2),
               ),
               child: isSelected
                   ? const Icon(
                       Icons.check,
-                      color: AppColors.backgroundWhite,
+                      color: Colors
+                          .white, // gradient background pe white icon achha dikhega
                       size: 16,
                     )
                   : const SizedBox.shrink(),
@@ -681,15 +642,13 @@ class _QtyControl extends StatelessWidget {
   final VoidCallback? onMinus;
   final VoidCallback onPlus;
 
-  static const Color _borderGrey = Color(0xFFE7E9EE);
-  static const Color _iconGrey = Color(0xFFBDBDBD);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         _CircleIconButton(icon: Icons.remove, onTap: onMinus),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         Text(
           "$quantity",
           style: const TextStyle(
@@ -698,7 +657,7 @@ class _QtyControl extends StatelessWidget {
             color: AppColors.textBlack87,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         _CircleIconButton(icon: Icons.add, onTap: onPlus),
       ],
     );
@@ -712,11 +671,9 @@ class _CircleIconButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   static const Color _borderGrey = Color(0xFFE7E9EE);
-  static const Color _iconGrey = Color(0xFFBDBDBD);
 
   @override
   Widget build(BuildContext context) {
-    final enabled = onTap != null;
 
     return InkWell(
       onTap: onTap,
@@ -726,10 +683,11 @@ class _CircleIconButton extends StatelessWidget {
         height: 28,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.backgroundWhite,
+          // color: AppColors.backgroundWhite,
+          gradient: AppColors.bgGradient,
           border: Border.all(color: _borderGrey, width: 1.6),
         ),
-        child: Icon(icon, size: 20, color: enabled ? _iconGrey : _borderGrey),
+        child: Icon(icon, size: 20, color: AppColors.backgroundWhite),
       ),
     );
   }

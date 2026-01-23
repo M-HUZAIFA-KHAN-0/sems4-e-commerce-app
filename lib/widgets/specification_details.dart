@@ -12,19 +12,25 @@ class SpecificationDetails extends StatelessWidget {
         children: [
           Expanded(
             flex: 4,
-            child: Text(
-              row['key'] ?? '',
-              style: TextStyle(
-                color: AppColors.textGreyDark.withOpacity(0.6),
-                fontSize: 13,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+              child: Text(
+                row['key'] ?? '',
+                style: TextStyle(
+                  color: AppColors.secondaryColor1,
+                  fontSize: 13,
+                ),
               ),
             ),
           ),
           Expanded(
             flex: 6,
-            child: Text(
-              row['value'] ?? '',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 0, 0, 0),
+              child: Text(
+                row['value'] ?? '',
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              ),
             ),
           ),
         ],
@@ -42,20 +48,22 @@ class SpecificationDetails extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite,
+            // color: AppColors.backgroundWhite,
+            gradient: AppColors.secondaryBGGradientColor,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.grey[200]!),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                section['title'] ?? '',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              GradientText(text: section['title'] ?? '', fontSize: FontSize.medium),
+              // Text(
+              //   section['title'] ?? '',
+              //   style: const TextStyle(
+              //     fontSize: 14,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
               const SizedBox(height: 8),
               const Divider(height: 1),
               ...rows.map((r) => _buildRow(r)),

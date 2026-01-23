@@ -303,7 +303,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
               tabs: const [
                 Tab(text: 'Requests'),
                 Tab(text: 'Approved'),
-                Tab(text: 'Returned/Refunded'),
+                Tab(text: 'Refunded'),
                 Tab(text: 'Cancelled'),
               ],
             ),

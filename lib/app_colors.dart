@@ -3,6 +3,87 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
+  // theme Colors
+  static const Color secondaryColor1 = Color(0xFF0995D3);
+  static const Color secondaryColor2 = Color.fromARGB(228, 47, 134, 172);
+
+  static const LinearGradient bgGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(108 * 3.1415926535 / 180),
+    colors: [Color.fromRGBO(161, 78, 150, 1), Color.fromRGBO(10, 133, 185, 1)],
+    stops: [0.3264, 0.8233],
+  );
+
+  static const LinearGradient secondaryBGGradientColor = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(128 * 3.1415926535 / 180), // 128deg
+    colors: [
+      Color.fromRGBO(191, 112, 180, 0.2),
+      Color.fromRGBO(9, 150, 211, 0.1),
+    ],
+    stops: [0.089, 0.9154],
+  );
+
+
+  static const LinearGradient bgLightGradientColor = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(135 * 3.1415926535 / 180),
+    colors: [
+      Color.fromRGBO(236, 136, 223, 0.712),
+      Color.fromRGBO(17, 167, 231, 0.102),
+    ],
+    stops: [0.089, 0.9154],
+  );
+
+  static const LinearGradient tooLightGradientColor = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(135 * 3.1415926535 / 180),
+    colors: [
+      Color.fromRGBO(241, 169, 231, 0.678),
+      Color.fromRGBO(148, 223, 255, 0.527),
+    ],
+    stops: [0.089, 0.9154],
+  );
+
+  static const Color bluePrimaryColor = Color.fromRGBO(17, 167, 231, 0.102);
+  static const Color pinkPrimaryColor = Color.fromRGBO(241, 169, 232, 1);
+  static const Color bgPrimaryColor = Color.fromRGBO(161, 78, 150, 1);
+
+  static const Color bgGradientHeading = Colors.white;
+  static const Color productDisplayWidgetBackground = Color(0xFFF5F5F5);
+
+  // glassmorphism Colors
+  static const Color glassmorphismWhite = Color.fromARGB(35, 255, 255, 255);
+  static const Color glassmorphismBlack = Color.fromARGB(35, 0, 0, 0);
+
+  static const Color glassmorphismBorderWhite = Color.fromARGB(
+    70,
+    255,
+    255,
+    255,
+  );
+  static const Color glassmorphismBorderBlack = Color.fromARGB(70, 0, 0, 0);
+
+  static const Color glassmorphismBoxShadowWhite = Color.fromARGB(
+    100,
+    255,
+    255,
+    255,
+  );
+  static const Color glassmorphismBoxShadowBlack = Color.fromARGB(100, 0, 0, 0);
+
+  // specific widget Colors
+  static const Color productCategoryCardBackground = Color.fromARGB(
+    255,
+    218,
+    218,
+    218,
+  );
+
   // Primary Colors
   static const Color primaryBlue = Color(0xFF2196F3);
   static const Color primaryBlueDark = Color(0xFF1976D2);
@@ -38,7 +119,7 @@ class AppColors {
   static const Color textGreyLighter = Color(0xFF888888);
   static const Color textGreyLightest = Color(0xFFCCCCCC);
   static const Color textGreyVeryLight = Color(0xFFBBBBBB);
-  static const Color textGreyLabel = Color(0xFF9AA0A6);
+  static const Color textGreyLabel = Color.fromARGB(255, 132, 134, 136);
   static const Color textGreyIcon = Color(0xFFBDBDBD);
   static const Color textBlack111 = Color(0xFF111111);
 

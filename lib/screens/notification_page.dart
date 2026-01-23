@@ -26,9 +26,6 @@ class _NotificationPageState extends State<NotificationPage> {
           'Notification',
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
-        actions: [
-          IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
-        ],
       ),
       body: ListView(
         children: [

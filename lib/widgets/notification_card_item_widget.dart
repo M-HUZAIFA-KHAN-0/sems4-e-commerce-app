@@ -24,7 +24,8 @@ class NotificationCardItemWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
@@ -41,7 +42,8 @@ class NotificationCardItemWidget extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: AppColors.textBlack,
+              // color: AppColors.textBlack,
+              gradient: AppColors.bgGradient,
               borderRadius: BorderRadius.circular(26),
             ),
             child: Icon(icon, color: AppColors.backgroundWhite, size: 28),

@@ -24,11 +24,9 @@ class CardContainerWidget extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        // color: backgroundColor,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: boxShadow != null
-            ? [boxShadow!]
-            : [BoxShadow(color: AppColors.shadowBlack, blurRadius: 8)],
       ),
       child: child,
     );

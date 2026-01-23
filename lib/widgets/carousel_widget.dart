@@ -93,7 +93,7 @@ class DealCard extends StatelessWidget {
       // margin: const EdgeInsets.symmetric(horizontal: 6),
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        gradient: AppColors.bgGradient,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -112,6 +112,7 @@ class DealCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      color: AppColors.bgGradientHeading,
                     ),
                   ),
                 ),
@@ -124,6 +125,7 @@ class DealCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
+                      color: AppColors.bgGradientHeading,
                     ),
                   ),
                 ),
@@ -135,7 +137,8 @@ class DealCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 10,
-                      color: Colors.black54,
+                      // color: Colors.black54,
+                      color: AppColors.bgGradientHeading,
                       height: 1.1,
                     ),
                   ),

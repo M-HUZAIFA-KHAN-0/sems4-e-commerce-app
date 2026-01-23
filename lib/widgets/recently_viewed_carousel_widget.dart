@@ -177,7 +177,8 @@ class RecentlyViewedProductCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),

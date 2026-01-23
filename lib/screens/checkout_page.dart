@@ -9,7 +9,6 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  int _selectedBottomIndex = 3;
 
   // Checkout data
   final String storeName = "Order Items";
@@ -43,12 +42,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundWhite,
+        elevation: 0,
+        foregroundColor: AppColors.textBlack87,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: const Text(
+          'Checkout',
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
+      ),
       body: Column(
         children: [
-          // Header with back button and title
-          _buildHeader(),
-
-          // Main content scrollable
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -75,32 +83,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      color: AppColors.backgroundWhite,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const Expanded(
-            child: Text(
-              "Checkout",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textBlack,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(width: 48), // Balance the back button
-        ],
-      ),
-    );
-  }
+  // Widget _buildHeader() {
+  //   return Container(
+  //     color: AppColors.backgroundWhite,
+  //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  //     child: Row(
+  //       children: [
+  //         IconButton(
+  //           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+  //           onPressed: () => Navigator.pop(context),
+  //         ),
+  //         const Expanded(
+  //           child: Text(
+  //             "Checkout",
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.w600,
+  //               color: AppColors.textBlack,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //         const SizedBox(width: 48), // Balance the back button
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 // Store and Products Section Widget
@@ -113,63 +121,74 @@ class _StoreProductsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      color: AppColors.backgroundWhite,
+      // color: AppColors.backgroundWhite,
+      // decoration: BoxDecoration(
+      //   gradient: AppColors.secondaryBGGradientColor,
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.shopping_bag,
-                  color: AppColors.textBlack,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  "Order Items",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textBlack,
+          Container(
+            decoration: BoxDecoration(
+              // gradient: AppColors.bgLightGradientColor,
+              gradient: AppColors.bgGradient,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.store,
+                    size: 22,
+                    color: AppColors.backgroundWhite,
                   ),
-                ),
-                const Spacer(),
-                Text(
-                  "${items.length} item${items.length > 1 ? 's' : ''}",
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textGreyLight,
+                  const SizedBox(width: 8),
+                  Text(
+                    "Order Items",
+                    style: const TextStyle(fontSize: 16, color: AppColors.backgroundWhite, fontWeight: FontWeight.w600),
                   ),
-                ),
-              ],
+                  const Spacer(),
+                  Text(
+                    "${items.length} item${items.length > 1 ? 's' : ''}",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.backgroundWhite,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFEEEEEE)),
-          Column(
-            children: items
-                .asMap()
-                .entries
-                .map(
-                  (entry) => Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 12,
+          const Divider(height: 4, color: Color(0xFFEEEEEE)),
+          Container(
+            decoration: BoxDecoration(
+        gradient: AppColors.secondaryBGGradientColor,
+      ),
+            child: Column(
+              children: items
+                  .asMap()
+                  .entries
+                  .map(
+                    (entry) => Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 12,
+                          ),
+                          child: _CheckoutProductCard(item: entry.value),
                         ),
-                        child: _CheckoutProductCard(item: entry.value),
-                      ),
-                      if (entry.key < items.length - 1)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Divider(height: 1, color: Color(0xFFEEEEEE)),
-                        ),
-                    ],
-                  ),
-                )
-                .toList(),
+                        if (entry.key < items.length - 1)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Divider(height: 0.5, color: Color(0xFFEEEEEE)),
+                          ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ],
       ),
@@ -295,8 +314,11 @@ class _SummarySection extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(top: 12),
-      color: AppColors.backgroundWhite,
+      // color: AppColors.backgroundWhite,
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppColors.secondaryBGGradientColor,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -305,7 +327,7 @@ class _SummarySection extends StatelessWidget {
             children: [
               Text(
                 "Subtotal (${items.length} items)",
-                style: const TextStyle(fontSize: 13, color: Color(0xFF666666)),
+                style: const TextStyle(fontSize: 13, color: AppColors.textGreyDark),
               ),
               Text(
                 "Rs. ${merchandiseTotal.toStringAsFixed(0)}",
@@ -325,7 +347,7 @@ class _SummarySection extends StatelessWidget {
             children: [
               const Text(
                 "Shipping Fee",
-                style: TextStyle(fontSize: 13, color: Color(0xFF666666)),
+                style: TextStyle(fontSize: 13, color: AppColors.textGreyDark),
               ),
               Text(
                 "Rs. ${shippingFee.toStringAsFixed(0)}",
@@ -365,17 +387,16 @@ class _VoucherSectionState extends State<_VoucherSection> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 12),
-      color: AppColors.backgroundWhite,
+      // color: AppColors.backgroundWhite,
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: AppColors.secondaryBGGradientColor,
+      ),
       child: Column(
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.card_giftcard,
-                color: Color(0xFFFF6B6B),
-                size: 20,
-              ),
+              GradientIconWidget(icon: Icons.card_giftcard, size: 20),
               const SizedBox(width: 8),
               const Text(
                 "Voucher & Code",
@@ -395,7 +416,7 @@ class _VoucherSectionState extends State<_VoucherSection> {
                   },
                   child: const Text(
                     "Voucher code >",
-                    style: TextStyle(fontSize: 12, color: Color(0xFF2196F3)),
+                    style: TextStyle(fontSize: 12, color: AppColors.secondaryColor1),
                   ),
                 ),
               if (_showVoucherInput)
@@ -532,7 +553,10 @@ class _TotalPaymentSection extends StatelessWidget {
     final total = merchandiseTotal + shippingFee;
 
     return Container(
-      color: AppColors.backgroundWhite,
+      // color: AppColors.backgroundWhite,
+      decoration: BoxDecoration(
+        gradient: AppColors.bgLightGradientColor,
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
@@ -546,17 +570,21 @@ class _TotalPaymentSection extends StatelessWidget {
                   "Total: ",
                   style: TextStyle(
                     fontSize: 16,
-                    color: AppColors.textGreyLight,
+                    color: AppColors.textGreyDark,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(width: 4),
+                // GradientText(
+                //   text: "Rs. ${total.toStringAsFixed(0)}",
+                //   fontSize: 16,
+                // ),
                 Text(
                   "RS ${total.toStringAsFixed(0)}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFFF6B3B),
+                    color: AppColors.textBlack,
                   ),
                 ),
               ],
@@ -573,7 +601,7 @@ class _TotalPaymentSection extends StatelessWidget {
               );
             },
             buttonText: "Place order",
-            width: 150,
+            width: 140,
             height: 40,
           ),
         ],

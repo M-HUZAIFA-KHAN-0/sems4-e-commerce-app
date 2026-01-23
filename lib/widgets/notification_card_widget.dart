@@ -40,7 +40,8 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite,
+            // color: AppColors.backgroundWhite,
+            gradient: AppColors.secondaryBGGradientColor,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: _borderGrey),
           ),
@@ -134,7 +135,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                       "Variant: ${item.variantText}",
                       style: const TextStyle(
                         fontSize: 13,
-                        color: _textGrey,
+                        color: AppColors.textGreyLabel,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -150,6 +151,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                               horizontal: 14,
                               vertical: 8,
                             ),
+                            side: const BorderSide(color: AppColors.borderGrey, width: 1.5),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -159,6 +161,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
+                              color: AppColors.textGreyLabel,
                             ),
                           ),
                         ),
@@ -226,7 +229,8 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
               height: 26,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Color(0xFF0A84FF),
+                // color: Color(0xFF0A84FF),
+                gradient: AppColors.bgGradient,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.15),

@@ -18,9 +18,12 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
-        leading: const BackButton(color: AppColors.textBlack),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        ),
         title: const Text(
-          "Order Payment",
+          'Order Payment',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
@@ -80,13 +83,13 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
 
   Widget _buildProgressIndicator() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: const [
           StepCircle(active: true, label: "DELIVERY", done: true),
-          StepLineWidget(isActive: true),
+          StepLine(active: true),
           StepCircle(active: true, label: "ADDRESS", done: true),
-          StepLineWidget(isActive: true),
+          StepLine(active: true),
           StepCircle(active: true, label: "PAYMENT", stepNumber: 3),
         ],
       ),
@@ -110,7 +113,8 @@ class PaymentOptionSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitleWidget(text: "Choose Payment Option"),
+        Text("Choose Payment Option", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        SizedBox(height: 12),
         _radioTile("Full Payment", "full"),
         _radioTile("Advance Payment", "advance"),
       ],
@@ -144,7 +148,8 @@ class PaymentMethodSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitleWidget(text: "Payment Method"),
+        Text("Payment Method", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        SizedBox(height: 12),
         _methodTile("Bank Transfer", "bank"),
         if (paymentType == "full") _methodTile("Credit Card", "card"),
       ],
@@ -193,11 +198,14 @@ class _BankTransferSectionState extends State<BankTransferSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitleWidget(text: "Payment Details"),
+        Text("Payment Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.grey.shade100,
+            // color: Colors.grey.shade100,
+            // color: AppColors.pinkPrimaryColor,
+            gradient: AppColors.tooLightGradientColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -274,7 +282,8 @@ class CreditCardSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitleWidget(text: "Card Details"),
+        Text("Card Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        SizedBox(height: 12),
         NoteBoxWidget(
           message:
               "Processing fee of 2% will be applied for credit card payments.",

@@ -99,7 +99,8 @@ class _UnpaidOrderCarouselWidgetState extends State<UnpaidOrderCarouselWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
