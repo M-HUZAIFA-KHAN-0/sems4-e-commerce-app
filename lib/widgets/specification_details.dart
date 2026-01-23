@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class SpecificationDetails extends StatelessWidget {
   final List<Map<String, dynamic>> sections;
@@ -14,7 +14,10 @@ class SpecificationDetails extends StatelessWidget {
             flex: 4,
             child: Text(
               row['key'] ?? '',
-              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+              style: TextStyle(
+                color: AppColors.textGreyDark.withOpacity(0.6),
+                fontSize: 13,
+              ),
             ),
           ),
           Expanded(
@@ -39,7 +42,7 @@ class SpecificationDetails extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.grey[200]!),
           ),

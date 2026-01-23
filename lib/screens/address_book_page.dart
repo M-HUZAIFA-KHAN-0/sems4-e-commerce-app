@@ -38,7 +38,7 @@
 //     showModalBottomSheet(
 //       context: context,
 //       isScrollControlled: true,
-//       backgroundColor: Colors.transparent,
+//       backgroundColor: AppColors.transparent,
 //       builder: (context) {
 //         return DraggableScrollableSheet(
 //           expand: false,
@@ -48,7 +48,7 @@
 //           builder: (context, scrollController) {
 //             return Container(
 //               decoration: const BoxDecoration(
-//                 color: Colors.white,
+//                 color: AppColors.backgroundWhite,
 //                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
 //               ),
 //               child: ListView(
@@ -162,7 +162,7 @@
 //                   _showAddressForm();
 //                 },
 //                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.black,
+//                   backgroundColor: AppColors.textBlack,
 //                   shape: RoundedRectangleBorder(
 //                     borderRadius: BorderRadius.circular(26),
 //                   ),
@@ -172,7 +172,7 @@
 //                   style: TextStyle(
 //                     fontSize: 14,
 //                     fontWeight: FontWeight.w800,
-//                     color: Colors.white,
+//                     color: AppColors.backgroundWhite,
 //                   ),
 //                 ),
 //               ),
@@ -184,9 +184,7 @@
 //   }
 // }
 
-import 'package:first/screens/address_drawer_form.dart';
-import 'package:first/widgets/widgets.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -200,150 +198,46 @@ class _AddressScreenState extends State<AddressScreen> {
     {
       'label': 'Home',
       'tag': 'Default',
+      // 'number': '1234567890',
       'address': '61480 Outbrook Park, PC 5679',
     },
     {
       'label': 'Office',
       'tag': '',
+      // 'number': '1234567890',
       'address': '699 Meadow Valley Terra, PC 3637',
     },
     {
       'label': 'Apartment',
       'tag': '',
+      // 'number': '1234567890',
       'address': '2183 Clyde Gallagher, PC 4642',
     },
     {
       'label': "Parent's House",
       'tag': '',
+      // 'number': '1234567890',
       'address': '5299 Blue Bill Park, PC 4627',
     },
-    {'label': 'Town Square', 'tag': '', 'address': '5373 Summerhouse, PC 4627'},
+    {
+      'label': 'Town Square',
+      'tag': '',
+      // 'number': '1234567890',
+      'address': '5373 Summerhouse, PC 4627',
+    },
   ];
 
   void _showAddressForm({Map<String, String>? editingAddr, int? index}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.7,
-          minChildSize: 0.4,
-          maxChildSize: 1.0,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-              child: ListView(
-                controller: scrollController,
-                children: [
-                  // Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Expanded(
-                          child: Text(
-                            editingAddr == null
-                                ? 'Add New Address'
-                                : 'Edit Address',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        if (editingAddr != null) ...[
-                          Center(
-                            child: TextButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (dialogContext) {
-                                    return DeleteConfirmationDialog(
-                                      title: 'Delete Address', // Pass heading
-                                      content:
-                                          'Are you sure you want to delete this address?', // Pass content
-                                      onConfirm: () {
-                                        setState(() {
-                                          addresses.removeAt(
-                                            index!,
-                                          ); // Perform deletion
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    221,
-                                    221,
-                                    221,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Text(
-                                  'Delete Address',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  // Form
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: AddressForm(
-                      existing: editingAddr,
-                      onSave: (newMap, isDefault) {
-                        setState(() {
-                          if (isDefault) {
-                            for (var addr in addresses) {
-                              addr['tag'] = '';
-                            }
-                            newMap['tag'] = 'Default';
-                          } else {
-                            newMap['tag'] = '';
-                          }
-                          if (index != null) {
-                            addresses[index] = newMap;
-                          } else {
-                            addresses.add(newMap);
-                          }
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+        return AddressFormDialog(
+          editingAddr: editingAddr,
+          index: index,
+          addresses: addresses,
+          onSave: () => setState(() {}),
         );
       },
     );
@@ -352,7 +246,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Address')),
+      appBar: AppBar(title: const Text('Address Book')),
       body: Column(
         children: [
           Expanded(
@@ -382,7 +276,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   _showAddressForm();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: AppColors.textBlack,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(26),
                   ),
@@ -392,7 +286,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                   ),
                 ),
               ),

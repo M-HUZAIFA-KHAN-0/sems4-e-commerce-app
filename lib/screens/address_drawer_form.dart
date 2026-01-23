@@ -1,5 +1,5 @@
 // address_form.dart
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class AddressForm extends StatefulWidget {
   final Map<String, String>? existing;
@@ -40,7 +40,7 @@ class _AddressFormState extends State<AddressForm> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          ' Address Details',
+          'Address Details',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
@@ -48,26 +48,25 @@ class _AddressFormState extends State<AddressForm> {
           controller: _nameCtrl,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Name',
+            labelText: 'Label (e.g., Home, Office)',
           ),
         ),
         const SizedBox(height: 16),
-        TextField(
+        MultilineTextFieldWidget(
           controller: _addrCtrl,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Address Details',
-            suffixIcon: Icon(Icons.location_on),
-          ),
+          labelText: 'Address Details',
+          maxLines: 3,
+          minLines: 3,
+          prefixIcon: Icons.location_on,
         ),
-
+        const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Checkbox(
               value: _isDefault,
-              activeColor: const Color.fromARGB(255, 0, 0, 0),
-              checkColor: Colors.white,
+              activeColor: AppColors.formBlack,
+              checkColor: AppColors.backgroundWhite,
               onChanged: (val) => setState(() => _isDefault = val!),
             ),
             const Text(
@@ -76,9 +75,7 @@ class _AddressFormState extends State<AddressForm> {
             ),
           ],
         ),
-
         const SizedBox(height: 16),
-        
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
           child: SizedBox(
@@ -95,25 +92,23 @@ class _AddressFormState extends State<AddressForm> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: AppColors.textBlack,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(26),
                 ),
               ),
               child: Text(
                 widget.existing == null ? 'Add' : 'Update',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                 ),
               ),
             ),
           ),
         ),
-        
       ],
     );
   }
 }
-

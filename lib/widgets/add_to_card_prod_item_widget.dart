@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'package:first/main-home.dart';
-import 'package:first/widgets/delete_confirmation_dialog_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
+
+/// Cart product item model
 
 class CartProductItem {
   const CartProductItem({
@@ -225,16 +224,13 @@ class _CartListWidgetState extends State<CartListWidget> {
                 height: 44,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF111111),
-                    width: 1.2,
-                  ),
+                  border: Border.all(color: AppColors.textBlack111, width: 1.2),
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.shopping_bag_outlined,
                     size: 20,
-                    color: Color(0xFF111111),
+                    color: AppColors.textBlack111,
                   ),
                 ),
               ),
@@ -249,7 +245,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                 style: const TextStyle(
                   fontSize: 14,
                   height: 1.35,
-                  color: Color(0xFF111111),
+                  color: AppColors.textBlack111,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -272,7 +268,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: AppColors.textBlack,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
@@ -283,7 +279,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppColors.backgroundWhite,
                     ),
                   ),
                 ),
@@ -310,7 +306,7 @@ class _CartListWidgetState extends State<CartListWidget> {
       children: [
         // Select all + Clear selected items
         Container(
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
           child: Row(
             children: [
@@ -321,17 +317,23 @@ class _CartListWidgetState extends State<CartListWidget> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: allSelected ? Colors.black : Colors.white,
+                    color: allSelected
+                        ? Colors.black
+                        : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                       color: allSelected
                           ? Colors.black
-                          : const Color(0xFFE7E9EE),
+                          : AppColors.borderGreyLighter,
                       width: 2,
                     ),
                   ),
                   child: allSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      ? const Icon(
+                          Icons.check,
+                          color: AppColors.backgroundWhite,
+                          size: 16,
+                        )
                       : const SizedBox.shrink(),
                 ),
               ),
@@ -341,43 +343,75 @@ class _CartListWidgetState extends State<CartListWidget> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Colors.black87,
+                  color: AppColors.textBlack87,
                 ),
               ),
               const Spacer(),
-              InkWell(
-                // onTap: anySelected ? _clearSelected : null,
-                onTap: anySelected ? () {
-                  showDialog(context: context, builder: (dialogContext){
-                    return DeleteConfirmationDialog(
-                      title: "Clear selected items",
-                      content:
-                      "Are you sure you want to remove the selected items from your cart?",
-                      onConfirm: () {
-                        _clearSelected();
-                      },
-                    );
-                  });
-                } : null,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 4,
+
+              // InkWell(
+              //   // onTap: anySelected ? _clearSelected : null,
+              //   onTap: anySelected ? () {
+              //     showDialog(context: context, builder: (dialogContext){
+              //       return DeleteConfirmationDialog(
+              //         title: "Clear selected items",
+              //         content:
+              //         "Are you sure you want to remove the selected items from your cart?",
+              //         onConfirm: () {
+              //           _clearSelected();
+              //         },
+              //       );
+              //     });
+              //   } : null,
+              //   borderRadius: BorderRadius.circular(8),
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 9,
+              //       vertical: 4,
+              //     ),
+              //     decoration: BoxDecoration(
+              //       color:  AppColors.formGrey221,
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: Text(
+              //       'Clear selected items',
+              //       style: TextStyle(
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.w600,
+              //         color: anySelected
+              //             ? const Color.fromARGB(221, 238, 0, 0)
+              //             :  AppColors.textGreyLabel,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              Center(
+                child: IconButton(
+                  onPressed: anySelected
+                      ? () {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              return DeleteConfirmationDialog(
+                                title: 'Clear Selected Items', // Pass heading
+                                content:
+                                    'Are you sure you want to clear the selected items?', // Pass content
+                                onConfirm: () {
+                                  _clearSelected();
+                                },
+                              );
+                            },
+                          );
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.delete,
+                    size: 34,
+                    color: anySelected
+                        ? const Color.fromARGB(255, 0, 0, 0)
+                        : AppColors.textGreyLabel,
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 221, 221, 221),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Clear selected items',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: anySelected
-                          ? const Color.fromARGB(221, 238, 0, 0)
-                          : const Color(0xFF9AA0A6),
-                    ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ),
@@ -441,7 +475,7 @@ class _CartRowCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(14),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
@@ -456,15 +490,23 @@ class _CartRowCard extends StatelessWidget {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: isSelected ? const Color.fromARGB(255, 0, 0, 0) : Colors.white,
+                color: isSelected
+                    ? const Color.fromARGB(255, 0, 0, 0)
+                    : AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected ? const Color.fromARGB(255, 0, 0, 0) : _borderGrey,
+                  color: isSelected
+                      ? const Color.fromARGB(255, 0, 0, 0)
+                      : _borderGrey,
                   width: 2,
                 ),
               ),
               child: isSelected
-                  ? const Icon(Icons.check, color: Colors.white, size: 16)
+                  ? const Icon(
+                      Icons.check,
+                      color: AppColors.backgroundWhite,
+                      size: 16,
+                    )
                   : const SizedBox.shrink(),
             ),
           ),
@@ -502,7 +544,7 @@ class _CartRowCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
-                            color: Colors.black87,
+                            color: AppColors.textBlack87,
                           ),
                         ),
                       ),
@@ -546,7 +588,7 @@ class _CartRowCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               const TextSpan(
@@ -554,7 +596,7 @@ class _CartRowCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.black87,
+                                  color: AppColors.textBlack87,
                                 ),
                               ),
                               TextSpan(
@@ -653,7 +695,7 @@ class _QtyControl extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Colors.black87,
+            color: AppColors.textBlack87,
           ),
         ),
         const SizedBox(width: 8),
@@ -684,7 +726,7 @@ class _CircleIconButton extends StatelessWidget {
         height: 28,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
+          color: AppColors.backgroundWhite,
           border: Border.all(color: _borderGrey, width: 1.6),
         ),
         child: Icon(icon, size: 20, color: enabled ? _iconGrey : _borderGrey),

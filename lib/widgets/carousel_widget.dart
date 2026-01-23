@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class CarouselWidget extends StatefulWidget {
   const CarouselWidget({super.key});
@@ -21,15 +21,14 @@ class _CarouselWidgetState extends State<CarouselWidget> {
 
   void _startAutoScroll() {
     Future.delayed(const Duration(seconds: 3), () {
-      if (_pageController.hasClients && mounted) {
-        _currentPage = (_currentPage + 1) % _numSlides;
-        _pageController.animateToPage(
-          _currentPage,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        _startAutoScroll();
-      }
+      if (!mounted || !_pageController.hasClients) return;
+      _currentPage = (_currentPage + 1) % _numSlides;
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      _startAutoScroll();
     });
   }
 
@@ -42,32 +41,30 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: 135, // ✅ fixed height to prevent overflow
       child: PageView(
         controller: _pageController,
         onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
+          setState(() => _currentPage = index);
         },
         children: const [
           DealCard(
             percent: '20%',
             title: 'Week Deals!',
             desc: 'Get a new car discount\nonly valid this week',
-            icon: Icons.directions_car,
+            imgUrl: 'https://picsum.photos/200?3',
           ),
           DealCard(
             percent: '30%',
             title: 'Hot Offer!',
             desc: 'Limited time SUV offers\nhurry up now',
-            icon: Icons.car_rental,
+            imgUrl: 'https://picsum.photos/200?3',
           ),
           DealCard(
             percent: '15%',
             title: 'Special Discount',
             desc: 'Best price for new models\nthis weekend',
-            icon: Icons.electric_car,
+            imgUrl: 'https://picsum.photos/200?3',
           ),
         ],
       ),
@@ -75,65 +72,102 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   }
 }
 
-/// Individual Deal Card widget used in carousel
+/// Individual Deal Card widget with image on right
 class DealCard extends StatelessWidget {
   final String percent;
   final String title;
   final String desc;
-  final IconData icon;
+  final String imgUrl;
 
-  const DealCard({super.key, 
+  const DealCard({
+    super.key,
     required this.percent,
     required this.title,
     required this.desc,
-    required this.icon,
+    required this.imgUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 6),
-      padding: const EdgeInsets.all(16),
+      // margin: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
+          /// LEFT TEXT
           Expanded(
+            flex: 3,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // vertically center
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  percent,
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    percent,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 2),
+                Flexible(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  desc,
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                const SizedBox(height: 2),
+                Flexible(
+                  child: Text(
+                    desc,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.black54,
+                      height: 1.1,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+
+          const SizedBox(width: 6),
+
+          /// RIGHT IMAGE
           Expanded(
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
+            flex: 2,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  imgUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: AppColors.backgroundGreyLight,
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 40,
+                        color: Colors.grey,
+                      ),
+                    );
+                  },
+                ),
               ),
-              child: Icon(icon, size: 60),
             ),
           ),
         ],

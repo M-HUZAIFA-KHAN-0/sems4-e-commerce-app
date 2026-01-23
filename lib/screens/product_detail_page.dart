@@ -1,6 +1,4 @@
-import 'package:first/screens/add_to_card_page.dart';
-import 'package:flutter/material.dart';
-import '../widgets/widgets.dart';
+import 'package:first/core/app_imports.dart';
 import 'comparison_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -49,11 +47,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         height: 50,
         decoration: BoxDecoration(
           border: Border.all(
-            color: _currentPage == index ? Colors.blue : Colors.grey[300]!,
+            color: _currentPage == index
+                ? Colors.blue
+                : AppColors.backgroundGreyLight!,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),
-          color: Colors.grey[100],
+          color: AppColors.backgroundGreyLighter,
         ),
         child: Icon(
           carouselIcons[index], // 🔥 SAME SOURCE
@@ -98,9 +98,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -154,7 +154,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                             children: carouselIcons.map((icon) {
                               return Container(
-                                color: Colors.grey[100],
+                                color: AppColors.backgroundGreyLighter,
                                 child: Icon(
                                   icon,
                                   size: 140,
@@ -181,7 +181,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               child: Text(
                                 '${_currentPage + 1} / ${carouselIcons.length}',
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.backgroundWhite,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -292,7 +292,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     'Rs',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: Color.fromARGB(255, 97, 97, 97),
+                                      color: AppColors.formGrey97,
                                     ),
                                   ),
                                   SizedBox(width: 4),
@@ -409,7 +409,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Container(
                         height: 44,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
+                          border: Border.all(
+                            color: AppColors.backgroundGreyLight!,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -645,33 +647,34 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 16),
 
-            Container(
-              child: Column(
-                children: [
-                  ShopMoreCategoriesWidget(
-                    title: "Shop More Categories",
-                    items: const [
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Wireless\nEarbuds",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Smart\nWatches",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Bluetooth\nSpeakers",
-                      ),
-                      ShopCategoryCardData(
-                        image: AssetImage("../assets/brands/dell.png"),
-                        title: "Tablets",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   child: Column(
+            //     children: [
+            //       ShopMoreCategoriesWidget(
+            //         title: "Shop More Categories",
+            //         items: const [
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Wireless\nEarbuds",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Smart\nWatches",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Bluetooth\nSpeakers",
+            //           ),
+            //           ShopCategoryCardData(
+            //             image: AssetImage("../assets/brands/dell.png"),
+            //             title: "Tablets",
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            CategoryViewCard(),
 
             const SizedBox(height: 24),
 
@@ -748,10 +751,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             //           const SizedBox(height: 24, child: DecoratedBox(
             //   decoration: BoxDecoration(color: Color.fromARGB(255, 180, 180, 180)),
             // ),),
-            Container(
-              height: 20,
-              color: const Color.fromARGB(255, 233, 233, 233),
-            ),
+            Container(height: 20, color: AppColors.productDetailLightGrey),
             const SizedBox(height: 24),
 
             Container(
@@ -786,7 +786,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
         child: SafeArea(
           top: false,
@@ -811,7 +811,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Specs',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -836,7 +836,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Review',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -861,7 +861,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 6),
                       Text(
                         'Compare',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
                       ),
                     ],
                   ),
@@ -871,7 +871,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               const SizedBox(width: 8),
 
               SizedBox(
-                width: 140,
+                width: 150,
                 height: 48,
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -884,14 +884,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   },
                   icon: const Icon(
                     Icons.shopping_bag_outlined,
-                    color: Colors.white,
+                    color: AppColors.backgroundWhite,
                   ),
                   label: const Text(
                     'Add to Cart',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: AppColors.backgroundWhite),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF7941D),
+                    backgroundColor: AppColors.primaryOrange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -911,16 +911,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     switch (color) {
       case 'Gold':
-        colorValue = const Color(0xFFD4AF37);
+        colorValue = AppColors.accentGold;
         break;
       case 'Silver':
-        colorValue = const Color(0xFFC0C0C0);
+        colorValue = AppColors.accentSilver;
         break;
       case 'Black':
-        colorValue = Colors.black;
+        colorValue = AppColors.textBlack;
         break;
       default:
-        colorValue = Colors.grey;
+        colorValue = AppColors.textGrey;
     }
 
     return GestureDetector(
@@ -937,7 +937,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             decoration: BoxDecoration(
               border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey[300]!,
+                color: isSelected
+                    ? Colors.blue
+                    : AppColors.backgroundGreyLight!,
                 width: isSelected ? 3 : 1,
               ),
               borderRadius: BorderRadius.circular(50),
@@ -972,9 +974,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[50] : Colors.transparent,
+          color: isSelected ? Colors.blue[50] : AppColors.transparent,
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey[300]!,
+            color: isSelected ? Colors.blue : AppColors.backgroundGreyLight!,
             width: isSelected ? 2 : 2,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -984,7 +986,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected ? Colors.blue : Colors.black,
+            color: isSelected ? Colors.blue : AppColors.textBlack,
           ),
         ),
       ),

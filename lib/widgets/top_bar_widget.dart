@@ -1,32 +1,38 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
-class TopBarWidget extends StatelessWidget {
+class TopBarWidget extends StatefulWidget {
   const TopBarWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
+  State<TopBarWidget> createState() => _TopBarWidgetState();
+}
 
-        /// HEADER WITH PROFILE
-        Row(
+class _TopBarWidgetState extends State<TopBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            /// LEFT PROFILE
             Row(
               children: [
                 CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Colors.grey[300],
-                  child: const Icon(Icons.person, color: Colors.grey),
+                  radius: 22,
+                  backgroundColor: AppColors.textGrey.withOpacity(0.3),
+                  child: const Icon(Icons.person, color: AppColors.textGrey),
                 ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text(
                       'Good Morning 👋',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: AppColors.textGrey),
                     ),
                     SizedBox(height: 4),
                     Text(
@@ -41,43 +47,12 @@ class TopBarWidget extends StatelessWidget {
               ],
             ),
 
-            // Row(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: [
-            //     IconButton(
-            //       icon: const Icon(Icons.search),
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => const SearchPage(),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //     IconButton(
-            //       icon: const Icon(Icons.favorite_border),
-            //       onPressed: () {},
-            //     ),
-            //     IconButton(
-            //       padding: EdgeInsets.zero,
-            //       icon: const Icon(Icons.menu_outlined),
-            //       onPressed: () {},
-            //     ),
-            //   ],
-            // ),
-
-
+            /// RIGHT ACTIONS
             Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
                   icon: const Icon(Icons.search),
                   onPressed: () {
                     Navigator.push(
@@ -88,35 +63,28 @@ class TopBarWidget extends StatelessWidget {
                     );
                   },
                 ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 32,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.menu_outlined),
-                  onPressed: () {},
-                ),
+                // IconButton(
+                //   padding: EdgeInsets.zero,
+                //   icon: const Icon(Icons.menu),
+                //   onPressed: () {
+                //     Scaffold.of(context).openEndDrawer();
+                //   },
+                // ),
               ],
             ),
-
-
           ],
         ),
-        const SizedBox(height: 24),
-      ],
+      ),
     );
+  }
+
+  void _openDrawerSlowly(BuildContext context) {
+    // Add longer delay to make drawer animation appear slower/more deliberate
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) {
+        Scaffold.of(context).openEndDrawer();
+      }
+    });
   }
 }
 
@@ -162,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundWhite,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -193,7 +161,10 @@ class _SearchPageState extends State<SearchPage> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search cars...',
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppColors.textGrey,
+                      ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.close),
@@ -205,11 +176,15 @@ class _SearchPageState extends State<SearchPage> {
                           : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        borderSide: BorderSide(
+                          color: AppColors.backgroundGreyLight!,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        borderSide: BorderSide(
+                          color: AppColors.backgroundGreyLight!,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -226,7 +201,7 @@ class _SearchPageState extends State<SearchPage> {
 
             const SizedBox(height: 8),
             const Divider(
-              color: Color.fromARGB(221, 155, 155, 155), // line color
+              color: AppColors.formGrey155, // line color
               thickness: 0.5, // line thickness
             ),
             const SizedBox(height: 8),

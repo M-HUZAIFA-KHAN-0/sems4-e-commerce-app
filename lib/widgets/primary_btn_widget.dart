@@ -1,22 +1,28 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class PrimaryBtnWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String buttonText;
   final Color? backgroundColor;
+  final double? height;
+  final double? width;
+  final double? fontSize;
 
   const PrimaryBtnWidget({
     super.key,
     required this.onPressed,
     this.buttonText = 'Add New Address',
-    this.backgroundColor = Colors.black,
+    this.backgroundColor = AppColors.textBlack,
+    this.height = 48,
+    this.width,
+    this.fontSize = 14,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: 48,
+      width: width ?? double.infinity,
+      height: height ?? 48,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -28,10 +34,10 @@ class PrimaryBtnWidget extends StatelessWidget {
         ),
         child: Text(
           buttonText,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: fontSize,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: AppColors.backgroundWhite,
           ),
         ),
       ),

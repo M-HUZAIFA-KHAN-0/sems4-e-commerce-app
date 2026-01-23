@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:first/core/app_imports.dart';
 
 class OrderGroupCard extends StatelessWidget {
   final String orderNumber;
   final String? placedDate;
   final String? status;
   final List<Map<String, dynamic>> items;
+  final bool isOrderTracking;
+  final VoidCallback? onTrackClick;
 
   const OrderGroupCard({
     super.key,
@@ -12,6 +14,8 @@ class OrderGroupCard extends StatelessWidget {
     this.placedDate,
     this.status,
     required this.items,
+    this.isOrderTracking = false,
+    this.onTrackClick,
   });
 
   double _parsePriceToDouble(String rawPrice) {
@@ -164,7 +168,7 @@ class OrderGroupCard extends StatelessWidget {
                                 //   'Qty: ${it['quantity'] ?? 1}',
                                 //   style: const TextStyle(
                                 //     fontSize: 12,
-                                //     color: Color(0xFF333333),
+                                //     color: AppColors.textGreyDark,
                                 //   ),
                                 // ),
                               ],
@@ -189,7 +193,7 @@ class OrderGroupCard extends StatelessWidget {
                                   'Qty: ${it['quantity'] ?? 1}',
                                   style: const TextStyle(
                                     fontSize: 12,
-                                    color: Color(0xFF333333),
+                                    color: AppColors.textGreyDark,
                                   ),
                                 ),
                               ],
@@ -218,7 +222,7 @@ class OrderGroupCard extends StatelessWidget {
                       Text(
                         'Total(${items.length} Item${items.length > 1 ? 's' : ''}):',
                         style: const TextStyle(
-                          color: Color(0xFF333333),
+                          color: AppColors.textGreyDark,
                           fontSize: 14,
                         ),
                       ),
@@ -237,7 +241,7 @@ class OrderGroupCard extends StatelessWidget {
                 // OutlinedButton(
                 //   onPressed: status == 'Cancelled' ? null : () {},
                 //   style: OutlinedButton.styleFrom(
-                //     foregroundColor: Colors.black87,
+                //     foregroundColor: AppColors.textBlack87,
                 //     side: const BorderSide(color: Color(0xFFBDBEC2)),
                 //     padding: const EdgeInsets.symmetric(
                 //       horizontal: 10,
@@ -251,7 +255,7 @@ class OrderGroupCard extends StatelessWidget {
                 // ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: isOrderTracking ? onTrackClick : () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF7A00),
                     elevation: 0, // shadow/border feel remove
@@ -266,9 +270,12 @@ class OrderGroupCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
-                    'Buy again',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  child: Text(
+                    isOrderTracking ? 'Track Now' : 'Buy again',
+                    style: const TextStyle(
+                      color: AppColors.backgroundWhite,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],

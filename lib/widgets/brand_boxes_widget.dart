@@ -1,101 +1,6 @@
-// import 'package:flutter/material.dart';
-
-// class BrandBoxesWidget extends StatelessWidget {
-//   const BrandBoxesWidget({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GridView.count(
-//       crossAxisCount: 5,
-//       shrinkWrap: true,
-//       physics: const NeverScrollableScrollPhysics(),
-//       mainAxisSpacing: 4,
-//       crossAxisSpacing: 4,
-//       childAspectRatio: 0.65,
-//       children: const [
-//         BrandIcon(brand: 'Mercedes'),
-//         BrandIcon(brand: 'Tesla'),
-//         BrandIcon(brand: 'BMW'),
-//         BrandIcon(brand: 'Toyota'),
-//         BrandIcon(brand: 'Volvo'),
-//         BrandIcon(brand: 'Bugatti'),
-//         BrandIcon(brand: 'Honda'),
-//         BrandIcon(brand: 'More'),
-//       ],
-//     );
-//   }
-// }
-
-// /// Individual Brand Icon widget
-// class BrandIcon extends StatelessWidget {
-//   final String brand;
-
-//   const BrandIcon({required this.brand});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final icons = {
-//       'Mercedes': Icons.star,
-//       'Tesla': Icons.flash_on,
-//       'BMW': Icons.settings,
-//       'Toyota': Icons.directions_car,
-//       'Volvo': Icons.build,
-//       'Bugatti': Icons.speed,
-//       'Honda': Icons.nature,
-//       'More': Icons.more_horiz,
-//     };
-
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Container(
-//           width: 48,
-//           height: 48,
-//           decoration: BoxDecoration(
-//             color: Colors.grey[200],
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//           child: Icon(
-//             icons[brand] ?? Icons.directions_car,
-//             color: Colors.black54,
-//             size: 30,
-//           ),
-//         ),
-//         const SizedBox(height: 3),
-//         SizedBox(
-//           width: 60,
-//           child: Text(
-//             brand,
-//             style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w400),
-//             textAlign: TextAlign.center,
-//             maxLines: 2,
-//             overflow: TextOverflow.ellipsis,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import 'package:flutter/material.dart';
+import 'package:first/screens/category_view_page.dart';
+import 'package:first/widgets/categories_drawer_widget.dart';
+import 'package:first/core/app_imports.dart';
 
 class BrandBoxesWidget extends StatelessWidget {
   const BrandBoxesWidget({super.key});
@@ -157,10 +62,18 @@ class BrandIcon extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icons[brand] ?? Icons.directions_car,
+            child: IconButton(
+              icon: Icon(icons[brand] ?? Icons.directions_car),
               color: Colors.black54,
-              size: 30,
+              iconSize: 28,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CategoryViewPage(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 3),

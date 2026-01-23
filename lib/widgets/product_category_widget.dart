@@ -1,22 +1,17 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class ShopCategoryCardData {
   const ShopCategoryCardData({
     required this.image,
     required this.title, // use "\n" for 2 lines exactly like SS
+    this.onTap,
   });
 
   final ImageProvider image;
   final String title;
+  final VoidCallback? onTap;
 }
 
-/// ✅ Reproduces the "Shop More Categories" section exactly like the SS:
-/// - Title on top (left aligned)
-/// - Light grey outer background
-/// - Light pink panel background
-/// - 2x2 grid cards
-/// - Purple border + rounded corners
-/// - White image area + purple bottom label with white text
 class ShopMoreCategoriesWidget extends StatelessWidget {
   const ShopMoreCategoriesWidget({
     super.key,
@@ -29,21 +24,19 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   final List<ShopCategoryCardData> items;
   final void Function(int index)? onTap;
 
-  // Colors sampled/matched to the screenshot style
-  static const Color _outerBg = Color(0xFFF2F3F5); // light grey
   static const Color _panelBg = Color(0xFFF6D5FB); // light pink
-  static const Color _purple = Color(0xFF8902A4);  // border + bottom bar
+  static const Color _purple = Color(0xFF8902A4); // border + bottom bar
 
   @override
   Widget build(BuildContext context) {
     // Expecting 4 cards (2x2) like SS, but will still render if more/less.
     return Container(
-      color: _outerBg,
+      color: _panelBg,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 18),
+          const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Text(
@@ -51,11 +44,11 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: AppColors.textBlack,
               ),
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 4),
           Container(
             width: double.infinity,
             color: _panelBg,
@@ -79,7 +72,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -87,11 +80,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
 }
 
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({
-    required this.data,
-    required this.purple,
-    this.onTap,
-  });
+  const _CategoryCard({required this.data, required this.purple, this.onTap});
 
   final ShopCategoryCardData data;
   final Color purple;
@@ -101,7 +90,7 @@ class _CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(color: purple, width: 3.5),
       ),
@@ -111,7 +100,7 @@ class _CategoryCard extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: AppColors.backgroundWhite,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(18),
                 child: Image(
@@ -132,7 +121,7 @@ class _CategoryCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppColors.backgroundWhite,
                   height: 1.15,
                 ),
               ),
@@ -144,9 +133,6 @@ class _CategoryCard extends StatelessWidget {
 
     if (onTap == null) return card;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: card,
-    );
+    return GestureDetector(onTap: onTap, child: card);
   }
 }

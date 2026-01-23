@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:first/core/app_imports.dart';
 
 class MenuItemData {
   final IconData icon;
@@ -28,10 +28,10 @@ class MenuSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.fromLTRB(17, 17, 17, 0),
+      padding: const EdgeInsets.fromLTRB(15, 17, 15, 1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,16 +40,16 @@ class MenuSectionWidget extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 16),
           GridView.count(
             crossAxisCount: 3,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 0,
-            crossAxisSpacing: 16,
+            crossAxisSpacing: 1,
             children: [for (final item in menuItems) _buildMenuItem(item)],
           ),
         ],
@@ -70,25 +70,25 @@ class MenuSectionWidget extends StatelessWidget {
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  // border: Border.all(color: Colors.black87, width: 2),
+                  // border: Border.all(color: AppColors.textBlack87, width: 2),
                 ),
-                child: Icon(item.icon, color: Colors.black87, size: 38),
+                child: Icon(item.icon, color: AppColors.textBlack87, size: 38),
               ),
               if (item.badgeCount > 0)
                 Container(
-                  width: 28,
-                  height: 28,
+                  width: 18,
+                  height: 18,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF2196F3),
+                    color: AppColors.primaryBlue,
                   ),
                   child: Center(
                     child: Text(
                       '${item.badgeCount}',
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
+                        color: AppColors.backgroundWhite,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -100,9 +100,9 @@ class MenuSectionWidget extends StatelessWidget {
             item.label,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textBlack87,
             ),
           ),
         ],
