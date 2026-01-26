@@ -30,7 +30,8 @@ class TitleIconRowWidget extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onTap,
-          child: Icon(icon, color: iconColor),
+          // child: Icon(icon, color: iconColor),
+          child: GradientIconWidget(icon: icon, size: 24,),
         ),
       ],
     );

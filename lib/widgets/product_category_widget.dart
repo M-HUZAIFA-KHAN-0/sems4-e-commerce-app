@@ -24,14 +24,20 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   final List<ShopCategoryCardData> items;
   final void Function(int index)? onTap;
 
-  static const Color _panelBg = Color(0xFFF6D5FB); // light pink
-  static const Color _purple = Color(0xFF8902A4); // border + bottom bar
+  static const Color _panelBg = Color.fromARGB(255, 228, 179, 221); // light pink
+  // static const Color _purple = Color(0xFF8902A4); // border + bottom bar
+  static const Color _purple = AppColors.secondaryColor1; // border + bottom bar
 
   @override
   Widget build(BuildContext context) {
     // Expecting 4 cards (2x2) like SS, but will still render if more/less.
     return Container(
-      color: _panelBg,
+      // color: _panelBg,
+      decoration: BoxDecoration(
+        // color: _panelBg,
+        gradient: AppColors.bgLightGradientColor,
+        borderRadius: BorderRadius.circular(6),
+      ),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +48,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
             child: Text(
               title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textBlack,
               ),
@@ -51,8 +57,11 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
-            color: _panelBg,
-            padding: const EdgeInsets.fromLTRB(26, 26, 26, 34),
+            // color: _panelBg,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(0, 228, 179, 221)
+            ),
+            padding: const EdgeInsets.fromLTRB(26, 18, 26, 34),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -72,7 +81,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
         ],
       ),
     );

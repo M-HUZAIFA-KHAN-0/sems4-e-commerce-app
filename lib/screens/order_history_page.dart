@@ -1,5 +1,4 @@
 import 'package:first/core/app_imports.dart';
-import 'order_tracking_page.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int initialTabIndex;
@@ -15,7 +14,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   late final TabController _tabController;
 
   // ---------------- SAMPLE DATA ----------------
-  final List<Map<String, dynamic>> _allOrders = [];
+  // final List<Map<String, dynamic>> _allOrders = [];
 
   final List<Map<String, dynamic>> _toPayOrders = [
     {
@@ -107,7 +106,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 6,
+      length: 4,
       vsync: this,
       initialIndex: widget.initialTabIndex,
     );
@@ -276,7 +275,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
           children: [
             // Pending Reviews Widget
             if (hasPending)
-              PendingReviewWidget(products: _pendingReviewProducts),
+            PendingReviewWidget(products: _pendingReviewProducts),
 
             // Reviewed Products Widget
             if (hasReviewed) ReviewedProductWidget(products: _reviewedProducts),
@@ -309,7 +308,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
               indicatorColor: AppColors.primaryBlue,
               labelColor: AppColors.textBlack87,
               tabs: const [
-                Tab(text: 'All'),
+                // Tab(text: 'All'),
                 Tab(text: 'Orders'),
                 Tab(text: 'Received'),
                 Tab(text: 'Reviews'),
@@ -322,34 +321,12 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
 
       body: Column(
         children: [
-          // ---------- DEMO BUTTONS (REMOVE LATER) ----------
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: Wrap(
-          //     spacing: 8,
-          //     children: [
-          //       ElevatedButton(
-          //         onPressed: () => goToTab(1),
-          //         child: const Text('Go to To Pay'),
-          //       ),
-          //       ElevatedButton(
-          //         onPressed: () => goToTab(4),
-          //         child: const Text('Go to To Review'),
-          //       ),
-          //       ElevatedButton(
-          //         onPressed: () => goToTab(5),
-          //         child: const Text('Go to Cancellation'),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
           // ---------------- TAB VIEWS ----------------
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildList(_allOrders),
+                // _buildList(_allOrders),
                 _buildList(_toPayOrders, isOrderTracking: true),
                 // _buildList(_toShipOrders),
                 _buildList(_toReceiveOrders),

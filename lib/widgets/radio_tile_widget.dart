@@ -13,9 +13,9 @@ class RadioTileWidget extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
-    this.activeBorderColor = Colors.blue,
+    this.activeBorderColor = AppColors.bgPrimaryColor,
     this.inactiveBorderColor = const Color(0xFFCECECE),
-    this.activeCircleColor = Colors.blue,
+    this.activeCircleColor = AppColors.bgPrimaryColor,
   });
 
   @override

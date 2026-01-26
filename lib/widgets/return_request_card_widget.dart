@@ -63,15 +63,16 @@ class ReturnRequestCardWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textBlack.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: AppColors.textBlack.withOpacity(0.05),
+        //     blurRadius: 8,
+        //     offset: const Offset(0, 2),
+        //   ),
+        // ],
       ),
       child: Column(
         children: [
@@ -90,7 +91,7 @@ class ReturnRequestCardWidget extends StatelessWidget {
                       'Return Request Date',
                       style: TextStyle(
                         fontSize: 10,
-                        color: AppColors.textGreyLight,
+                        color: AppColors.textGreyDark,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -233,7 +234,7 @@ class ReturnRequestCardWidget extends StatelessWidget {
                                 'Qty: $quantity',
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: AppColors.textGreyMedium,
+                                  color: AppColors.textGreyDark,
                                 ),
                               ),
                             ],
@@ -245,7 +246,7 @@ class ReturnRequestCardWidget extends StatelessWidget {
                             'Received: $receivedDate',
                             style: const TextStyle(
                               fontSize: 10,
-                              color: AppColors.textGreyLight,
+                              color: AppColors.textGreyDark,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -274,171 +275,7 @@ class ReturnRequestCardWidget extends StatelessWidget {
                 const Divider(height: 1, color: Color(0xFFE8E8E8)),
                 const SizedBox(height: 12),
 
-                // Timeline: Received -> Returned -> Refunded
-                Row(
-                  children: [
-                    // Received
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: status == 'Approved'
-                                  ? const Color(0xFF4CAF50)
-                                  : AppColors.textGreyMedium,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(
-                              Icons.check,
-                              color: AppColors.backgroundWhite,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Approved',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.textGreyMedium,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          // Text(
-                          //   status == 'Approved' ? receivedDate : "date",
-                          //   style: const TextStyle(
-                          //     fontSize: 9,
-                          //     color: AppColors.textGreyLight,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-
-                    // Arrow
-                    // Expanded(
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 2,
-                            width: 50,
-                            color: AppColors.textGreyMedium,
-                          ),
-                          // const SizedBox(height: 14),
-                          // const Icon(
-                          //   Icons.arrow_forward,
-                          //   size: 18,
-                          //   color: AppColors.primaryGreen,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    // ),
-
-                    // Returned
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: AppColors.textGreyMedium,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(
-                              Icons.restart_alt_rounded,
-                              color: AppColors.backgroundWhite,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Returned',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.textGreyMedium,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          // Text(
-                          //   "date",
-                          //   style: const TextStyle(
-                          //     fontSize: 9,
-                          //     color: AppColors.textGreyLight,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-
-                    // Arrow
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 2,
-                            width: 50,
-                            color: AppColors.textGreyMedium,
-                          ),
-                          // const SizedBox(height: 14),
-                          // const Icon(
-                          //   Icons.arrow_forward,
-                          //   size: 18,
-                          //   color: AppColors.primaryGreen,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    // ),
-
-                    // Refunded
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: AppColors.textGreyMedium,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(
-                              Icons.account_balance_wallet_outlined,
-                              color: AppColors.backgroundWhite,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Refunded',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.textGreyMedium,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          // Text(
-                          //   "date",
-                          //   style: const TextStyle(
-                          //     fontSize: 9,
-                          //     color: AppColors.textGreyLight,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                OrderReturnTimelineStatusWidget(status: status == 'Approved' ? 'approved' : 'pending'),
 
                 const SizedBox(height: 12),
                 const Divider(height: 1, color: Color(0xFFE8E8E8)),
@@ -456,14 +293,15 @@ class ReturnRequestCardWidget extends StatelessWidget {
                         color: AppColors.textGreyMedium,
                       ),
                     ),
-                    Text(
-                      refundAmount,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primaryGreen,
-                      ),
-                    ),
+                    // Text(
+                    //   refundAmount,
+                    //   style: const TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w700,
+                    //     color: AppColors.primaryGreen,
+                    //   ),
+                    // ),
+                    GradientText(text: refundAmount,fontSize: 16,fontWeight: FontWeight.w700,)
                   ],
                 ),
               ],

@@ -123,10 +123,17 @@ class _CartPageExampleState extends State<CartPageExample> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLighter,
       appBar: AppBar(
-        title: const Text("Cart"),
         backgroundColor: AppColors.backgroundWhite,
-        foregroundColor: AppColors.textBlack87,
         elevation: 0,
+        foregroundColor: AppColors.textBlack87,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: const Text(
+          'My Cart',
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
       ),
       body: Column(
         children: [
@@ -199,12 +206,6 @@ class _CartPageExampleState extends State<CartPageExample> {
   }
 }
 
-/// ✅ Dropdown Order Summary:
-/// - Initially CLOSED (only header line visible)
-/// - Tap anywhere on header to open/close
-/// - Expands from bottom to top with smooth animation
-/// - Shows each selected item's total price (price × quantity)
-/// - Shows grand total at the bottom
 class OrderSummaryDropdown extends StatefulWidget {
   const OrderSummaryDropdown({
     super.key,
@@ -247,7 +248,8 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
       curve: Curves.easeOut,
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.bgLightGradientColor,
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowBlack,
@@ -261,50 +263,6 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header line (clickable anywhere)
-          // InkWell(
-          //   onTap: _toggle,
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 4),
-          //     child: Row(
-          //       children: [
-          //         Expanded(
-          //           child: const Text(
-          //             "Order Summary",
-          //             style: TextStyle(
-          //               fontSize: 14,
-          //               fontWeight: FontWeight.w700,
-          //               color: AppColors.textBlack87,
-          //             ),
-          //           ),
-          //         ),
-          //         AnimatedRotation(
-          //           turns: _expanded ? 0.5 : 0.0,
-          //           duration: const Duration(milliseconds: 220),
-          //           curve: Curves.easeOut,
-          //           child: const Icon(
-          //             Icons.keyboard_arrow_up,
-          //             size: 22,
-          //             color: Colors.black54,
-          //           ),
-          //         ),
-          //         PrimaryBtnWidget(
-          //           height: 40,
-          //           width: 190,
-          //           buttonText: "Select payment method",
-          //           onPressed: () {
-          //             Navigator.push(
-          //               context,
-          //               MaterialPageRoute(
-          //                 builder: (context) => const CheckoutPage(),
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           InkWell(
             onTap: _toggle, // Order summary + arrow click
             child: Padding(
@@ -323,7 +281,8 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                             color: AppColors.textBlack87,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        // const SizedBox(width: 6),
+                        Spacer(),
 
                         // Arrow right after text
                         AnimatedRotation(
@@ -341,20 +300,20 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                   ),
 
                   // Button (only when NOT expanded)
-                  if (!_expanded)
-                    PrimaryBtnWidget(
-                      height: 43,
-                      width: 150,
-                      buttonText: "Checkout",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CheckoutPage(),
-                          ),
-                        );
-                      },
-                    ),
+                  // if (!_expanded)
+                  //   PrimaryBtnWidget(
+                  //     height: 43,
+                  //     width: 150,
+                  //     buttonText: "Checkout",
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const CheckoutPage(),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
                 ],
               ),
             ),
@@ -567,6 +526,12 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                   const SizedBox(height: 12),
 
                   // Button
+
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
                   PrimaryBtnWidget(
                     height: 43,
                     buttonText: "Checkout",
@@ -579,18 +544,6 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                       );
                     },
                   ),
-
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
-          // PrimaryBtnWidget(
-          //                 buttonText: "Select payment method",
-          //                 onPressed: (){
-          //                   Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage()));
-          //                 }
-          //               ),
         ],
       ),
     );

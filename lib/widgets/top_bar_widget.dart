@@ -17,40 +17,33 @@ class _TopBarWidgetState extends State<TopBarWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+
+            IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+                
             /// LEFT PROFILE
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: AppColors.textGrey.withOpacity(0.3),
-                  child: const Icon(Icons.person, color: AppColors.textGrey),
+            // Row(
+            //   children: [
+                SizedBox(
+                  height: 50,
+                  width: 200, // max width
+                  child: Image.asset(
+                    '../../assets/branding/png-nav-logo.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'Good Morning 👋',
-                      style: TextStyle(fontSize: 12, color: AppColors.textGrey),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Andrew Ainsley',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            //   ],
+            // ),
 
             /// RIGHT ACTIONS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
                 IconButton(
                   padding: EdgeInsets.zero,
                   icon: const Icon(Icons.search),
@@ -63,15 +56,9 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                     );
                   },
                 ),
-                // IconButton(
-                //   padding: EdgeInsets.zero,
-                //   icon: const Icon(Icons.menu),
-                //   onPressed: () {
-                //     Scaffold.of(context).openEndDrawer();
-                //   },
-                // ),
-              ],
-            ),
+                
+            //   ],
+            // ),
           ],
         ),
       ),

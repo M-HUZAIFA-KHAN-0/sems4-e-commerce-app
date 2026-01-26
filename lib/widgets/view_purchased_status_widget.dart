@@ -29,7 +29,10 @@ class ProductStatsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(Icons.remove_red_eye_outlined, size: 16, color: iconColor),
+        GradientIconWidget(
+          icon: Icons.remove_red_eye_outlined,
+          size: 16,
+        ),
         const SizedBox(width: 4),
         Text("${_formatCount(views)} Views", style: textStyle),
 
@@ -37,7 +40,10 @@ class ProductStatsRow extends StatelessWidget {
         Text('|', style: TextStyle(fontSize: 16, color: AppColors.formGrey34)),
         const SizedBox(width: 10),
 
-        Icon(Icons.shopping_bag_outlined, size: 16, color: iconColor),
+        GradientIconWidget(
+          icon: Icons.shopping_bag_outlined,
+          size: 16,
+        ),
         const SizedBox(width: 4),
         Text("${_formatCount(purchases)} Purchased", style: textStyle),
       ],

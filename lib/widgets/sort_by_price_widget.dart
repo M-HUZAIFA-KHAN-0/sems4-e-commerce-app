@@ -22,16 +22,16 @@ class ShopByPriceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 24, 10, 24),
-      color: AppColors.primaryYellow,
+      color: AppColors.productCategoryCardBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Shop by Price",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: FontSize.homePageTitle,
               fontWeight: FontWeight.bold,
-              color: AppColors.color333333,
+              color: AppColors.textBlack,
             ),
           ),
           SizedBox(height: 20),
@@ -83,7 +83,7 @@ class PriceButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isHighlighted ? AppColors.color4CAF50 : AppColors.primaryPink,
+          color: AppColors.secondaryColor1,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -99,9 +99,7 @@ class PriceButton extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isHighlighted
-                  ? AppColors.primaryPink
-                  : AppColors.backgroundWhite,
+              color: AppColors.backgroundWhite,
               fontWeight: FontWeight.w600,
               fontSize: 11,
             ),

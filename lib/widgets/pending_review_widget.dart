@@ -23,14 +23,15 @@ class PendingReviewWidget extends StatelessWidget {
         children: [
           SizedBox(height: 6),
           // Heading
-          const Text(
-            ' Pending Reviews',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textBlack87,
-            ),
-          ),
+          GradientText(text: " Pending Reviews"),
+          // const Text(
+          //   ' Pending Reviews',
+          //   style: TextStyle(
+          //     fontSize: 18,
+          //     fontWeight: FontWeight.w700,
+          //     color: AppColors.textBlack87,
+          //   ),
+          // ),
           const SizedBox(height: 12),
 
           // Product Cards
@@ -57,7 +58,8 @@ class PendingReviewWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
+        // color: const Color(0xFFFAFAFA),
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.borderGreyDivider, width: 1),
       ),

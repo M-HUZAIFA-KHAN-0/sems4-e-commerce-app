@@ -109,7 +109,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
   /// ---------------- STEPS ----------------
   Widget _buildProgressIndicator() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: const [
           StepCircle(active: true, label: "DELIVERY", stepNumber: 1),
@@ -136,10 +136,11 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
+          // color: AppColors.backgroundWhite,
+          gradient: AppColors.secondaryBGGradientColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primaryGreen : AppColors.borderGrey,
+            color: isSelected ? AppColors.bgPrimaryColor : AppColors.borderGrey,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
@@ -156,7 +157,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFF4CAF50)
+                      ? AppColors.bgPrimaryColor
                       : Colors.grey.shade400,
                   width: 2,
                 ),
@@ -166,7 +167,8 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
                       margin: const EdgeInsets.all(3),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primaryGreen,
+                        // color: AppColors.primaryGreen,
+                        gradient: AppColors.bgGradient,
                       ),
                     )
                   : null,
@@ -201,14 +203,18 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
             const SizedBox(width: 12),
 
             // PRICE
-            Text(
-              option.price,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryGreen,
-              ),
-            ),
+            // Text(
+            //   option.price,
+            //   style: const TextStyle(
+            //     fontSize: 18,
+            //     fontWeight: FontWeight.w600,
+            //     color: AppColors.primaryGreen,
+            //   ),
+            // ),
+            GradientText(
+              text: option.price,
+              fontSize: 18,
+            ), 
           ],
         ),
       ),

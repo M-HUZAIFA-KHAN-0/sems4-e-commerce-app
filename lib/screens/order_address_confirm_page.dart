@@ -101,7 +101,7 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
 
   Widget _buildProgressIndicator() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: const [
           StepCircle(active: true, label: "DELIVERY", done: true),
@@ -140,13 +140,20 @@ class _ContactInfoSectionState extends State<_ContactInfoSection> {
             icon: isEditing ? Icons.save : Icons.edit,
             onTap: () => setState(() => isEditing = !isEditing),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           TextField(
             controller: nameController,
             enabled: isEditing,
             decoration: const InputDecoration(
               labelText: "Full Name",
               isDense: true,
+
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.bgPrimaryColor,
+                  width: 2,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -156,6 +163,13 @@ class _ContactInfoSectionState extends State<_ContactInfoSection> {
             decoration: const InputDecoration(
               labelText: "Mobile Number",
               isDense: true,
+
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.bgPrimaryColor,
+                  width: 2,
+                ),
+              ),
             ),
             keyboardType: TextInputType.phone,
           ),
@@ -195,11 +209,13 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
               parentState?._showAddressForm();
             },
           ),
-          const SizedBox(height: 12),
+
+          const SizedBox(height: 14),
+
           DropdownButtonFormField<String>(
-            value: selectedAddress,
             hint: const Text("Select delivery address"),
             isExpanded: true,
+            elevation: 0,
 
             // 👇 Dropdown items (label + address)
             items: addresses.map((e) {
@@ -207,7 +223,7 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
                 value: e['label'],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  // mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       e['label'] ?? '',
@@ -246,8 +262,19 @@ class _DeliveryAddressSelectorState extends State<_DeliveryAddressSelector> {
             },
 
             decoration: const InputDecoration(
-              border: OutlineInputBorder(),
               isDense: true,
+
+              // enabledBorder: UnderlineInputBorder(
+              //   borderSide: BorderSide(
+              //     color: AppColors.borderGrey,
+              //   ),
+              // ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.bgPrimaryColor,
+                  width: 2,
+                ),
+              ),
             ),
           ),
         ],

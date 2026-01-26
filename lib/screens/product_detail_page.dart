@@ -1,5 +1,4 @@
 import 'package:first/core/app_imports.dart';
-import 'comparison_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -42,6 +41,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           curve: Curves.easeInOut,
         );
       },
+
+      // child: Container(
+      //   width: 50,
+      //   height: 50,
+      //   decoration: BoxDecoration(
+      //     border: Border.all(
+      //       color: _currentPage == index
+      //           ? Colors.blue
+      //           : AppColors.backgroundGreyLight,
+      //       width: 2,
+      //     ),
+      //     borderRadius: BorderRadius.circular(8),
+      //     color: AppColors.backgroundGreyLighter,
+      //   ),
+      //   child: Icon(
+      //     carouselIcons[index], // 🔥 SAME SOURCE
+      //     size: 26,
+      //     color: Colors.grey[400],
+      //   ),
+      // ),
       child: Container(
         width: 50,
         height: 50,
@@ -49,16 +68,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           border: Border.all(
             color: _currentPage == index
                 ? Colors.blue
-                : AppColors.backgroundGreyLight!,
+                : AppColors.backgroundGreyLight,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),
           color: AppColors.backgroundGreyLighter,
         ),
-        child: Icon(
-          carouselIcons[index], // 🔥 SAME SOURCE
-          size: 26,
-          color: Colors.grey[400],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            'https://picsum.photos/200?2',
+            fit: BoxFit.contain, // ❗ stretch nahi hogi
+          ),
         ),
       ),
     );
@@ -103,7 +124,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         backgroundColor: AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -131,10 +152,66 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               // padding: const EdgeInsets.all(10.0),
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: SizedBox(
-                height: 250, // total height same as carousel
+                height: 240, // total height same as carousel
                 child: Row(
                   children: [
                     /// MAIN CAROUSEL (LEFT)
+                    // Expanded(
+                    //   child: Stack(
+                    //     children: [
+                    //       PageView(
+                    //         controller: _pageController,
+                    //         onPageChanged: (index) {
+                    //           setState(() {
+                    //             _currentPage = index;
+                    //           });
+
+                    //           _thumbScrollController.animateTo(
+                    //             index * 25.0, // 60 height + 10 gap
+                    //             duration: const Duration(milliseconds: 300),
+                    //             curve: Curves.easeInOut,
+                    //           );
+                    //         },
+
+                    //         children: carouselIcons.map((icon) {
+                    //           return Container(
+                    //             color: AppColors.backgroundGreyLighter,
+                    //             child: Icon(
+                    //               icon,
+                    //               size: 140,
+                    //               color: Colors.grey[400],
+                    //             ),
+                    //           );
+                    //         }).toList(),
+                    //       ),
+
+                    //       /// PAGE INDICATOR
+                    //       Positioned(
+                    //         bottom: 12,
+                    //         right: 12,
+                    //         child: Container(
+                    //           padding: const EdgeInsets.symmetric(
+                    //             horizontal: 10,
+                    //             vertical: 6,
+                    //           ),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.grey[600],
+                    //             borderRadius: BorderRadius.circular(20),
+                    //           ),
+
+                    //           child: Text(
+                    //             '${_currentPage + 1} / ${carouselIcons.length}',
+                    //             style: const TextStyle(
+                    //               color: AppColors.backgroundWhite,
+                    //               fontSize: 11,
+                    //               fontWeight: FontWeight.w600,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Expanded(
                       child: Stack(
                         children: [
@@ -146,44 +223,51 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               });
 
                               _thumbScrollController.animateTo(
-                                index * 25.0, // 60 height + 10 gap
+                                index * 25.0,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
                               );
                             },
-
                             children: carouselIcons.map((icon) {
                               return Container(
-                                color: AppColors.backgroundGreyLighter,
-                                child: Icon(
-                                  icon,
-                                  size: 140,
-                                  color: Colors.grey[400],
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.glassmorphismBlack,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    'https://picsum.photos/200?2',
+                                    fit: BoxFit.contain,
+                                    width: 240,
+                                    height: 240,
+                                  ),
                                 ),
                               );
                             }).toList(),
                           ),
 
-                          /// PAGE INDICATOR
+                          /// PAGE INDICATOR (unchanged)
                           Positioned(
-                            bottom: 12,
-                            right: 12,
+                            bottom: 6,
+                            right: 6,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.grey[600],
+                                // color: Colors.grey[600],
+                                gradient: AppColors.bgGradient,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-
                               child: Text(
                                 '${_currentPage + 1} / ${carouselIcons.length}',
                                 style: const TextStyle(
                                   color: AppColors.backgroundWhite,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
                             ),
@@ -192,19 +276,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                     ),
 
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
 
                     /// THUMBNAILS (RIGHT)
                     SizedBox(
                       width: 50, // thumbnail column width
                       child: ListView.builder(
                         controller: _thumbScrollController,
-
                         physics: const BouncingScrollPhysics(),
                         itemCount: carouselIcons.length,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 6),
                             child: _thumbnailItem(index),
                           );
                         },
@@ -230,7 +313,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const Text(
                     'HP Laptop EQ2180AU 15.6 Inches\nAMD Ryzen 5 (8GB RAM - 512GBSSD)',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       height: 1.4,
                     ),
@@ -273,11 +356,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /// LEFT: Rs
-                          // const Text(
-                          //   'Rs',
-                          //   style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 97, 97, 97)),
-                          // ),
                           const SizedBox(width: 8),
 
                           /// CENTER: Old price + discount
@@ -328,14 +406,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.blue[50],
+                                        // color: Colors.blue[50],
+                                        gradient: AppColors.bgGradient,
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: const Text(
                                         '11% OFF',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.blue,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -357,7 +436,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   /// STORAGE SECTION
                   const Text(
                     'Storage',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
                   ),
 
                   const SizedBox(height: 8),
@@ -377,7 +456,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   /// COLORS SECTION
                   const Text(
                     'Colors',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
                   ),
 
                   const SizedBox(height: 8),
@@ -399,7 +478,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   // --- Quantity selector ---
                   const Text(
                     'Quantity',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
                   ),
 
                   const SizedBox(height: 8),
@@ -487,20 +566,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   /// DESCRIPTION
                   const Text(
                     'Description',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
                   ),
 
                   const SizedBox(height: 12),
 
-                  Text(
-                    'HP 15 (EQ2180AU) is a compact, powerful, and reliable laptop designed to meet the needs of professionals. '
-                    'With its AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD, it offers exceptional performance for everyday computing tasks.',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                      height: 1.6,
-                    ),
+                  
+
+                  ExpandableText(
+                    text:
+                        'HP 15 (EQ2180AU) is a compact, powerful, and reliable laptop designed to meet the needs of professionals. '
+                        'With its AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD, it offers exceptional performance for everyday computing tasks. '
+                        'The laptop features a 15.6-inch Full HD display that delivers vibrant visuals and sharp details, making it ideal for work and entertainment. '
+                        'Equipped with multiple connectivity options, including USB-C, HDMI, and Wi-Fi 6, it ensures seamless integration with various devices and networks. '
+                        'The HP 15 also boasts a long-lasting battery life, allowing users to stay productive on the go without frequent recharging. '
+                        'Its sleek design and durable build make it a stylish companion for professionals who value both performance and aesthetics.',
+                      // trimLines: 2,
                   ),
+
+                  // Text(
+                  //   'HP 15 (EQ2180AU) is a compact, powerful, and reliable laptop designed to meet the needs of professionals. '
+                  //   'With its AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD, it offers exceptional performance for everyday computing tasks.',
+                  //   style: TextStyle(
+                  //     fontSize: 13,
+                  //     color: Colors.grey[700],
+                  //     height: 1.6,
+                  //   ),
+                  // ),
 
                   const SizedBox(height: 24),
                 ],
@@ -509,26 +601,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(height: 8),
 
-            /// SIMILAR PRODUCTS
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue[50], // light blue background
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Similar Products",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  ProductDisplayWidget(
-                    cars: [
+            BGColorProdDisplayCard(
+              heading: "Similar Products",
+              cars: [
                       {
                         'name': 'BMW M4 Series',
                         'price': '\$155,000',
@@ -561,11 +636,66 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         'image': Icons.directions_car,
                         'color': Colors.red,
                       },
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                    ],),
+
+            /// SIMILAR PRODUCTS
+            // Container(
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     // color: Colors.blue[50], // light blue background
+
+            //     borderRadius: BorderRadius.circular(2),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       const Text(
+            //         "Similar Products",
+            //         style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.backgroundWhite),
+            //       ),
+
+            //       const SizedBox(height: 12),
+
+            //       ProductDisplayWidget(
+            //         cars: [
+            //           {
+            //             'name': 'BMW M4 Series',
+            //             'price': '\$155,000',
+            //             'rating': 4.5,
+            //             'status': 'New',
+            //             'image': Icons.directions_car,
+            //             'color': Colors.grey,
+            //           },
+            //           {
+            //             'name': 'Camaro Sports',
+            //             'price': '\$170,000',
+            //             'rating': 4.7,
+            //             'status': 'New',
+            //             'image': Icons.directions_car,
+            //             'color': Colors.amber,
+            //           },
+            //           {
+            //             'name': 'Audi Sports',
+            //             'price': '\$133,000',
+            //             'rating': 4.1,
+            //             'status': 'Used',
+            //             'image': Icons.directions_car,
+            //             'color': Colors.red,
+            //           },
+            //           {
+            //             'name': 'Audi Sports',
+            //             'price': '\$133,000',
+            //             'rating': 4.1,
+            //             'status': 'Used',
+            //             'image': Icons.directions_car,
+            //             'color': Colors.red,
+            //           },
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
             const SizedBox(height: 28),
 
@@ -583,13 +713,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     },
                     {
                       'icon': Icons.memory,
-                      'title': '512 GB',
-                      'description': 'Internal Memory',
-                    },
-                    {
-                      'icon': Icons.computer,
                       'title': '5500 U',
                       'description': 'Processor',
+                    },
+                    {
+                      'icon': Icons.storage,
+                      'title': '512 GB',
+                      'description': 'Internal Memory',
                     },
                     {
                       'icon': Icons.developer_board,
@@ -606,7 +736,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             // --- Specification Details (tag-based sections + rows) ---
             Padding(
               // key: _specDetailsKey,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SpecificationDetails(
                 sections: [
                   {
@@ -710,14 +840,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Reviews',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                    GradientText(text: "Reviews"),
+                    // const Text(
+                    //   'Reviews',
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    const SizedBox(height: 18),
                     ProductReview(
                       name: 'Sharjeel Atiq',
                       rating: 5,
@@ -760,13 +891,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: [
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      "Shop By Brand",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: GradientText(
+                      text: 'Shop By Brand',
                     ),
+                    // child: Text(
+                    //   "Shop By Brand",
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
                   ),
                   const SizedBox(height: 18),
                   BrandImageSlider(
@@ -778,10 +912,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     horizontalPadding: 24,
                     itemSpacing: 18,
                   ),
+            SizedBox(height: 22),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            Container(height: 46, color: AppColors.productDetailLightGrey),
           ],
         ),
       ),
@@ -807,11 +942,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.list_alt, color: Colors.black),
-                      const SizedBox(height: 6),
+                      // const Icon(Icons.list_alt, color: Colors.black),
+                      GradientIconWidget(icon: Icons.list_alt, size: 24),
+                      const SizedBox(height: 4),
                       Text(
                         'Specs',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
+                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
                       ),
                     ],
                   ),
@@ -832,11 +968,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star_border, color: Colors.black),
-                      const SizedBox(height: 6),
+                      // const Icon(Icons.star_border, color: Colors.black),
+                      GradientIconWidget(icon: Icons.star_border, size: 24),
+                      const SizedBox(height: 4),
                       Text(
                         'Review',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
+                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
                       ),
                     ],
                   ),
@@ -857,11 +994,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.compare_arrows, color: Colors.black),
-                      const SizedBox(height: 6),
+                      // const Icon(Icons.compare_arrows, color: Colors.black),
+                      GradientIconWidget(icon: Icons.compare_arrows, size: 24),
+                      const SizedBox(height: 4),
                       Text(
                         'Compare',
-                        style: TextStyle(color: Colors.grey[800], fontSize: 10),
+                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
                       ),
                     ],
                   ),
@@ -870,34 +1008,77 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               const SizedBox(width: 8),
 
-              SizedBox(
-                width: 150,
-                height: 48,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CartPageExample(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.shopping_bag_outlined,
-                    color: AppColors.backgroundWhite,
-                  ),
-                  label: const Text(
-                    'Add to Cart',
-                    style: TextStyle(color: AppColors.backgroundWhite),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryOrange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: 150,
+              //   height: 48,
+              //   decoration: BoxDecoration(
+              //     gradient: AppColors.bgGradient,
+              //     borderRadius: BorderRadius.circular(10),
+              //   ),
+              //   child: ElevatedButton.icon(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => CartPageExample(),
+              //         ),
+              //       );
+              //     },
+              //     icon: const Icon(
+              //       Icons.shopping_bag_outlined,
+              //       color: AppColors.backgroundWhite,
+              //     ),
+              //     label: const Text(
+              //       'Add to Cart',
+              //       style: TextStyle(color: AppColors.backgroundWhite),
+              //     ),
+              //     // style: ElevatedButton.styleFrom(
+              //     //   // backgroundColor: AppColors.primaryOrange,
+              //     //   shape: RoundedRectangleBorder(
+              //     //     borderRadius: BorderRadius.circular(10),
+              //     //   ),
+              //     // ),
+              //   ),
+              // ),
+
+              Container(
+  // width: 130,
+  height: 46,
+  // padding: const EdgeInsets.symmetric(horizontal: 1),
+  decoration: BoxDecoration(
+    gradient: AppColors.bgGradient, // ✅ gradient BG
+    borderRadius: BorderRadius.circular(10),
+  ),
+  alignment: Alignment.center,
+  child: ElevatedButton.icon(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CartPageExample(),
+        ),
+      );
+    },
+    icon: const Icon(
+      Icons.shopping_bag_outlined,
+      color: Colors.white, // ✅ white icon
+      size: 24,
+    ),
+    label: const Text(
+      'Add to Cart',
+      style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), // ✅ white text
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.transparent, // 🔥 MOST IMPORTANT
+      shadowColor: Colors.transparent,     // 🔥 remove shadow
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+  ),
+),
+
             ],
           ),
         ),
@@ -923,43 +1104,81 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         colorValue = AppColors.textGrey;
     }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedColor = color;
-        });
-      },
-      child: Column(
-        children: [
-          Container(
-            width: 45,
-            height: 45,
+    // return GestureDetector(
+    //   onTap: () {
+    //     setState(() {
+    //       selectedColor = color;
+    //     });
+    //   },
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         width: 45,
+    //         height: 45,
 
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isSelected
-                    ? Colors.blue
-                    : AppColors.backgroundGreyLight!,
-                width: isSelected ? 3 : 1,
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: colorValue,
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
+    //         decoration: BoxDecoration(
+    //           border: Border.all(
+    //             color: isSelected
+    //                 ? Colors.blue
+    //                 : AppColors.backgroundGreyLight,
+    //             width: isSelected ? 3 : 1,
+    //           ),
+    //           borderRadius: BorderRadius.circular(50),
+    //         ),
+    //         child: Container(
+    //           margin: const EdgeInsets.all(4),
+    //           decoration: BoxDecoration(
+    //             color: colorValue,
+    //             borderRadius: BorderRadius.circular(50),
+    //           ),
+    //         ),
+    //       ),
+    //       const SizedBox(height: 8),
+    //       Text(
+    //         color,
+    //         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    return GestureDetector(
+  onTap: () {
+    setState(() {
+      selectedColor = color;
+    });
+  },
+  child: Column(
+    children: [
+      Container(
+        width: 40,
+        height: 40,
+        padding: const EdgeInsets.all(1.5), // border ka thickness
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          gradient: isSelected
+              ? AppColors.bgGradient // selected ke liye gradient
+              : LinearGradient(
+                  colors: [const Color.fromARGB(255, 255, 255, 255), const Color.fromARGB(255, 255, 255, 255)], // non-selected ke liye black
+                ),
+        ),
+        child: Container(
+          margin: const EdgeInsets.all(2), // inner circle aur border ke beech gap
+          decoration: BoxDecoration(
+            color: colorValue,
+            borderRadius: BorderRadius.circular(50),
           ),
-          const SizedBox(height: 8),
-          Text(
-            color,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        ],
+        ),
       ),
-    );
+      const SizedBox(height: 8),
+      Text(
+        color,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+      ),
+    ],
+  ),
+);
+
   }
 
   Widget _buildStorageOption(String storage) {
@@ -971,24 +1190,153 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           selectedStorage = storage;
         });
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[50] : AppColors.transparent,
-          border: Border.all(
-            color: isSelected ? Colors.blue : AppColors.backgroundGreyLight!,
-            width: isSelected ? 2 : 2,
-          ),
-          borderRadius: BorderRadius.circular(12),
+      // child: Container(
+      //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      //   decoration: BoxDecoration(
+      //     color: isSelected ? Colors.blue[50] : AppColors.transparent,
+      //     gradient: isSelected ? AppColors.bgGradient : null,
+      //     border: Border.all(
+      //       color: isSelected ? Colors.blue : AppColors.backgroundGreyLight!,
+      //       width: isSelected ? 2 : 2,
+      //     ),
+      //     borderRadius: BorderRadius.circular(12),
+      //   ),
+      //   child: Text(
+      //     storage,
+      //     style: TextStyle(
+      //       fontSize: 12,
+      //       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+      //       color: isSelected ? Colors.blue : AppColors.textBlack,
+      //     ),
+      //   ),
+      // ),
+child:  Container(
+  padding: const EdgeInsets.all(2), // outer padding same for both
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(8),
+    gradient: isSelected ? AppColors.bgGradient : null, // gradient border
+    border: !isSelected
+        ? Border.all(
+            color: Colors.black,
+            width: 1.5,
+          )
+        : null,
+  ),
+  child: Container(
+    padding: isSelected? const EdgeInsets.symmetric(horizontal: 10, vertical: 7): const EdgeInsets.symmetric(horizontal: 8, vertical: 5),// inner padding same always
+    decoration: BoxDecoration(
+      color: isSelected ? Colors.blue[50] : AppColors.transparent,
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: ShaderMask(
+      shaderCallback: (bounds) => isSelected
+          ? AppColors.bgGradient.createShader(
+              Rect.fromLTWH(0, 0, bounds.width, bounds.height))
+          : LinearGradient(
+              colors: [AppColors.textBlack, AppColors.textBlack])
+              .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+      child: Text(
+        storage,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
-        child: Text(
-          storage,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected ? Colors.blue : AppColors.textBlack,
+      ),
+    ),
+  ),
+)
+
+
+
+
+    );
+  }
+}
+
+
+
+class ExpandableText extends StatefulWidget {
+  final String text;
+  final int trimLines;
+
+  const ExpandableText({
+    super.key,
+    required this.text,
+    this.trimLines = 3,
+  });
+
+  @override
+  State<ExpandableText> createState() => _ExpandableTextState();
+}
+
+class _ExpandableTextState extends State<ExpandableText> {
+  bool isExpanded = false;
+  late String firstPart;
+  late String secondPart;
+  bool isOverflow = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _splitText());
+  }
+
+  void _splitText() {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: widget.text,
+        style: const TextStyle(fontSize: 13, color: Colors.grey, height: 1.6),
+      ),
+      maxLines: widget.trimLines,
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(maxWidth: MediaQuery.of(context).size.width - 32);
+
+    if (textPainter.didExceedMaxLines) {
+      isOverflow = true;
+
+      // find approximate cutoff
+      int cutoff = (widget.text.length * 0.4).toInt(); // adjust 0.6 for exact length
+      firstPart = widget.text.substring(0, cutoff);
+      secondPart = widget.text.substring(cutoff);
+    } else {
+      firstPart = widget.text;
+      secondPart = '';
+    }
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isOverflow) {
+      return Text(
+        widget.text,
+        style: const TextStyle(fontSize: 13, color: Colors.grey, height: 1.6),
+      );
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(fontSize: 13, color: Colors.grey, height: 1.6),
+        children: [
+          TextSpan(
+            text: isExpanded ? widget.text : "$firstPart...",
           ),
-        ),
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: GestureDetector(
+              onTap: () => setState(() => isExpanded = !isExpanded),
+              child: Text(
+                isExpanded ? " Less" : " More",
+                style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

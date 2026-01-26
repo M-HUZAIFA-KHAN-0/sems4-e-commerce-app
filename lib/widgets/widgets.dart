@@ -1,6 +1,6 @@
 // Barrel file for all widgets
 export 'carousel_widget.dart';
-export 'brand_boxes_widget.dart';
+export 'categories_display_widget.dart';
 export 'top_deals_widget.dart';
 export 'product_display_widget.dart';
 export 'top_bar_widget.dart';
@@ -43,7 +43,6 @@ export 'card_container_widget.dart';
 export 'section_title_widget.dart';
 export 'radio_box_widget.dart';
 export 'title_icon_row_widget.dart';
-export 'step_line_widget.dart';
 export 'notification_card_item_widget.dart';
 export 'radio_tile_widget.dart';
 export 'note_box_widget.dart';
@@ -69,3 +68,8 @@ export 'outline_input_decoration_helper.dart';
 export 'faq_widget.dart';
 export '../app_colors.dart';
 export 'pick_multiple_img_field_widget.dart';
+export 'gradient_heading_text_widget.dart';
+export 'bg_color_prod_display_card_widget.dart';
+export 'gradient_icon_widget.dart';
+export 'order_return_timeline_status_widget.dart';
+import 'categories_drawer_widget.dart';

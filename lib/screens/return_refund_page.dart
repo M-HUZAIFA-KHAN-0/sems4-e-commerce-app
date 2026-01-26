@@ -109,34 +109,6 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
-          // Request Return/Refund Button
-          // SizedBox(
-          //   width: double.infinity,
-          //   height: 44,
-          //   child: ElevatedButton(
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor:  AppColors.primaryBlue,
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(8),
-          //       ),
-          //     ),
-          //     onPressed: () {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //         const SnackBar(
-          //           content: Text('Request Return/Refund functionality'),
-          //         ),
-          //       );
-          //     },
-          //     child: const Text(
-          //       'Request Return / Refund Product',
-          //       style: TextStyle(
-          //         color: AppColors.backgroundWhite,
-          //         fontSize: 14,
-          //         fontWeight: FontWeight.w600,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           PrimaryBtnWidget(
             onPressed: () {
               Navigator.push(
@@ -303,7 +275,7 @@ class _ReturnRefundPageState extends State<ReturnRefundPage>
               tabs: const [
                 Tab(text: 'Requests'),
                 Tab(text: 'Approved'),
-                Tab(text: 'Returned/Refunded'),
+                Tab(text: 'Refunded'),
                 Tab(text: 'Cancelled'),
               ],
             ),

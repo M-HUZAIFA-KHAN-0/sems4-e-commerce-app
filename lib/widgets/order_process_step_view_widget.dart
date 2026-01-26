@@ -7,6 +7,7 @@ class StepCircle extends StatelessWidget {
   final int stepNumber;
 
   const StepCircle({
+    super.key,
     required this.active,
     required this.label,
     this.done = false,
@@ -17,9 +18,15 @@ class StepCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 16,
-          backgroundColor: active ? Colors.green : Colors.grey.shade300,
+        Container(
+          width: 32, // radius 16 * 2
+          height: 32,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: active ? AppColors.bgGradient : null,
+            color: active ? null : Colors.grey.shade300,
+          ),
+          alignment: Alignment.center,
           child: done
               ? const Icon(
                   Icons.check,
@@ -32,11 +39,13 @@ class StepCircle extends StatelessWidget {
                     color: active
                         ? AppColors.backgroundWhite
                         : AppColors.textBlack,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
         ),
         const SizedBox(height: 6),
-        Text(label, style: TextStyle(fontSize: 10)),
+        Text(label, style: const TextStyle(fontSize: 10)),
       ],
     );
   }
@@ -44,15 +53,18 @@ class StepCircle extends StatelessWidget {
 
 class StepLine extends StatelessWidget {
   final bool active;
-  const StepLine({required this.active});
+  const StepLine({ super.key, required this.active});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        height: 2,
+        height: 2.5,
         margin: const EdgeInsets.only(bottom: 18),
-        color: active ? Colors.green : Colors.grey.shade300,
+        decoration: BoxDecoration(
+          gradient: active ? AppColors.bgGradient : null,
+          color: active ? null : Colors.grey.shade300,
+        ),
       ),
     );
   }

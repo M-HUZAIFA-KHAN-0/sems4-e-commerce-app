@@ -10,40 +10,32 @@ class SpecificationHighlights extends StatelessWidget {
     final title = t['title'] ?? '';
     final desc = t['description'] ?? '';
 
-    Widget leading;
-    if (icon is IconData) {
-      leading = CircleAvatar(
-        radius: 22,
-        backgroundColor: AppColors.statusBlueLight,
-        child: Icon(icon, color: AppColors.primaryBlue, size: 29),
-      );
-    } else if (icon is String) {
-      leading = Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: AppColors.statusBlueLight,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: Image.asset(icon, fit: BoxFit.cover),
-        ),
-      );
-    } else {
-      leading = CircleAvatar(
-        radius: 22,
-        backgroundColor: AppColors.statusBlueLight,
-        child: Icon(Icons.info_outline, color: AppColors.primaryBlue, size: 22),
-      );
-    }
+    // ✅ Simplified: hamesha gradient background + white icon
+    Widget leading = Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        gradient: AppColors.bgGradient,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: icon is IconData
+            ? Icon(icon, color: AppColors.backgroundWhite, size: 30)
+            : icon is String
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(icon, fit: BoxFit.cover),
+                  )
+                : const Icon(Icons.info_outline, color: AppColors.backgroundWhite, size: 26),
+      ),
+    );
 
     return SizedBox(
       width: 160,
       child: Row(
         children: [
           leading,
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,12 +71,14 @@ class SpecificationHighlights extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.backgroundGrey,
+        // color: AppColors.backgroundGrey,
+        // gradient: AppColors.secondaryBGGradientColor,
+        gradient: AppColors.bgLightGradientColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Wrap(
-        alignment: WrapAlignment.spaceEvenly, // 👈 horizontal center / evenly
-        runAlignment: WrapAlignment.center, // 👈 vertical center
+        alignment: WrapAlignment.spaceEvenly,
+        runAlignment: WrapAlignment.center,
         spacing: 12,
         runSpacing: 12,
         children: tags.map((t) => _buildTag(context, t)).toList(),

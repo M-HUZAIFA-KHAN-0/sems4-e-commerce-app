@@ -28,7 +28,8 @@ class MenuSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        // color: AppColors.backgroundWhite,
+        gradient: AppColors.secondaryBGGradientColor,
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.fromLTRB(15, 17, 15, 1),
@@ -38,12 +39,12 @@ class MenuSectionWidget extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: FontSize.homePageTitle,
               fontWeight: FontWeight.w800,
-              color: AppColors.textBlack87,
+              color: AppColors.secondaryColor1,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           GridView.count(
             crossAxisCount: 3,
             shrinkWrap: true,
@@ -65,14 +66,20 @@ class MenuSectionWidget extends StatelessWidget {
           Stack(
             alignment: Alignment.topRight,
             children: [
-              Container(
+              SizedBox(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  // border: Border.all(color: AppColors.textBlack87, width: 2),
+                // child: Icon(item.icon, color: AppColors.textBlack87, size: 38),
+                child: ShaderMask(
+                  shaderCallback: (bounds) =>
+                      AppColors.bgGradient.createShader(bounds),
+                  blendMode: BlendMode.srcIn,
+                  child: Icon(
+                    item.icon,
+                    size: 38,
+                    color: Colors.white, // base color for gradient
+                  ),
                 ),
-                child: Icon(item.icon, color: AppColors.textBlack87, size: 38),
               ),
               if (item.badgeCount > 0)
                 Container(
@@ -80,7 +87,7 @@ class MenuSectionWidget extends StatelessWidget {
                   height: 18,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primaryBlue,
+                    color: AppColors.secondaryColor1,
                   ),
                   child: Center(
                     child: Text(
@@ -95,7 +102,6 @@ class MenuSectionWidget extends StatelessWidget {
                 ),
             ],
           ),
-          // const SizedBox(height: 2),
           Text(
             item.label,
             textAlign: TextAlign.center,
