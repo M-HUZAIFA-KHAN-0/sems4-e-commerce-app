@@ -72,3 +72,4 @@ export 'gradient_heading_text_widget.dart';
 export 'bg_color_prod_display_card_widget.dart';
 export 'gradient_icon_widget.dart';
 export 'order_return_timeline_status_widget.dart';
+import 'categories_drawer_widget.dart';

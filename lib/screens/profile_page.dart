@@ -2,6 +2,8 @@ import 'package:first/screens/address_book_page.dart';
 import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/recent_view_more_page.dart';
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/auth_service.dart';
+import 'package:first/screens/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -145,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const OrderHistoryPage(initialTabIndex: 1),
+                                const OrderHistoryPage(initialTabIndex: 0),
                           ),
                         );
                       },
@@ -171,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const OrderHistoryPage(initialTabIndex: 2),
+                                const OrderHistoryPage(initialTabIndex: 1),
                           ),
                         );
                       },
@@ -184,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const OrderHistoryPage(initialTabIndex: 3),
+                                const OrderHistoryPage(initialTabIndex: 2),
                           ),
                         );
                       },
@@ -199,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const OrderHistoryPage(initialTabIndex: 4),
+                                const OrderHistoryPage(initialTabIndex: 3),
                           ),
                         );
                       },
@@ -439,8 +441,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           builder: (ctx) {
                             return LogoutDrawer(
                               onLogout: () {
-                                // Yahan tum logout ka logic likh sakte ho
-                                // print("User logged out");
+                                // Perform logout: clear session and token
+                                final authService = AuthService();
+                                authService.logout();
+
+                                // Navigate to login screen and clear navigation stack
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (_) => const MyHomePage(),
+                                  ),
+                                  (route) => false,
+                                );
                               },
                             );
                           },
@@ -456,7 +467,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         bottomNavigationBar: BottomBarWidget(
-          isLoggedIn: false,
           currentIndex: _selectedBottomIndex,
           onIndexChanged: (index) {
             if (index == 3) {

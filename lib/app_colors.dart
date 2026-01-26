@@ -7,6 +7,14 @@ class AppColors {
   static const Color secondaryColor1 = Color(0xFF0995D3);
   static const Color secondaryColor2 = Color.fromARGB(228, 47, 134, 172);
 
+  static const LinearGradient bgSecondaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(108 * 3.1415926535 / 180),
+    colors: [Color.fromRGBO(55, 140, 149, 0.342), Color.fromRGBO(183, 194, 154, 1)],
+    stops: [0.3264, 0.8233],
+  );
+  
   static const LinearGradient bgGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,

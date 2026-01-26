@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
-import 'main-home.dart';
+// import 'package:first/screens/onboarding_screen.dart';
+// import 'package:flutter/material.dart';
+// import 'main-home.dart';
+import 'package:first/core/app_imports.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +25,18 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: const MyHomePage(),
+      // home: const MyHomePage(),
+      // home: const OnboardingScreen(),
+      home: const CheckoutPage(),
+    //   home: const ProductDetailPage( product: {
+    //   'name': 'Camaro Sports',
+    //   'price': '\$170,000',
+    //   'rating': 4.7,
+    //   'status': 'New',
+    //   'image': Icons.directions_car,
+    //   // 'color': Colors.amber[100],
+    // },
+    //   ),
     );
   }
 }

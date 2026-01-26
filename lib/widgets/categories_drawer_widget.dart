@@ -1,90 +1,101 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/screens/logout_drawer.dart';
+import 'package:first/services/api/auth_service.dart';
 
-class CategoriesDrawer extends StatefulWidget {
-  const CategoriesDrawer({super.key});
-
-  @override
-  State<CategoriesDrawer> createState() => _CategoriesDrawerState();
-}
-
-class _CategoriesDrawerState extends State<CategoriesDrawer> {
-  final List<MenuItemData> topMenuItems = [
-    MenuItemData(
-      label: 'My Account',
-      icon: Icons.person,
-      page: const ProfilePage(),
-    ),
-    MenuItemData(
-      label: 'My Orders',
-      icon: Icons.location_on,
-      page: const OrderHistoryPage(),
-    ),
-    MenuItemData(
-      label: 'Notifications',
-      icon: Icons.notifications,
-      page: const NotificationPage(),
-    ),
-    MenuItemData(
-      label: 'Wishlist',
-      icon: Icons.favorite,
-      page: const WishlistPage(),
-    ),
-    MenuItemData(
-      label: 'Cart',
-      icon: Icons.shopping_cart,
-      page: const CartPageExample(),
-    ),
-  ];
-
-  final List<MenuItemData> bottomMenuItems = [
-    // MenuItemData(label: 'About'),
-    MenuItemData(
-      label: 'Return & Refund',
-      icon: Icons.repeat_rounded,
-      page: const ReturnRefundPage(),
-    ),
-    MenuItemData(
-      label: 'FAQs',
-      icon: Icons.help_outline,
-      page: const FAQsPage(),
-    ),
-    MenuItemData(
-      label: 'Launch a Complaint',
-      icon: Icons.assignment,
-      page: const AddComplaintsFormPage(),
-    ),
-    MenuItemData(
-      label: 'Contact',
-      icon: Icons.phone_outlined,
-      page: const ContactUsPage(),
-    ),
-    MenuItemData(label: 'Logout', icon: Icons.logout),
-  ];
-
-  final List<CategoryItem> categories = [
-    CategoryItem(label: 'Mobiles'),
-    CategoryItem(label: 'Smart Watches'),
-    CategoryItem(label: 'Wireless Earbuds'),
-    CategoryItem(label: 'Air Purifiers'),
-    CategoryItem(label: 'Personal Cares'),
-    CategoryItem(label: 'Mobile Accessories'),
-    CategoryItem(label: 'Bluetooth Speakers'),
-    CategoryItem(label: 'Power Banks'),
-    CategoryItem(label: 'Tablets'),
-    CategoryItem(label: 'Laptops'),
-  ];
-
-  final List<PopularListItem> popularLists = [
-    PopularListItem(label: 'Best Mobiles Under 10000'),
-    PopularListItem(label: 'Best Mobiles Under 15000'),
-    PopularListItem(label: 'Best Mobiles Under 20000'),
-    PopularListItem(label: 'Best Mobiles Under 30000'),
-    PopularListItem(label: 'Best Mobiles Under 40000'),
-    PopularListItem(label: 'Best Mobiles Under 50000'),
-  ];
+class CategoriesDrawerWidget extends StatelessWidget {
+  const CategoriesDrawerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void handleLogout() {
+      final authService = AuthService();
+      authService.logout();
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const MyHomePage()),
+        (route) => false,
+      );
+    }
+
+    final List<MenuItemData> topMenuItems = [
+      MenuItemData(
+        label: 'My Account',
+        icon: Icons.person,
+        page: const ProfilePage(),
+      ),
+      MenuItemData(
+        label: 'My Orders',
+        icon: Icons.location_on,
+        page: AppConstant.isloggedIn ? OrderHistoryPage() : LoginPage(),
+      ),
+      MenuItemData(
+        label: 'Notifications',
+        icon: Icons.notifications,
+        page: const NotificationPage(),
+      ),
+      MenuItemData(
+        label: 'Wishlist',
+        icon: Icons.favorite,
+        page: const WishlistPage(),
+      ),
+      MenuItemData(
+        label: 'Cart',
+        icon: Icons.shopping_cart,
+        page: const CartPageExample(),
+      ),
+    ];
+
+    final List<MenuItemData> bottomMenuItems = [
+      // MenuItemData(label: 'About'),
+      MenuItemData(
+        label: 'Return & Refund',
+        icon: Icons.repeat_rounded,
+        page: AppConstant.isloggedIn ? ReturnRefundPage() : LoginPage(),
+      ),
+      MenuItemData(
+        label: 'FAQs',
+        icon: Icons.help_outline,
+        page: const FAQsPage(),
+      ),
+      MenuItemData(
+        label: 'Launch a Complaint',
+        icon: Icons.assignment,
+        page: const AddComplaintsFormPage(),
+      ),
+      MenuItemData(
+        label: 'Contact',
+        icon: Icons.phone_outlined,
+        page: const ContactUsPage(),
+      ),
+      MenuItemData(
+        label: AppConstant.isloggedIn ? 'Logout' : 'Login',
+        icon: AppConstant.isloggedIn ? Icons.logout : Icons.login,
+        page: AppConstant.isloggedIn ? LogoutDrawer(onLogout: handleLogout) : LoginPage(),
+      ),
+    ];
+
+    final List<CategoryItem> categories = [
+      CategoryItem(label: 'Mobiles'),
+      CategoryItem(label: 'Smart Watches'),
+      CategoryItem(label: 'Wireless Earbuds'),
+      CategoryItem(label: 'Air Purifiers'),
+      CategoryItem(label: 'Personal Cares'),
+      CategoryItem(label: 'Mobile Accessories'),
+      CategoryItem(label: 'Bluetooth Speakers'),
+      CategoryItem(label: 'Power Banks'),
+      CategoryItem(label: 'Tablets'),
+      CategoryItem(label: 'Laptops'),
+    ];
+
+    final List<PopularListItem> popularLists = [
+      PopularListItem(label: 'Best Mobiles Under 10000'),
+      PopularListItem(label: 'Best Mobiles Under 15000'),
+      PopularListItem(label: 'Best Mobiles Under 20000'),
+      PopularListItem(label: 'Best Mobiles Under 30000'),
+      PopularListItem(label: 'Best Mobiles Under 40000'),
+      PopularListItem(label: 'Best Mobiles Under 50000'),
+    ];
+
     return Drawer(
       backgroundColor: AppColors.transparent,
       elevation: 0,
@@ -122,11 +133,8 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
-                        Icons.close,
-                        color: AppColors.textBlack87,
-                        size: 28,
-                      ),
+                      icon: const Icon(Icons.close),
+                      iconSize: 28,
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -140,7 +148,7 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                   child: Column(
                     children: [
                       // TOP MENU
-                      _blueMenu(topMenuItems),
+                      _blueMenu(topMenuItems, context),
 
                       // CATEGORIES
                       _section(
@@ -167,7 +175,7 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
                       const Divider(),
 
                       // BOTTOM MENU
-                      _blueMenu(bottomMenuItems),
+                      _blueMenu(bottomMenuItems, context),
                     ],
                   ),
                 ),
@@ -179,7 +187,7 @@ class _CategoriesDrawerState extends State<CategoriesDrawer> {
     );
   }
 
-  Widget _blueMenu(List<MenuItemData> items) {
+  Widget _blueMenu(List<MenuItemData> items, BuildContext context) {
     return Container(
       decoration: BoxDecoration(gradient: AppColors.bgGradient),
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),

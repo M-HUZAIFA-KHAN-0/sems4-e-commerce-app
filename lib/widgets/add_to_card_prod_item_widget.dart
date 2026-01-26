@@ -63,15 +63,11 @@ class CartListWidget extends StatefulWidget {
     this.items,
     this.onChanged,
     this.onShopNow,
-    // this.emptyMessage = "Your cart is empty",
-    this.emptyMessage =
-        "Your bag is empty.\nWhen you add products, they'll\nappear here.",
   });
 
   final List<CartProductItem>? items;
   final ValueChanged<List<CartProductItem>>? onChanged;
   final VoidCallback? onShopNow;
-  final String emptyMessage;
 
   @override
   State<CartListWidget> createState() => _CartListWidgetState();
@@ -201,82 +197,20 @@ class _CartListWidgetState extends State<CartListWidget> {
   @override
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Icon
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.textBlack111, width: 1.2),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 20,
-                    color: AppColors.textBlack111,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Message (same "structure" as your Text return)
-              Text(
-                widget
-                    .emptyMessage, // e.g. "Your bag is empty.\nWhen you add products, they'll\nappear here."
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.35,
-                  color: AppColors.textBlack111,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-
-              // ✅ fixed gap between content and button
-              const SizedBox(height: 25),
-
-              // Button
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  // onPressed: widget.onShopNow,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyHomePage(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.textBlack,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                  ),
-                  child: const Text(
-                    "Shop Now",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.backgroundWhite,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+      return EmptyStateWidget(
+      emptyMessage:
+          "Your bag is empty.\nWhen you add products, they'll\nappear here.",
+      icon: Icons.shopping_bag_outlined,
+      buttonText: "Shop Now",
+      onButtonPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MyHomePage(),
           ),
-        ),
-      );
+        );
+      },
+    );
     }
 
     final anySelected = _items.any((e) => e.isSelected);

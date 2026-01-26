@@ -1,4 +1,6 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/screens/order_receipt_page.dart';
+import 'package:first/screens/order_confirmation_success_screen.dart';
 
 class OrderPaymentPage extends StatefulWidget {
   const OrderPaymentPage({super.key});
@@ -73,7 +75,41 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
             child: PrimaryBtnWidget(
               width: double.infinity,
               buttonText: "Next",
-              onPressed: () {},
+              onPressed: () {
+                // Create order receipt page with sample data
+                final orderReceiptPage = OrderReceiptPage(
+                  orderNumber: '2827966',
+                  productName: 'Tecno Camon 40 Pro',
+                  productPrice: '60,999',
+                  productColor: 'GALAXY BLACK',
+                  productImage: 'https://picsum.photos/200?1',
+                  orderData: {
+                    'name': 'Huzaifa Khan',
+                    'email': 'huzpubgkhan@gmail.com',
+                    'phone': '03154699890',
+                    'cnic': '42101-3754411-3',
+                    'province': 'Sindh',
+                    'city': 'Karachi - North\nKarachi Sector 11',
+                    'area': 'Sector 11 - C 2',
+                    'address': 'R-196 top floor sector 11c2 north Karachi',
+                    'shippingCost': '149',
+                    'expectedDelivery': 'Oct 30 - Nov 01',
+                    'totalPrice': '61,148',
+                    'paidAmount': '1,148',
+                  },
+                );
+
+                // Navigate to confirmation screen which will then navigate to receipt
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => OrderConfirmationSuccessScreen(
+                      targetPage: orderReceiptPage,
+                      message: 'Your order has been placed successfully',
+                      displayDuration: const Duration(seconds: 2),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -113,7 +149,10 @@ class PaymentOptionSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Choose Payment Option", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        Text(
+          "Choose Payment Option",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
         SizedBox(height: 12),
         _radioTile("Full Payment", "full"),
         _radioTile("Advance Payment", "advance"),
@@ -148,7 +187,10 @@ class PaymentMethodSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Payment Method", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        Text(
+          "Payment Method",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
         SizedBox(height: 12),
         _methodTile("Bank Transfer", "bank"),
         if (paymentType == "full") _methodTile("Credit Card", "card"),
@@ -198,7 +240,10 @@ class _BankTransferSectionState extends State<BankTransferSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Payment Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        Text(
+          "Payment Details",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
         SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(10),
@@ -282,7 +327,10 @@ class CreditCardSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Card Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+        Text(
+          "Card Details",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
         SizedBox(height: 12),
         NoteBoxWidget(
           message:

@@ -20,10 +20,11 @@ export 'dart:async';
 // ==================== PROJECT CORE & UTILITIES ====================
 export 'package:first/app_colors.dart';
 export 'package:first/constants/app_spacing.dart';
+export 'package:first/core/app_constant.dart';
 
 // ==================== PROJECT WIDGETS ====================
 // Barrel export for all common widgets
-export 'package:first/widgets/widgets.dart';
+export 'package:first/widgets/widgets.dart' hide session;
 
 // ==================== PROJECT SCREENS (Common Navigation) ====================
 // Navigation screens used across multiple pages
@@ -37,6 +38,8 @@ export 'package:first/screens/checkout_page.dart';
 export 'package:first/screens/category_view_page.dart';
 export 'package:first/screens/order_tracking_page.dart';
 export 'package:first/screens/order_history_page.dart';
+export 'package:first/screens/order_receipt_page.dart';
+export 'package:first/screens/order_confirmation_success_screen.dart';
 export 'package:first/screens/return_refund_page.dart';
 export 'package:first/screens/email_verification_page.dart';
 export 'package:first/screens/login_page.dart';
@@ -48,13 +51,22 @@ export 'package:first/screens/contact_page.dart';
 export 'package:first/screens/complaints_page.dart';
 export 'package:first/screens/add_complaints_form_page.dart';
 export 'package:first/screens/complaint_detail_page.dart';
-
+import 'package:first/screens/logout_drawer.dart';
+export 'package:first/screens/address_book_page.dart';
 
 // ==================== THIRD-PARTY PACKAGES ====================
 // Image handling
 export 'package:image_picker/image_picker.dart';
 export 'package:image_cropper/image_cropper.dart';
 export 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
+// API & Networking
+export 'package:dio/dio.dart';
+
+// ==================== PROJECT MODELS & SERVICES ====================
+export 'package:first/models/models.dart';
+export 'package:first/services/services.dart';
+export 'package:first/services/user_session_manager.dart';
 
 // ==================== PROJECT Font ====================
 export 'fontsize.dart';
