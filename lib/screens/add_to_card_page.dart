@@ -9,6 +9,7 @@ class CartPageExample extends StatefulWidget {
 
 class _CartPageExampleState extends State<CartPageExample> {
   int _selectedBottomIndex = 3; // Set to 3 for Bag tab
+  final UserSessionManager _sessionManager = UserSessionManager();
 
   // Parent controls initial data + stock values
   List<CartProductItem> cartItems = [
@@ -112,13 +113,7 @@ class _CartPageExampleState extends State<CartPageExample> {
     // ✅ calculate ONLY selected items
     final selectedItems = cartItems.where((e) => e.isSelected).toList();
     final selectedCount = selectedItems.length;
-
-    final totalSelected = selectedItems.fold<double>(
-      0,
-      (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
-    );
-
-    final totalText = _formatMoney(totalSelected);
+    final isLoggedIn = _sessionManager.isLoggedIn;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLighter,
@@ -135,39 +130,10 @@ class _CartPageExampleState extends State<CartPageExample> {
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: CartListWidget(
-              items: cartItems,
-              onChanged: (updatedItems) {
-                setState(() {
-                  cartItems = updatedItems;
-                });
-              },
-              // emptyMessage: "Your cart is empty",
-              emptyMessage:
-                  "Your bag is empty.\nWhen you add products, they'll\nappear here.",
-            ),
-          ),
-
-          // ✅ Collapsible Order Summary (dropdown)
-          if (cartItems.isNotEmpty)
-            OrderSummaryDropdown(
-              items: cartItems,
-              selectedItems: selectedItems,
-              itemCount: selectedCount,
-              totalText: totalText,
-              parsePrice: _parsePrice,
-              formatMoney: _formatMoney,
-              onSelectPayment: () {
-                // TODO: handle payment method selection
-              },
-            ),
-        ],
-      ),
+      body: isLoggedIn
+          ? _buildCartContent(selectedItems, selectedCount)
+          : _buildLoginRequiredState(),
       bottomNavigationBar: BottomBarWidget(
-        isLoggedIn: false,
         currentIndex: _selectedBottomIndex,
         onIndexChanged: (index) {
           if (index == 0) {
@@ -202,6 +168,61 @@ class _CartPageExampleState extends State<CartPageExample> {
           });
         },
       ),
+    );
+  }
+
+  Widget _buildCartContent(
+    List<CartProductItem> selectedItems,
+    int selectedCount,
+  ) {
+    final totalSelected = selectedItems.fold<double>(
+      0,
+      (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
+    );
+    final totalText = _formatMoney(totalSelected);
+
+    return Column(
+      children: [
+        Expanded(
+          child: CartListWidget(
+            items: cartItems,
+            onChanged: (updatedItems) {
+              setState(() {
+                cartItems = updatedItems;
+              });
+            },
+            // emptyMessage:
+            //     "Your bag is empty.\nWhen you add products, they'll\nappear here.",
+          ),
+        ),
+
+        // ✅ Collapsible Order Summary (dropdown)
+        if (cartItems.isNotEmpty)
+          OrderSummaryDropdown(
+            items: cartItems,
+            selectedItems: selectedItems,
+            itemCount: selectedCount,
+            totalText: totalText,
+            parsePrice: _parsePrice,
+            formatMoney: _formatMoney,
+            onSelectPayment: () {},
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLoginRequiredState() {
+    return EmptyStateWidget(
+      emptyMessage:
+          "Sign in to your account to add\nitems to your cart and checkout.",
+      icon: Icons.shopping_bag_outlined,
+      buttonText: "Sign In",
+      onButtonPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      },
     );
   }
 }
@@ -298,22 +319,6 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                       ],
                     ),
                   ),
-
-                  // Button (only when NOT expanded)
-                  // if (!_expanded)
-                  //   PrimaryBtnWidget(
-                  //     height: 43,
-                  //     width: 150,
-                  //     buttonText: "Checkout",
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const CheckoutPage(),
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
                 ],
               ),
             ),
@@ -526,24 +531,21 @@ class _OrderSummaryDropdownState extends State<OrderSummaryDropdown>
                   const SizedBox(height: 12),
 
                   // Button
-
                   const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
-                  PrimaryBtnWidget(
-                    height: 43,
-                    buttonText: "Checkout",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CheckoutPage(),
-                        ),
-                      );
-                    },
-                  ),
+          PrimaryBtnWidget(
+            height: 43,
+            buttonText: "Checkout",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CheckoutPage()),
+              );
+            },
+          ),
         ],
       ),
     );

@@ -1,5 +1,8 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/auth_service.dart';
+import 'package:first/main-home.dart';
 import 'signup_page.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,12 +13,21 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = AuthService();
 
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
+  late final TextEditingController _emailCtrl;
+  late final TextEditingController _passCtrl;
 
   bool _remember = false;
   bool _obscurePass = true;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailCtrl = TextEditingController();
+    _passCtrl = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -30,11 +42,80 @@ class _LoginPageState extends State<LoginPage> {
     return r.hasMatch(e);
   }
 
-  void _submit() {
+  void _submit() async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() != true) return;
 
-    // TODO: Call login API
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await _authService.login(
+        usernameOrEmail: _emailCtrl.text.trim(),
+        password: _passCtrl.text.trim(),
+        rememberMe: _remember,
+      );
+
+      if (!mounted) return;
+
+      // Check if email is not verified
+      if (result['emailNotVerified'] == true) {
+        print('📧 Email not verified - redirecting to OTP screen');
+
+        final userId = result['userId'];
+        final email = _emailCtrl.text.trim();
+
+        // Navigate to OTP verification screen with a special message
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => EmailVerificationPage(
+              email: email,
+              userId: userId,
+              isEmailNotVerified: true,
+            ),
+          ),
+        );
+        return;
+      }
+
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? 'Login successful!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to home/dashboard
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (!mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MyHomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? 'Login failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An unexpected error occurred'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      print('Error during login: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -134,13 +215,37 @@ class _LoginPageState extends State<LoginPage> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const ForgotPasswordPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Forgot Password?",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF1F1F1F),
+                                        fontWeight: FontWeight.w700,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
 
                             const SizedBox(height: 14),
 
-                            _PrimaryButton(text: "Sign in", onPressed: _submit),
+                            _PrimaryButton(
+                              text: _isLoading ? "Signing in..." : "Sign in",
+                              onPressed: _isLoading ? null : _submit,
+                            ),
 
                             const SizedBox(height: 18),
                             const _ContinueDivider(text: "or continue with"),
@@ -247,8 +352,9 @@ class _SquareCheck extends StatelessWidget {
 
 class _PrimaryButton extends StatelessWidget {
   const _PrimaryButton({required this.text, required this.onPressed});
+
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +374,9 @@ class _PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textBlack,
+          backgroundColor: onPressed != null
+              ? AppColors.textBlack
+              : Colors.grey,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(26),

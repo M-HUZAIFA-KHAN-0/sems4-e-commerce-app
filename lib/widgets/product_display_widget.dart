@@ -198,28 +198,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import 'dart:ui';
 import 'package:first/core/app_imports.dart';
 
 class ProductDisplayWidget extends StatelessWidget {
@@ -245,10 +223,7 @@ class ProductDisplayWidget extends StatelessWidget {
         childAspectRatio: 0.66,
       ),
       itemBuilder: (context, index) {
-        return ProductCard(
-          car: cars[index],
-          glassEffect: glassEffect,
-        );
+        return ProductCard(car: cars[index], glassEffect: glassEffect);
       },
     );
   }
@@ -258,11 +233,7 @@ class ProductCard extends StatefulWidget {
   final Map<String, dynamic> car;
   final bool glassEffect;
 
-  const ProductCard({
-    super.key,
-    required this.car,
-    this.glassEffect = false,
-  });
+  const ProductCard({super.key, required this.car, this.glassEffect = false});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -285,7 +256,9 @@ class _ProductCardState extends State<ProductCard> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: widget.glassEffect ? AppColors.glassmorphismWhite : AppColors.productCardGrey,
+          color: widget.glassEffect
+              ? AppColors.glassmorphismWhite
+              : AppColors.productCardGrey,
           boxShadow: [
             BoxShadow(
               color: AppColors.glassmorphismBoxShadowBlack,
@@ -312,8 +285,15 @@ class _ProductCardState extends State<ProductCard> {
                     /// Background Image
                     Positioned.fill(
                       child: Image.network(
-                        widget.car['imageUrl'] ?? 'https://picsum.photos/200?3',
+                        widget.car['coverImage'] ??
+                            'https://picsum.photos/200?3',
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: AppColors.formGrey96,
+                            child: const Icon(Icons.image_not_supported),
+                          );
+                        },
                       ),
                     ),
 
@@ -332,7 +312,9 @@ class _ProductCardState extends State<ProductCard> {
                           ),
                           child: Icon(
                             _favorited ? Icons.favorite : Icons.favorite_border,
-                            color: _favorited ? AppColors.accentRed : AppColors.textBlack,
+                            color: _favorited
+                                ? AppColors.accentRed
+                                : AppColors.textBlack,
                             size: 20,
                           ),
                         ),
@@ -344,7 +326,10 @@ class _ProductCardState extends State<ProductCard> {
                       top: 6,
                       left: 6,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.textBlack,
                           borderRadius: BorderRadius.circular(4),
@@ -393,7 +378,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    widget.car['name'],
+                    widget.car['productName'] ?? 'Unknown Product',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -403,14 +388,14 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
                   Text(
-                    widget.car['price'],
+                    'PKR ${widget.car['price']?.toString() ?? '0'}',
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    widget.car['price'],
+                    'PKR ${widget.car['price']?.toString() ?? '0'}',
                     style: const TextStyle(
                       fontSize: 9,
                       decoration: TextDecoration.lineThrough,

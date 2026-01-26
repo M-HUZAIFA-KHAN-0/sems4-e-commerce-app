@@ -9,6 +9,7 @@ class WishlistPage extends StatefulWidget {
 
 class _WishlistPageState extends State<WishlistPage> {
   int _selectedBottomIndex = 2; // Set to 2 for wishlist page
+  final UserSessionManager _sessionManager = UserSessionManager();
 
   // Parent controls initial data + stock values
   List<CartProductItem> wishlistItems = [
@@ -49,6 +50,7 @@ class _WishlistPageState extends State<WishlistPage> {
     // ✅ calculate ONLY selected items
     final selectedItems = wishlistItems.where((e) => e.isSelected).toList();
     final selectedCount = selectedItems.length;
+    final isLoggedIn = _sessionManager.isLoggedIn;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLighter,
@@ -65,46 +67,10 @@ class _WishlistPageState extends State<WishlistPage> {
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: WishlistListWidget(
-              items: wishlistItems,
-              onChanged: (updatedItems) {
-                setState(() {
-                  wishlistItems = updatedItems;
-                });
-              },
-              emptyMessage:
-                  "Your wishlist is empty.\nWhen you add products, they'll\nappear here.",
-            ),
-          ),
-
-          // Add-all button shown when more than one selected
-          if (selectedCount > 1)
-            Container(
-              color: AppColors.backgroundWhite,
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-
-              child: PrimaryBtnWidget(
-                onPressed: () {
-                  final selectedIds = wishlistItems
-                      .where((e) => e.isSelected)
-                      .map((e) => e.id)
-                      .toSet();
-                  setState(() {
-                    wishlistItems.removeWhere(
-                      (e) => selectedIds.contains(e.id),
-                    );
-                  });
-                },
-                buttonText: 'Add all items to cart',
-              ),
-            ),
-        ],
-      ),
+      body: isLoggedIn
+          ? _buildWishlistContent(selectedItems, selectedCount)
+          : _buildLoginRequiredState(),
       bottomNavigationBar: BottomBarWidget(
-        isLoggedIn: false,
         currentIndex: _selectedBottomIndex,
         onIndexChanged: (index) {
           if (index == 0) {
@@ -139,6 +105,62 @@ class _WishlistPageState extends State<WishlistPage> {
           });
         },
       ),
+    );
+  }
+
+  Widget _buildWishlistContent(
+    List<CartProductItem> selectedItems,
+    int selectedCount,
+  ) {
+    return Column(
+      children: [
+        Expanded(
+          child: WishlistListWidget(
+            items: wishlistItems,
+            onChanged: (updatedItems) {
+              setState(() {
+                wishlistItems = updatedItems;
+              });
+            },
+            emptyMessage:
+                "Your wishlist is empty.\nWhen you add products, they'll\nappear here.",
+          ),
+        ),
+
+        // Add-all button shown when more than one selected
+        if (selectedCount > 1)
+          Container(
+            color: AppColors.backgroundWhite,
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+            child: PrimaryBtnWidget(
+              onPressed: () {
+                final selectedIds = wishlistItems
+                    .where((e) => e.isSelected)
+                    .map((e) => e.id)
+                    .toSet();
+                setState(() {
+                  wishlistItems.removeWhere((e) => selectedIds.contains(e.id));
+                });
+              },
+              buttonText: 'Add all items to cart',
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLoginRequiredState() {
+    return EmptyStateWidget(
+      emptyMessage:
+          "Sign in to your account to view\nyour wishlist and saved items.",
+      icon: Icons.favorite_border,
+      buttonText: "Sign In",
+      onButtonPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      },
     );
   }
 }
@@ -214,51 +236,17 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
   @override
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            EmptyStateWidget(
-              message: widget.emptyMessage,
-              icon: Icons.favorite_border,
-              iconColor: AppColors.color111111,
-              backgroundColor: null,
-              iconSize: 20,
-              containerSize: 44,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-            const SizedBox(height: 25),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyHomePage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.textBlack,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                ),
-                child: const Text(
-                  'Shop Now',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.backgroundWhite,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      return EmptyStateWidget(
+        emptyMessage:
+            "Your wishlist is empty.\nWhen you add products, they'll\nappear here.",
+        icon: Icons.favorite_border,
+        buttonText: "Shop Now",
+        onButtonPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        },
       );
     }
 

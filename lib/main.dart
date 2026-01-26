@@ -2,6 +2,7 @@
 // import 'package:flutter/material.dart';
 // import 'main-home.dart';
 import 'package:first/core/app_imports.dart';
+import 'package:first/screens/onboarding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // home: const MyHomePage(),
-      // home: const OnboardingScreen(),
-      home: const CheckoutPage(),
+      home: const OnboardingScreen(),
+      // home: const CheckoutPage(),
     //   home: const ProductDetailPage( product: {
     //   'name': 'Camaro Sports',
     //   'price': '\$170,000',

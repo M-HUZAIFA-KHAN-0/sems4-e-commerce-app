@@ -9,9 +9,12 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedBottomIndex = 1;
+  final UserSessionManager _sessionManager = UserSessionManager();
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = _sessionManager.isLoggedIn;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundGreyLightest,
       appBar: AppBar(
@@ -27,61 +30,10 @@ class _NotificationPageState extends State<NotificationPage> {
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: ListView(
-        children: [
-          SectionTitleWidget(text: 'Today'),
-          NotificationCardItemWidget(
-            icon: Icons.sell_outlined,
-            title: 'Your offer has been accepted!',
-            subtitle:
-                "Congrats! your offer has been accepted by the seller for \$170.00",
-            date: '2 hrs ago',
-            showButton: true,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: WishlistCardWidget(
-              item: NotificationCardItem(
-                title: 'Package Shipped!',
-                subtitle: 'Your package is on the way.',
-                icon: Icons.local_shipping_outlined,
-              ),
-            ),
-          ),
-          SectionTitleWidget(text: 'Yesterday'),
-          NotificationCardItemWidget(
-            icon: Icons.location_on_outlined,
-            title: 'New Services Available!',
-            subtitle: 'Now you can track orders in real time',
-            date: '1 day ago',
-            showButton: false,
-          ),
-          NotificationCardItemWidget(
-            icon: Icons.sell_outlined,
-            title: 'Your offer has been rejected!',
-            subtitle:
-                "We're sorry, your offer has been rejected by the seller :(",
-            date: '1 day ago',
-            showButton: true,
-          ),
-          NotificationCardItemWidget(
-            icon: Icons.credit_card,
-            title: 'Credit Card Connected!',
-            subtitle: 'Credit Card has been linked!',
-            date: '1 day ago',
-          ),
-          SectionTitleWidget(text: 'December 22, 2024'),
-          NotificationCardItemWidget(
-            icon: Icons.check_circle_outline,
-            title: 'Account Setup Successful!',
-            subtitle: 'Account Setup has been completed.',
-            date: '5 days ago',
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
+      body: isLoggedIn
+          ? _buildNotificationContent()
+          : _buildLoginRequiredState(),
       bottomNavigationBar: BottomBarWidget(
-        isLoggedIn: false,
         currentIndex: _selectedBottomIndex,
         onIndexChanged: (index) {
           if (index == 0) {
@@ -114,6 +66,77 @@ class _NotificationPageState extends State<NotificationPage> {
           });
         },
       ),
+    );
+  }
+
+  Widget _buildNotificationContent() {
+    return ListView(
+      children: [
+        SectionTitleWidget(text: 'Today'),
+        NotificationCardItemWidget(
+          icon: Icons.sell_outlined,
+          title: 'Your offer has been accepted!',
+          subtitle:
+              "Congrats! your offer has been accepted by the seller for \$170.00",
+          date: '2 hrs ago',
+          showButton: true,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: WishlistCardWidget(
+            item: NotificationCardItem(
+              title: 'Package Shipped!',
+              subtitle: 'Your package is on the way.',
+              icon: Icons.local_shipping_outlined,
+            ),
+          ),
+        ),
+        SectionTitleWidget(text: 'Yesterday'),
+        NotificationCardItemWidget(
+          icon: Icons.location_on_outlined,
+          title: 'New Services Available!',
+          subtitle: 'Now you can track orders in real time',
+          date: '1 day ago',
+          showButton: false,
+        ),
+        NotificationCardItemWidget(
+          icon: Icons.sell_outlined,
+          title: 'Your offer has been rejected!',
+          subtitle:
+              "We're sorry, your offer has been rejected by the seller :(",
+          date: '1 day ago',
+          showButton: true,
+        ),
+        NotificationCardItemWidget(
+          icon: Icons.credit_card,
+          title: 'Credit Card Connected!',
+          subtitle: 'Credit Card has been linked!',
+          date: '1 day ago',
+        ),
+        SectionTitleWidget(text: 'December 22, 2024'),
+        NotificationCardItemWidget(
+          icon: Icons.check_circle_outline,
+          title: 'Account Setup Successful!',
+          subtitle: 'Account Setup has been completed.',
+          date: '5 days ago',
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  Widget _buildLoginRequiredState() {
+    return EmptyStateWidget(
+      emptyMessage:
+          "Sign in to your account to view\nnotifications and stay updated.",
+      icon: Icons.notifications_none,
+      buttonText: "Sign In",
+      onButtonPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      },
     );
   }
 }

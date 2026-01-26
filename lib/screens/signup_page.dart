@@ -1,4 +1,5 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/auth_service.dart';
 import 'login_page.dart';
 import 'email_verification_page.dart';
 
@@ -11,6 +12,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = AuthService();
 
   late final TextEditingController _emailCtrl;
   late final TextEditingController _firstNameCtrl;
@@ -21,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _remember = false;
   bool _obscurePass = true;
   bool _obscureConfirm = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -54,16 +57,89 @@ class _SignUpPageState extends State<SignUpPage> {
     return r.hasMatch(v);
   }
 
-  void _submit() {
+  void _submit() async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() != true) return;
 
-    // TODO: Call your API
-    // If success -> navigate to verification screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const EmailVerificationPage()),
-    );
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await _authService.signup(
+        email: _emailCtrl.text.trim(),
+        firstName: _firstNameCtrl.text.trim(),
+        lastName: _lastNameCtrl.text.trim(),
+        password: _passCtrl.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      if (result['success'] == true) {
+        // Extract userId from response for email verification
+        final userId = result['userId'] ?? result['data']?['userId'];
+
+        print(
+          'Signup successful! UserId: $userId (Type: ${userId.runtimeType})',
+        );
+
+        if (userId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                result['message'] ??
+                    'Signup successful! Please verify your email.',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // Show success message but can't navigate without userId
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result['message'] ??
+                  'Signup successful! Check your email for OTP.',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to email verification after showing success message
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => EmailVerificationPage(
+              email: _emailCtrl.text.trim(),
+              userId: userId,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? 'Signup failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An unexpected error occurred'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      print('Error during signup: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -245,8 +321,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             // Sign up button (navigates to verification)
                             _PrimaryButton(
-                              text: "Sign up & Verify",
-                              onPressed: _submit,
+                              text: _isLoading
+                                  ? "Signing up..."
+                                  : "Sign up & Verify",
+                              onPressed: _isLoading ? null : _submit,
                             ),
 
                             const SizedBox(height: 18),
@@ -361,7 +439,7 @@ class _PrimaryButton extends StatelessWidget {
   const _PrimaryButton({required this.text, required this.onPressed});
 
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -381,7 +459,9 @@ class _PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textBlack,
+          backgroundColor: onPressed != null
+              ? AppColors.textBlack
+              : Colors.grey,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(26),

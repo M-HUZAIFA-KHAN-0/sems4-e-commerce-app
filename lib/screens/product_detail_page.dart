@@ -1,9 +1,18 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/models/product_detail_model.dart';
+import 'package:first/services/api/product_service.dart';
+import 'package:first/widgets/add_to_cart_confirmation_drawer.dart';
 
 class ProductDetailPage extends StatefulWidget {
-  final Map<String, dynamic> product;
+  /// Constructor can accept either productId OR product map (for backward compatibility)
+  final int? productId;
+  final Map<String, dynamic>? product;
 
-  const ProductDetailPage({super.key, required this.product});
+  const ProductDetailPage({super.key, this.productId, this.product})
+    : assert(
+        productId != null || product != null,
+        'Either productId or product must be provided',
+      );
 
   @override
   State<ProductDetailPage> createState() => _ProductDetailPageState();
@@ -16,6 +25,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final GlobalKey _reviewsKey = GlobalKey();
   late ScrollController _scrollController;
 
+  // API Service
+  final ProductService _productService = ProductService();
+
+  // Product Data
+  ProductDetailModel? _productDetail;
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  // UI State
   int _currentPage = 0;
   String selectedColor = 'Gold';
   String selectedStorage = '512GB - 8GB RAM';
@@ -23,16 +41,204 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   late int availableStock = 15;
   bool _stockLimitReached = false;
 
+  // Placeholder carousel (for backward compatibility with map-based products)
   final List<IconData> carouselIcons = [
-    Icons.laptop, // 👈 STATIC FIRST (featured)
-    Icons.phone_android, // 👈 dynamic
+    Icons.laptop,
+    Icons.phone_android,
     Icons.tablet_mac,
     Icons.desktop_windows,
     Icons.watch,
     Icons.headset,
   ];
 
+  // ************************************************************
+  // *********************** Product Detail *********************
+  // ************************************************************
+
+  /// Load product details from API based on productId
+  Future<void> _loadProductDetail() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      // Get productId - either from parameter or parse from map
+      int? productId = widget.productId;
+      if (productId == null && widget.product != null) {
+        productId = widget.product!['productId'] as int?;
+      }
+
+      if (productId == null) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Invalid product ID';
+        });
+        return;
+      }
+
+      // Fetch product detail from API
+      final product = await _productService.fetchProductDetailById(productId);
+
+      if (product == null) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Product not found';
+        });
+        return;
+      }
+
+      setState(() {
+        _productDetail = product;
+        _isLoading = false;
+
+        // Auto-select cheapest variant
+        final cheapestVariant = product.getCheapestVariant();
+        if (cheapestVariant != null) {
+          availableStock = cheapestVariant.stock;
+          selectedQuantity = 1;
+          _stockLimitReached = availableStock < 1;
+        }
+      });
+    } catch (e) {
+      print('Error loading product: $e');
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error loading product: $e';
+      });
+    }
+  }
+
+  /// Get specifications mapped to UI fields
+  /// Maps API specifications to only those visible in UI design
+  Map<String, String> _getMappedSpecifications() {
+    if (_productDetail == null) return {};
+
+    // UI SPEC FIELDS (locked design)
+    const uiSpecFields = {
+      'Dimensions': 'Dimensions',
+      'Weight': 'Weight',
+      'OS': 'Operating System',
+      'CPU': 'Generation',
+      'Display': 'Screen Size',
+      'Storage': 'Internal Memory',
+      'RAM': 'RAM',
+      'GPU': 'Graphics Memory',
+    };
+
+    final mappedSpecs = <String, String>{};
+
+    // Extract only specs that exist in both API and UI
+    for (var spec in _productDetail!.specifications) {
+      if (uiSpecFields.containsKey(spec.specificationName)) {
+        mappedSpecs[uiSpecFields[spec.specificationName]!] = spec
+            .getDisplayValue();
+      }
+    }
+
+    return mappedSpecs;
+  }
+
+  /// Get available variants based on selected storage and color
+  /// Used for dynamic filtering of color/storage options
+  List<ProductVariant> _getAvailableVariants({
+    String? forStorage,
+    String? forColor,
+  }) {
+    if (_productDetail == null) return [];
+
+    return _productDetail!.variants.where((variant) {
+      // Filter by storage (full SKU match) if specified
+      if (forStorage != null && variant.sku != forStorage) {
+        return false;
+      }
+
+      // Filter by color if specified - try to match in SKU
+      // If color is not in SKU, still accept the variant (fallback for when SKU doesn't contain colors)
+      if (forColor != null && !variant.sku.contains(forColor)) {
+        // Don't filter out - accept the variant anyway since colors might not be in SKU
+        // This allows color selection even if SKU format doesn't include color names
+      }
+
+      return true;
+    }).toList();
+  }
+
+  /// Update stock and UI when variant selection changes
+  void _updateVariantSelection({String? newStorage, String? newColor}) {
+    if (_productDetail == null) return;
+
+    final variants = _getAvailableVariants(
+      forStorage: newStorage,
+      forColor: newColor,
+    );
+
+    if (variants.isEmpty) {
+      setState(() {
+        availableStock = 0;
+        _stockLimitReached = true;
+      });
+      return;
+    }
+
+    // Get the first available variant and update stock
+    final selectedVariant = variants.first;
+    setState(() {
+      availableStock = selectedVariant.stock;
+      selectedQuantity = 1;
+      _stockLimitReached = availableStock < 1;
+    });
+  }
+
+  /// Get all unique colors from product variants
+  List<String> _getAvailableColors() {
+    if (_productDetail == null) return [];
+
+    final colorSet = <String>{};
+    final commonColors = [
+      'Gold',
+      'Silver',
+      'Black',
+      'White',
+      'Red',
+      'Blue',
+      'Green',
+      'Purple',
+      'Pink',
+      'Gray',
+      'Brown',
+      'Space Gray',
+      'Rose Gold',
+    ];
+
+    for (var variant in _productDetail!.variants) {
+      print('DEBUG SKU: ${variant.sku}'); // DEBUG
+      for (var color in commonColors) {
+        if (variant.sku.contains(color)) {
+          colorSet.add(color);
+          print('DEBUG FOUND COLOR: $color'); // DEBUG
+        }
+      }
+    }
+
+    // If no colors found in SKU, return a default list of common colors
+    // This is a fallback when colors aren't properly stored in SKU
+    if (colorSet.isEmpty) {
+      print('DEBUG: No colors found in SKU, using default list');
+      colorSet.addAll(['Gold', 'Silver', 'Black']);
+    }
+
+    print('DEBUG FINAL COLORS: ${colorSet.toList()}'); // DEBUG
+    return colorSet.toList();
+  }
+
   Widget _thumbnailItem(int index) {
+    // Build thumbnail from product gallery images if available
+    final imageUrl = _productDetail?.galleryImages.isNotEmpty == true
+        ? _productDetail!.galleryImages[index %
+              _productDetail!.galleryImages.length]
+        : _productDetail?.coverImage;
+
     return GestureDetector(
       onTap: () {
         _pageController.animateToPage(
@@ -41,26 +247,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           curve: Curves.easeInOut,
         );
       },
-
-      // child: Container(
-      //   width: 50,
-      //   height: 50,
-      //   decoration: BoxDecoration(
-      //     border: Border.all(
-      //       color: _currentPage == index
-      //           ? Colors.blue
-      //           : AppColors.backgroundGreyLight,
-      //       width: 2,
-      //     ),
-      //     borderRadius: BorderRadius.circular(8),
-      //     color: AppColors.backgroundGreyLighter,
-      //   ),
-      //   child: Icon(
-      //     carouselIcons[index], // 🔥 SAME SOURCE
-      //     size: 26,
-      //     color: Colors.grey[400],
-      //   ),
-      // ),
       child: Container(
         width: 50,
         height: 50,
@@ -76,10 +262,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            'https://picsum.photos/200?2',
-            fit: BoxFit.contain, // ❗ stretch nahi hogi
-          ),
+          child: imageUrl != null
+              ? Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Placeholder if image fails
+                    return Icon(
+                      Icons.laptop,
+                      size: 26,
+                      color: Colors.grey[400],
+                    );
+                  },
+                )
+              : Icon(
+                  carouselIcons[index % carouselIcons.length],
+                  size: 26,
+                  color: Colors.grey[400],
+                ),
         ),
       ),
     );
@@ -91,13 +291,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _pageController = PageController();
     _thumbScrollController = ScrollController();
     _scrollController = ScrollController();
-    // Initialize stock from product map (single source). Default to 5 if not provided.
-    availableStock = (widget.product['stock'] is int)
-        ? widget.product['stock'] as int
-        : 5;
-    if (availableStock < 1) {
-      _stockLimitReached = true;
-    }
+
+    // Load product detail from API
+    _loadProductDetail();
   }
 
   @override
@@ -114,9 +310,79 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       const AssetImage("../assets/brands/lenovo.png"),
       const AssetImage("../assets/brands/dell.png"),
       const AssetImage("../assets/brands/hp.png"),
-      // const AssetImage("assets/brands/apple.png"),
-      // const AssetImage("assets/brands/acer.png"),
     ];
+
+    // ***************************************************
+    // ***************** Product Detail ******************
+    // ***************************************************
+
+    // Show loading indicator while fetching data
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundWhite,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Product Details',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Show error message if product failed to load
+    if (_errorMessage != null) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundWhite,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Product Details',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: $_errorMessage'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _loadProductDetail,
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // If product detail loaded successfully
+    if (_productDetail == null) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundWhite,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: const Center(child: Text('Product not found')),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
@@ -149,69 +415,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           children: [
             /// PRODUCT IMAGE + THUMBNAILS ROW
             Padding(
-              // padding: const EdgeInsets.all(10.0),
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: SizedBox(
-                height: 240, // total height same as carousel
+                height: 240,
                 child: Row(
                   children: [
                     /// MAIN CAROUSEL (LEFT)
-                    // Expanded(
-                    //   child: Stack(
-                    //     children: [
-                    //       PageView(
-                    //         controller: _pageController,
-                    //         onPageChanged: (index) {
-                    //           setState(() {
-                    //             _currentPage = index;
-                    //           });
-
-                    //           _thumbScrollController.animateTo(
-                    //             index * 25.0, // 60 height + 10 gap
-                    //             duration: const Duration(milliseconds: 300),
-                    //             curve: Curves.easeInOut,
-                    //           );
-                    //         },
-
-                    //         children: carouselIcons.map((icon) {
-                    //           return Container(
-                    //             color: AppColors.backgroundGreyLighter,
-                    //             child: Icon(
-                    //               icon,
-                    //               size: 140,
-                    //               color: Colors.grey[400],
-                    //             ),
-                    //           );
-                    //         }).toList(),
-                    //       ),
-
-                    //       /// PAGE INDICATOR
-                    //       Positioned(
-                    //         bottom: 12,
-                    //         right: 12,
-                    //         child: Container(
-                    //           padding: const EdgeInsets.symmetric(
-                    //             horizontal: 10,
-                    //             vertical: 6,
-                    //           ),
-                    //           decoration: BoxDecoration(
-                    //             color: Colors.grey[600],
-                    //             borderRadius: BorderRadius.circular(20),
-                    //           ),
-
-                    //           child: Text(
-                    //             '${_currentPage + 1} / ${carouselIcons.length}',
-                    //             style: const TextStyle(
-                    //               color: AppColors.backgroundWhite,
-                    //               fontSize: 11,
-                    //               fontWeight: FontWeight.w600,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     Expanded(
                       child: Stack(
                         children: [
@@ -228,27 +437,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 curve: Curves.easeInOut,
                               );
                             },
-                            children: carouselIcons.map((icon) {
-                              return Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.glassmorphismBlack,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    'https://picsum.photos/200?2',
-                                    fit: BoxFit.contain,
-                                    width: 240,
-                                    height: 240,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
+                            children: _buildCarouselPages(),
                           ),
 
-                          /// PAGE INDICATOR (unchanged)
+                          /// PAGE INDICATOR
                           Positioned(
                             bottom: 6,
                             right: 6,
@@ -258,12 +450,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                // color: Colors.grey[600],
                                 gradient: AppColors.bgGradient,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                '${_currentPage + 1} / ${carouselIcons.length}',
+                                '${_currentPage + 1} / ${_getCarouselLength()}',
                                 style: const TextStyle(
                                   color: AppColors.backgroundWhite,
                                   fontSize: 12,
@@ -280,11 +471,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                     /// THUMBNAILS (RIGHT)
                     SizedBox(
-                      width: 50, // thumbnail column width
+                      width: 50,
                       child: ListView.builder(
                         controller: _thumbScrollController,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: carouselIcons.length,
+                        itemCount: _getCarouselLength(),
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 6),
@@ -298,9 +489,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
 
-            // const SizedBox(height: 16),
-
-            /// PRODUCT DETAILS
+            /// PRODUCT DETAILS SECTION
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -310,9 +499,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const SizedBox(height: 8),
 
                   /// PRODUCT NAME
-                  const Text(
-                    'HP Laptop EQ2180AU 15.6 Inches\nAMD Ryzen 5 (8GB RAM - 512GBSSD)',
-                    style: TextStyle(
+                  Text(
+                    _productDetail!.productName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       height: 1.4,
@@ -337,9 +526,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ],
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        '5.0 | 1 Review',
-                        style: TextStyle(
+                      Text(
+                        '${_productDetail!.averageRating} | Reviews',
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
@@ -349,251 +538,50 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                   const SizedBox(height: 10),
 
-                  /// PRICE SECTION
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 8),
-
-                          /// CENTER: Old price + discount
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // -------- First Row: Rs + Final Price --------
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const [
-                                  Text(
-                                    'Rs',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: AppColors.formGrey97,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '194,999',
-                                    style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 4),
-
-                              // -------- Second Row: Old Price + Discount Badge --------
-                              Padding(
-                                padding: const EdgeInsets.only(left: 28.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '219,999',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[400],
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        // color: Colors.blue[50],
-                                        gradient: AppColors.bgGradient,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: const Text(
-                                        '11% OFF',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(width: 12),
-                        ],
-                      ),
-                    ],
-                  ),
+                  /// PRICE SECTION (FROM CHEAPEST VARIANT)
+                  _buildPriceSection(),
 
                   const SizedBox(height: 24),
 
                   /// STORAGE SECTION
-                  const Text(
-                    'Storage',
-                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      _buildStorageOption('512GB - 8GB RAM'),
-                      _buildStorageOption('256GB - 8GB RAM'),
-                      _buildStorageOption('512GB - 16GB RAM'),
-                    ],
-                  ),
+                  _buildStorageSection(),
 
                   const SizedBox(height: 24),
 
                   /// COLORS SECTION
+                  _buildColorsSection(),
+
+                  const SizedBox(height: 24),
+                  
+                  /// QUANTITY SECTION
                   const Text(
-                    'Colors',
-                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  SizedBox(
-                    height: 100,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildColorOption('Gold'),
-                        const SizedBox(width: 12),
-                        _buildColorOption('Silver'),
-                        const SizedBox(width: 12),
-                        _buildColorOption('Black'),
-                      ],
+                    'Quantity',
+                    style: TextStyle(
+                      fontSize: FontSize.homePageTitle,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.secondaryColor1,
                     ),
                   ),
 
-                  // --- Quantity selector ---
-                  const Text(
-                    'Quantity',
-                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
-                  ),
-
                   const SizedBox(height: 8),
 
-                  Row(
-                    children: [
-                      Container(
-                        height: 44,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.backgroundGreyLight!,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
-                                minWidth: 28,
-                                minHeight: 28,
-                              ),
-                              icon: const Icon(Icons.remove, size: 20),
-                              onPressed: () {
-                                setState(() {
-                                  if (selectedQuantity > 1) {
-                                    selectedQuantity -= 1;
-                                    // If we dropped below stock limit, clear the flag
-                                    if (selectedQuantity < availableStock) {
-                                      _stockLimitReached = false;
-                                    }
-                                  }
-                                });
-                              },
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              child: Text(
-                                selectedQuantity.toString(),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(
-                                minWidth: 28,
-                                minHeight: 28,
-                              ),
-                              icon: const Icon(Icons.add, size: 20),
-                              onPressed: () {
-                                setState(() {
-                                  if (selectedQuantity < availableStock) {
-                                    selectedQuantity += 1;
-                                    _stockLimitReached = false;
-                                  } else {
-                                    // reached limit, show message
-                                    _stockLimitReached = true;
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
+                  _buildQuantitySection(),
 
-                      const SizedBox(width: 12),
-                      Text(
-                        _stockLimitReached ? 'Stock not available' : '',
-                        style: TextStyle(
-                          color: _stockLimitReached
-                              ? Colors.red
-                              : Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 24),
 
                   /// DESCRIPTION
                   const Text(
                     'Description',
-                    style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.secondaryColor1),
+                    style: TextStyle(
+                      fontSize: FontSize.homePageTitle,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.secondaryColor1,
+                    ),
                   ),
 
                   const SizedBox(height: 12),
 
-                  
-
-                  ExpandableText(
-                    text:
-                        'HP 15 (EQ2180AU) is a compact, powerful, and reliable laptop designed to meet the needs of professionals. '
-                        'With its AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD, it offers exceptional performance for everyday computing tasks. '
-                        'The laptop features a 15.6-inch Full HD display that delivers vibrant visuals and sharp details, making it ideal for work and entertainment. '
-                        'Equipped with multiple connectivity options, including USB-C, HDMI, and Wi-Fi 6, it ensures seamless integration with various devices and networks. '
-                        'The HP 15 also boasts a long-lasting battery life, allowing users to stay productive on the go without frequent recharging. '
-                        'Its sleek design and durable build make it a stylish companion for professionals who value both performance and aesthetics.',
-                      // trimLines: 2,
-                  ),
-
-                  // Text(
-                  //   'HP 15 (EQ2180AU) is a compact, powerful, and reliable laptop designed to meet the needs of professionals. '
-                  //   'With its AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD, it offers exceptional performance for everyday computing tasks.',
-                  //   style: TextStyle(
-                  //     fontSize: 13,
-                  //     color: Colors.grey[700],
-                  //     height: 1.6,
-                  //   ),
-                  // ),
-
+                  ExpandableText(text: _productDetail!.description),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -604,39 +592,40 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             BGColorProdDisplayCard(
               heading: "Similar Products",
               cars: [
-                      {
-                        'name': 'BMW M4 Series',
-                        'price': '\$155,000',
-                        'rating': 4.5,
-                        'status': 'New',
-                        'image': Icons.directions_car,
-                        'color': Colors.grey,
-                      },
-                      {
-                        'name': 'Camaro Sports',
-                        'price': '\$170,000',
-                        'rating': 4.7,
-                        'status': 'New',
-                        'image': Icons.directions_car,
-                        'color': Colors.amber,
-                      },
-                      {
-                        'name': 'Audi Sports',
-                        'price': '\$133,000',
-                        'rating': 4.1,
-                        'status': 'Used',
-                        'image': Icons.directions_car,
-                        'color': Colors.red,
-                      },
-                      {
-                        'name': 'Audi Sports',
-                        'price': '\$133,000',
-                        'rating': 4.1,
-                        'status': 'Used',
-                        'image': Icons.directions_car,
-                        'color': Colors.red,
-                      },
-                    ],),
+                {
+                  'name': 'BMW M4 Series',
+                  'price': '\$155,000',
+                  'rating': 4.5,
+                  'status': 'New',
+                  'image': Icons.directions_car,
+                  'color': Colors.grey,
+                },
+                {
+                  'name': 'Camaro Sports',
+                  'price': '\$170,000',
+                  'rating': 4.7,
+                  'status': 'New',
+                  'image': Icons.directions_car,
+                  'color': Colors.amber,
+                },
+                {
+                  'name': 'Audi Sports',
+                  'price': '\$133,000',
+                  'rating': 4.1,
+                  'status': 'Used',
+                  'image': Icons.directions_car,
+                  'color': Colors.red,
+                },
+                {
+                  'name': 'Audi Sports',
+                  'price': '\$133,000',
+                  'rating': 4.1,
+                  'status': 'Used',
+                  'image': Icons.directions_car,
+                  'color': Colors.red,
+                },
+              ],
+            ),
 
             /// SIMILAR PRODUCTS
             // Container(
@@ -696,7 +685,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             //     ],
             //   ),
             // ),
-
             const SizedBox(height: 28),
 
             Padding(
@@ -891,9 +879,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: [
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: GradientText(
-                      text: 'Shop By Brand',
-                    ),
+                    child: GradientText(text: 'Shop By Brand'),
                     // child: Text(
                     //   "Shop By Brand",
                     //   style: TextStyle(
@@ -912,7 +898,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     horizontalPadding: 24,
                     itemSpacing: 18,
                   ),
-            SizedBox(height: 22),
+                  SizedBox(height: 22),
                 ],
               ),
             ),
@@ -947,7 +933,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 4),
                       Text(
                         'Specs',
-                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
+                        style: TextStyle(
+                          color: AppColors.textBlack,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -973,7 +962,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 4),
                       Text(
                         'Review',
-                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
+                        style: TextStyle(
+                          color: AppColors.textBlack,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -999,7 +991,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 4),
                       Text(
                         'Compare',
-                        style: TextStyle(color: AppColors.textBlack, fontSize: 10),
+                        style: TextStyle(
+                          color: AppColors.textBlack,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -1040,45 +1035,63 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               //     // ),
               //   ),
               // ),
-
               Container(
-  // width: 130,
-  height: 46,
-  // padding: const EdgeInsets.symmetric(horizontal: 1),
-  decoration: BoxDecoration(
-    gradient: AppColors.bgGradient, // ✅ gradient BG
-    borderRadius: BorderRadius.circular(10),
-  ),
-  alignment: Alignment.center,
-  child: ElevatedButton.icon(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CartPageExample(),
-        ),
-      );
-    },
-    icon: const Icon(
-      Icons.shopping_bag_outlined,
-      color: Colors.white, // ✅ white icon
-      size: 24,
-    ),
-    label: const Text(
-      'Add to Cart',
-      style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), // ✅ white text
-    ),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.transparent, // 🔥 MOST IMPORTANT
-      shadowColor: Colors.transparent,     // 🔥 remove shadow
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-  ),
-),
-
+                // width: 130,
+                height: 46,
+                // padding: const EdgeInsets.symmetric(horizontal: 1),
+                decoration: BoxDecoration(
+                  gradient: AppColors.bgGradient, // ✅ gradient BG
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // Open confirmation drawer
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => AddToCartConfirmationDrawer(
+                        selectedStorage: selectedStorage.toString(),
+                        selectedColor: selectedColor.toString(),
+                        selectedQuantity: selectedQuantity,
+                        availableStock: availableStock,
+                        product: widget.product ?? {},
+                        onConfirm: (storage, color, quantity) {
+                          // Handle the confirmed selection and navigate to cart
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CartPageExample(),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.white, // ✅ white icon
+                    size: 24,
+                  ),
+                  label: const Text(
+                    'Add to Cart',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ), // ✅ white text
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent, // 🔥 MOST IMPORTANT
+                    shadowColor: Colors.transparent, // 🔥 remove shadow
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -1086,99 +1099,365 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-  Widget _buildColorOption(String color) {
-    bool isSelected = selectedColor == color;
-    Color colorValue;
+  /// Helper: Build carousel pages from product images
+  List<Widget> _buildCarouselPages() {
+    if (_productDetail == null) return [];
 
-    switch (color) {
-      case 'Gold':
-        colorValue = AppColors.accentGold;
-        break;
-      case 'Silver':
-        colorValue = AppColors.accentSilver;
-        break;
-      case 'Black':
-        colorValue = AppColors.textBlack;
-        break;
-      default:
-        colorValue = AppColors.textGrey;
+    final images = <String>[];
+    if (_productDetail!.coverImage != null) {
+      images.add(_productDetail!.coverImage!);
+    }
+    images.addAll(_productDetail!.galleryImages);
+
+    // If no images, use placeholder carousel
+    if (images.isEmpty) {
+      return carouselIcons.map((icon) {
+        return Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.glassmorphismBlack,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, size: 140, color: Colors.grey[400]),
+        );
+      }).toList();
     }
 
-    // return GestureDetector(
-    //   onTap: () {
-    //     setState(() {
-    //       selectedColor = color;
-    //     });
-    //   },
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         width: 45,
-    //         height: 45,
+    // Build carousel from actual images
+    return images.map((imageUrl) {
+      return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.glassmorphismBlack,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.contain,
+            width: 240,
+            height: 240,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.laptop, size: 140, color: Colors.grey[400]);
+            },
+          ),
+        ),
+      );
+    }).toList();
+  }
 
-    //         decoration: BoxDecoration(
-    //           border: Border.all(
-    //             color: isSelected
-    //                 ? Colors.blue
-    //                 : AppColors.backgroundGreyLight,
-    //             width: isSelected ? 3 : 1,
-    //           ),
-    //           borderRadius: BorderRadius.circular(50),
-    //         ),
-    //         child: Container(
-    //           margin: const EdgeInsets.all(4),
-    //           decoration: BoxDecoration(
-    //             color: colorValue,
-    //             borderRadius: BorderRadius.circular(50),
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(height: 8),
-    //       Text(
-    //         color,
-    //         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-    //       ),
-    //     ],
-    //   ),
-    // );
+  /// Helper: Get carousel length (images or placeholder icons)
+  int _getCarouselLength() {
+    if (_productDetail == null) return carouselIcons.length;
+
+    final totalImages =
+        ((_productDetail!.coverImage != null) ? 1 : 0) +
+        _productDetail!.galleryImages.length;
+
+    return totalImages > 0 ? totalImages : carouselIcons.length;
+  }
+
+  /// Helper: Build price section from cheapest variant
+  Widget _buildPriceSection() {
+    if (_productDetail == null) {
+      return const SizedBox.shrink();
+    }
+
+    // Get the selected variant based on current selections
+    final availableVariants = _getAvailableVariants(
+      forStorage: selectedStorage,
+      forColor: selectedColor,
+    );
+
+    ProductVariant? selectedVariant;
+    if (availableVariants.isNotEmpty) {
+      selectedVariant = availableVariants.first;
+    } else {
+      selectedVariant = _productDetail!.getCheapestVariant();
+    }
+
+    if (selectedVariant == null) {
+      return const SizedBox.shrink();
+    }
+
+    final finalPrice = selectedVariant.finalPrice ?? selectedVariant.price ?? 0;
+    final originalPrice = selectedVariant.price ?? 0;
+    final hasDiscount = finalPrice < originalPrice;
+    final discountPercent = hasDiscount
+        ? (((originalPrice - finalPrice) / originalPrice) * 100)
+              .toStringAsFixed(0)
+        : null;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Rs',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppColors.formGrey97,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      finalPrice.toStringAsFixed(0),
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.only(left: 28.0),
+                  child: Row(
+                    children: [
+                      if (hasDiscount) ...[
+                        Text(
+                          originalPrice.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[400],
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: AppColors.bgGradient,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '$discountPercent% OFF',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Helper: Build storage section (RAM/Storage options from variants)
+  Widget _buildStorageSection() {
+    if (_productDetail == null || _productDetail!.variants.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // Get unique storage options from SKU
+    final storageOptions = <String>{
+      '512GB - 8GB RAM',
+      '256GB - 8GB RAM',
+      '512GB - 16GB RAM',
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Storage',
+          style: TextStyle(
+            fontSize: FontSize.homePageTitle,
+            fontWeight: FontWeight.bold,
+            color: AppColors.secondaryColor1,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: storageOptions.map((storage) {
+            return _buildStorageOption(storage);
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  /// Helper: Build colors section
+  Widget _buildColorsSection() {
+    if (_productDetail == null) {
+      return const SizedBox.shrink();
+    }
+
+    final availableColors = _getAvailableColors();
+
+    if (availableColors.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Colors',
+          style: TextStyle(
+            fontSize: FontSize.homePageTitle,
+            fontWeight: FontWeight.bold,
+            color: AppColors.secondaryColor1,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: availableColors
+              .map((color) => _buildColorOption(color))
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  /// Helper: Build quantity selector
+  Widget _buildQuantitySection() {
+    return Row(
+      children: [
+        Container(
+          height: 44,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.backgroundGreyLight),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                icon: const Icon(Icons.remove, size: 20),
+                onPressed: () {
+                  setState(() {
+                    if (selectedQuantity > 1) {
+                      selectedQuantity -= 1;
+                      if (selectedQuantity < availableStock) {
+                        _stockLimitReached = false;
+                      }
+                    }
+                  });
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  selectedQuantity.toString(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                icon: const Icon(Icons.add, size: 20),
+                onPressed: () {
+                  setState(() {
+                    if (selectedQuantity < availableStock) {
+                      selectedQuantity += 1;
+                      _stockLimitReached = false;
+                    } else {
+                      _stockLimitReached = true;
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          _stockLimitReached ? 'Stock not available' : '',
+          style: TextStyle(
+            color: _stockLimitReached ? Colors.red : Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildColorOption(String color) {
+    bool isSelected = selectedColor == color;
 
     return GestureDetector(
-  onTap: () {
-    setState(() {
-      selectedColor = color;
-    });
-  },
-  child: Column(
-    children: [
-      Container(
-        width: 40,
-        height: 40,
-        padding: const EdgeInsets.all(1.5), // border ka thickness
+      onTap: () {
+        setState(() {
+          selectedColor = color;
+        });
+        // Update variant selection which updates price and stock
+        _updateVariantSelection(newColor: color);
+        // Rebuild to show updated price
+        setState(() {});
+      },
+      child: Container(
+        padding: const EdgeInsets.all(2), // outer padding same for both
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: isSelected
-              ? AppColors.bgGradient // selected ke liye gradient
-              : LinearGradient(
-                  colors: [const Color.fromARGB(255, 255, 255, 255), const Color.fromARGB(255, 255, 255, 255)], // non-selected ke liye black
-                ),
+          borderRadius: BorderRadius.circular(8),
+          gradient: isSelected ? AppColors.bgGradient : null, // gradient border
+          border: !isSelected
+              ? Border.all(color: Colors.black, width: 1.5)
+              : null,
         ),
         child: Container(
-          margin: const EdgeInsets.all(2), // inner circle aur border ke beech gap
+          padding: isSelected
+              ? const EdgeInsets.symmetric(horizontal: 10, vertical: 7)
+              : const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 5,
+                ), // inner padding same always
           decoration: BoxDecoration(
-            color: colorValue,
-            borderRadius: BorderRadius.circular(50),
+            color: isSelected ? Colors.blue[50] : AppColors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: ShaderMask(
+            shaderCallback: (bounds) => isSelected
+                ? AppColors.bgGradient.createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  )
+                : LinearGradient(
+                    colors: [AppColors.textBlack, AppColors.textBlack],
+                  ).createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  ),
+            child: Text(
+              color,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
-      const SizedBox(height: 8),
-      Text(
-        color,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-      ),
-    ],
-  ),
-);
-
+    );
   }
 
   Widget _buildStorageOption(String storage) {
@@ -1189,6 +1468,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         setState(() {
           selectedStorage = storage;
         });
+        // Update variant selection which updates price and stock
+        _updateVariantSelection(newStorage: storage);
+        // Rebuild to show updated price
+        setState(() {});
       },
       // child: Container(
       //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -1210,61 +1493,56 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       //     ),
       //   ),
       // ),
-child:  Container(
-  padding: const EdgeInsets.all(2), // outer padding same for both
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(8),
-    gradient: isSelected ? AppColors.bgGradient : null, // gradient border
-    border: !isSelected
-        ? Border.all(
-            color: Colors.black,
-            width: 1.5,
-          )
-        : null,
-  ),
-  child: Container(
-    padding: isSelected? const EdgeInsets.symmetric(horizontal: 10, vertical: 7): const EdgeInsets.symmetric(horizontal: 8, vertical: 5),// inner padding same always
-    decoration: BoxDecoration(
-      color: isSelected ? Colors.blue[50] : AppColors.transparent,
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: ShaderMask(
-      shaderCallback: (bounds) => isSelected
-          ? AppColors.bgGradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height))
-          : LinearGradient(
-              colors: [AppColors.textBlack, AppColors.textBlack])
-              .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
-      child: Text(
-        storage,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
+      child: Container(
+        padding: const EdgeInsets.all(2), // outer padding same for both
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          gradient: isSelected ? AppColors.bgGradient : null, // gradient border
+          border: !isSelected
+              ? Border.all(color: Colors.black, width: 1.5)
+              : null,
+        ),
+        child: Container(
+          padding: isSelected
+              ? const EdgeInsets.symmetric(horizontal: 10, vertical: 7)
+              : const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 5,
+                ), // inner padding same always
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.blue[50] : AppColors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: ShaderMask(
+            shaderCallback: (bounds) => isSelected
+                ? AppColors.bgGradient.createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  )
+                : LinearGradient(
+                    colors: [AppColors.textBlack, AppColors.textBlack],
+                  ).createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  ),
+            child: Text(
+              storage,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
       ),
-    ),
-  ),
-)
-
-
-
-
     );
   }
 }
-
-
 
 class ExpandableText extends StatefulWidget {
   final String text;
   final int trimLines;
 
-  const ExpandableText({
-    super.key,
-    required this.text,
-    this.trimLines = 3,
-  });
+  const ExpandableText({super.key, required this.text, this.trimLines = 3});
 
   @override
   State<ExpandableText> createState() => _ExpandableTextState();
@@ -1298,7 +1576,8 @@ class _ExpandableTextState extends State<ExpandableText> {
       isOverflow = true;
 
       // find approximate cutoff
-      int cutoff = (widget.text.length * 0.4).toInt(); // adjust 0.6 for exact length
+      int cutoff = (widget.text.length * 0.4)
+          .toInt(); // adjust 0.6 for exact length
       firstPart = widget.text.substring(0, cutoff);
       secondPart = widget.text.substring(cutoff);
     } else {
@@ -1322,9 +1601,7 @@ class _ExpandableTextState extends State<ExpandableText> {
       text: TextSpan(
         style: const TextStyle(fontSize: 13, color: Colors.grey, height: 1.6),
         children: [
-          TextSpan(
-            text: isExpanded ? widget.text : "$firstPart...",
-          ),
+          TextSpan(text: isExpanded ? widget.text : "$firstPart..."),
           WidgetSpan(
             alignment: PlaceholderAlignment.baseline,
             baseline: TextBaseline.alphabetic,
@@ -1332,7 +1609,10 @@ class _ExpandableTextState extends State<ExpandableText> {
               onTap: () => setState(() => isExpanded = !isExpanded),
               child: Text(
                 isExpanded ? " Less" : " More",
-                style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

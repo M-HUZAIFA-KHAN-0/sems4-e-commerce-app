@@ -1,5 +1,6 @@
 // address_form.dart
 import 'package:first/core/app_imports.dart';
+import 'package:first/widgets/city_selector_widget.dart';
 
 class AddressForm extends StatefulWidget {
   final Map<String, String>? existing;
@@ -14,6 +15,7 @@ class AddressForm extends StatefulWidget {
 class _AddressFormState extends State<AddressForm> {
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _addrCtrl = TextEditingController();
+  String? _selectedCity;
   bool _isDefault = false;
 
   @override
@@ -22,6 +24,7 @@ class _AddressFormState extends State<AddressForm> {
     if (widget.existing != null) {
       _nameCtrl.text = widget.existing!['label'] ?? '';
       _addrCtrl.text = widget.existing!['address'] ?? '';
+      _selectedCity = widget.existing!['city'];
       _isDefault = widget.existing!['tag'] == 'Default';
     }
   }
@@ -60,6 +63,14 @@ class _AddressFormState extends State<AddressForm> {
           prefixIcon: Icons.location_on,
         ),
         const SizedBox(height: 16),
+        CitySelector(
+          selectedCity: _selectedCity,
+          onCitySelected: (city) {
+            setState(() => _selectedCity = city);
+          },
+          isRequired: true,
+        ),
+        const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -83,10 +94,14 @@ class _AddressFormState extends State<AddressForm> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                if (_nameCtrl.text.isNotEmpty && _addrCtrl.text.isNotEmpty) {
+                if (_nameCtrl.text.isNotEmpty &&
+                    _addrCtrl.text.isNotEmpty &&
+                    _selectedCity != null &&
+                    _selectedCity!.isNotEmpty) {
                   final Map<String, String> newMap = {
                     'label': _nameCtrl.text,
                     'address': _addrCtrl.text,
+                    'city': _selectedCity!,
                   };
                   widget.onSave(newMap, _isDefault);
                 }

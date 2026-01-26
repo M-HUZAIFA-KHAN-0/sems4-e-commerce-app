@@ -13,8 +13,8 @@ class BGColorProdDisplayCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
       decoration: BoxDecoration(
-        gradient: AppColors.bgGradient, // Use your AppColors.bgGradient
-        // gradient: AppColors.secondaryBGGradientColor,
+        // gradient: AppColors.bgGradient, // Use your AppColors.bgGradient
+        gradient: AppColors.bgSecondaryGradient,
         borderRadius: BorderRadius.circular(2),
       ),
       child: Column(

@@ -77,7 +77,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           child: const TopBarWidget(),
         ),
       ),
-      endDrawer: const CategoriesDrawer(),
+      endDrawer: const CategoriesDrawerWidget(),
       endDrawerEnableOpenDragGesture: false,
       drawerScrimColor: AppColors.textBlack.withOpacity(0.4),
       body: SingleChildScrollView(
@@ -103,7 +103,6 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
         ),
       ),
       bottomNavigationBar: BottomBarWidget(
-        isLoggedIn: false,
         currentIndex: _selectedBottomIndex,
         onIndexChanged: (index) {
           if (index == 3) {
