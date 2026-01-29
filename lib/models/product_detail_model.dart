@@ -1,5 +1,6 @@
 /// Complete Product Detail Model - Maps to API response structure
 /// Supports full variant selection, specifications, and images
+library;
 
 class ProductDetailModel {
   final int productId;
@@ -151,6 +152,7 @@ class ProductVariant {
   final DateTime? discountStart;
   final DateTime? discountEnd;
   final List<String> specifications;
+  final List<Map<String, dynamic>> variantSpecifications;
 
   ProductVariant({
     required this.variantId,
@@ -163,6 +165,7 @@ class ProductVariant {
     this.discountStart,
     this.discountEnd,
     this.specifications = const [],
+    this.variantSpecifications = const [],
   });
 
   factory ProductVariant.fromJson(Map<String, dynamic> json) {
@@ -181,6 +184,12 @@ class ProductVariant {
           ? DateTime.parse(json['discountEnd'] as String)
           : null,
       specifications: List<String>.from(json['specifications'] ?? []),
+      variantSpecifications: List<Map<String, dynamic>>.from(
+        (json['variantSpecifications'] as List?)?.map(
+              (spec) => Map<String, dynamic>.from(spec as Map),
+            ) ??
+            [],
+      ),
     );
   }
 
@@ -196,6 +205,7 @@ class ProductVariant {
       'discountStart': discountStart?.toIso8601String(),
       'discountEnd': discountEnd?.toIso8601String(),
       'specifications': specifications,
+      'variantSpecifications': variantSpecifications,
     };
   }
 }

@@ -532,18 +532,20 @@ class _WishlistRowCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    if (item.imageProvider != null)
+    if (item.imageProvider != null) {
       return Image(
         image: item.imageProvider!,
         fit: BoxFit.cover,
         filterQuality: FilterQuality.high,
       );
-    if (item.imageUrl != null && item.imageUrl!.isNotEmpty)
+    }
+    if (item.imageUrl != null && item.imageUrl!.isNotEmpty) {
       return Image.network(
         item.imageUrl!,
         fit: BoxFit.cover,
         filterQuality: FilterQuality.high,
       );
+    }
     return const Center(child: Icon(Icons.image_outlined, color: _iconGrey));
   }
 }

@@ -28,7 +28,7 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
     },
   ];
 
-  void _showAddressForm({Map<String, String>? editingAddr, int? index}) {
+  void _showAddressForm({Map<String, String>? editingAddr}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -36,9 +36,19 @@ class _OrderAddressConfirmPageState extends State<OrderAddressConfirmPage> {
       builder: (context) {
         return AddressFormDialog(
           editingAddr: editingAddr,
-          index: index,
-          addresses: addresses,
-          onSave: () => setState(() {}),
+          onSave: (String? message) {
+            if (message != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: message.startsWith('✅')
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              );
+            }
+            setState(() {});
+          },
         );
       },
     );

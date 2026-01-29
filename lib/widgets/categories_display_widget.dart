@@ -1,93 +1,96 @@
 import 'package:first/core/app_imports.dart';
 
 class CategoriesDisplayWidget extends StatelessWidget {
-  const CategoriesDisplayWidget({super.key});
+  final List<CategoryModel> categories;
+  final Function(int categoryId)? onCategoryTap;
+
+  const CategoriesDisplayWidget({
+    super.key,
+    required this.categories,
+    this.onCategoryTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final List<String> brands = [
-      'Mercedes',
-      'Tesla',
-      'BMW',
-      'Toyota',
-      'Volvo',
-      'Bugatti',
-      'Honda',
-      'More',
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Wrap(
-        spacing: 6,
-        runSpacing: 10,
-        children: brands.map((brand) => BrandIcon(brand: brand)).toList(),
-      ),
-    );
-  }
-}
-
-/// Individual Brand Icon widget
-class BrandIcon extends StatelessWidget {
-  final String brand;
-
-  const BrandIcon({required this.brand, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // 👇 Image URLs map (icons ki jagah)
-    final images = {
-      'Mercedes': 'https://picsum.photos/200?1',
-      'Tesla': 'https://picsum.photos/200?2',
-      'BMW': 'https://picsum.photos/200?3',
-      'Toyota': 'https://picsum.photos/200?4',
-      'Volvo': 'https://picsum.photos/200?5',
-      'Bugatti': 'https://picsum.photos/200?6',
-      'Honda': 'https://picsum.photos/200?7',
-      'More': 'https://picsum.photos/200?8',
-    };
+    if (categories.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return SizedBox(
-      width: 65,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GestureDetector(
+      height: 110,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CategoryViewPage(),
-                ),
-              );
+              if (onCategoryTap != null) {
+                onCategoryTap!(category.categoryId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoryViewPage(
+                      selectedCategoryId: category.categoryId,
+                      categoryName: category.categoryName,
+                    ),
+                  ),
+                );
+              }
             },
-            child: SizedBox(
-              width: 54,
-              height: 54,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8), // 👈 same radius
-                child: Image.network(
-                  images[brand] ?? 'https://picsum.photos/200',
-                  fit: BoxFit.contain,
-                ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Column(
+                children: [
+                  // Category Image Circle
+                  Container(
+                    width: 65,
+                    height: 65,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.backgroundGreyLighter,
+                      border: Border.all(
+                        color: AppColors.borderGreyLighter,
+                        width: 1,
+                      ),
+                      image:
+                          category.categoryImage != null &&
+                              category.categoryImage!.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(category.categoryImage!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child:
+                        (category.categoryImage == null ||
+                            category.categoryImage!.isEmpty)
+                        ? const Icon(
+                            Icons.category_outlined,
+                            color: AppColors.textGreyMedium,
+                            size: 40,
+                          )
+                        : null,
+                  ),
+                  const SizedBox(height: 8),
+                  // Category Name
+                  Text(
+                    category.categoryName,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textBlack87,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            brand,
-            style: const TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w400,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 }
-

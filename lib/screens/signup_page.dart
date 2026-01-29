@@ -1,7 +1,5 @@
 import 'package:first/core/app_imports.dart';
 import 'package:first/services/api/auth_service.dart';
-import 'login_page.dart';
-import 'email_verification_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

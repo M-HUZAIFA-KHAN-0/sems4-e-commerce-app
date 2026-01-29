@@ -8,7 +8,7 @@ class ProductService {
   /// Fetch all products with their ratings
   Future<List<ProductModel>> fetchProducts() async {
     try {
-      final response = await _apiClient.dio.get('/api/Products');
+      final response = await _apiClient.dio.get('/api/Products/display');
 
       // Handle paginated API response
       Map<String, dynamic> responseData = {};
@@ -82,6 +82,31 @@ class ProductService {
     } catch (e) {
       print('❌ Error fetching product detail $productId: $e');
       return null;
+    }
+  }
+
+  // *************************************************************
+  // ********************* Product View Logging ******************
+  // *************************************************************
+
+  /// Log that a user has viewed a product. This is a fire-and-forget call.
+  Future<void> logProductView({
+    required int productId,
+    int? userId,
+  }) async {
+    try {
+      print('📊 Logging product view for productId: $productId, userId: $userId');
+      await _apiClient.dio.post(
+        '/api/ProductView',
+        data: {
+          'productId': productId,
+          'userId': userId,
+        },
+      );
+      print('✅ Product view logged successfully.');
+    } catch (e) {
+      // Silently fail as this is not a critical user-facing feature
+      print('⚠️ Failed to log product view: $e');
     }
   }
 

@@ -455,7 +455,7 @@ class _RecentViewMorePageState extends State<RecentViewMorePage> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

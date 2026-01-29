@@ -1,7 +1,7 @@
 import 'package:first/core/app_imports.dart';
 
 class AuthField extends StatelessWidget {
-  const AuthField({
+  const AuthField({super.key, 
     required this.hint,
     required this.controller,
     required this.prefixIcon,

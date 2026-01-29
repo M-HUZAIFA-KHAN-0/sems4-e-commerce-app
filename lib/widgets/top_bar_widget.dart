@@ -17,26 +17,25 @@ class _TopBarWidgetState extends State<TopBarWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
             IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ),
-                
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+
             /// LEFT PROFILE
             // Row(
             //   children: [
-                SizedBox(
-                  height: 50,
-                  width: 200, // max width
-                  child: Image.asset(
-                    '../../assets/branding/png-nav-logo.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
+            SizedBox(
+              height: 50,
+              width: 200, // max width
+              child: Image.asset(
+                '../../assets/branding/png-nav-logo.png',
+                fit: BoxFit.contain,
+              ),
+            ),
             //   ],
             // ),
 
@@ -44,19 +43,17 @@ class _TopBarWidgetState extends State<TopBarWidget> {
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.end,
             //   children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SearchPage(),
-                      ),
-                    );
-                  },
-                ),
-                
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchPage()),
+                );
+              },
+            ),
+
             //   ],
             // ),
           ],
@@ -147,7 +144,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search cars...',
+                      hintText: 'Search prodItems...',
                       prefixIcon: const Icon(
                         Icons.search,
                         color: AppColors.textGrey,
@@ -164,13 +161,13 @@ class _SearchPageState extends State<SearchPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundGreyLight!,
+                          color: AppColors.backgroundGreyLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundGreyLight!,
+                          color: AppColors.backgroundGreyLight,
                         ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(

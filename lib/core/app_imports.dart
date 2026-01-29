@@ -51,15 +51,14 @@ export 'package:first/screens/contact_page.dart';
 export 'package:first/screens/complaints_page.dart';
 export 'package:first/screens/add_complaints_form_page.dart';
 export 'package:first/screens/complaint_detail_page.dart';
-import 'package:first/screens/logout_drawer.dart';
-export 'package:first/screens/address_book_page.dart';
+// export 'package:first/screens/address_book_page.dart';
+export 'package:first/widgets/categories_display_widget.dart';
 
 // ==================== THIRD-PARTY PACKAGES ====================
 // Image handling
 export 'package:image_picker/image_picker.dart';
 export 'package:image_cropper/image_cropper.dart';
 export 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 // API & Networking
 export 'package:dio/dio.dart';
 
@@ -67,6 +66,10 @@ export 'package:dio/dio.dart';
 export 'package:first/models/models.dart';
 export 'package:first/services/services.dart';
 export 'package:first/services/user_session_manager.dart';
+export 'package:first/services/api/address_service.dart';
+export 'package:first/models/create_address_model.dart';
+export 'package:first/models/category_model.dart';
+export 'package:first/services/api/category_service.dart';
 
 // ==================== PROJECT Font ====================
 export 'fontsize.dart';

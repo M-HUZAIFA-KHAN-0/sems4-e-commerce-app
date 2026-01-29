@@ -7,6 +7,8 @@ class UserSessionManager {
   String? _userName;
   bool _isLoggedIn = false;
   String? _token; // Add a private variable to store the token
+  int? _wishlistId; // Store user's wishlist ID
+  int? _cartId; // Store user's cart ID
 
   factory UserSessionManager() {
     return _instance;
@@ -17,6 +19,8 @@ class UserSessionManager {
     _userEmail = null;
     _userName = null;
     _isLoggedIn = false;
+    _wishlistId = null;
+    _cartId = null;
   }
 
   /// Set user data after signup
@@ -49,6 +53,17 @@ class UserSessionManager {
     _token = token;
   }
 
+  /// Store user's wishlist ID
+  void setWishlistId(int wishlistId) {
+    _wishlistId = wishlistId;
+    print('🔖 WISHLIST ID SET: $_wishlistId');
+  }
+
+  /// Store user's cart ID
+  void setCartId(int cartId) {
+    _cartId = cartId;
+  }
+
   /// Get userId
   int? get userId => _userId;
 
@@ -64,12 +79,23 @@ class UserSessionManager {
   /// Check if user data exists
   bool get hasUserData => _userId != null && _userEmail != null;
 
+  /// Get wishlist ID
+  int? get wishlistId {
+    print('📖 WISHLIST ID GET: $_wishlistId');
+    return _wishlistId;
+  }
+
+  /// Get cart ID
+  int? get cartId => _cartId;
+
   /// Clear session (on logout)
   void clearSession() {
     _userId = null;
     _userEmail = null;
     _userName = null;
     _isLoggedIn = false;
+    _wishlistId = null;
+    _cartId = null;
     print('✅ User session cleared');
   }
 

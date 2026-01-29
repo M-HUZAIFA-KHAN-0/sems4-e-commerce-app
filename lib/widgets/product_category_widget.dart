@@ -24,7 +24,12 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
   final List<ShopCategoryCardData> items;
   final void Function(int index)? onTap;
 
-  static const Color _panelBg = Color.fromARGB(255, 228, 179, 221); // light pink
+  static const Color _panelBg = Color.fromARGB(
+    255,
+    228,
+    179,
+    221,
+  ); // light pink
   // static const Color _purple = Color(0xFF8902A4); // border + bottom bar
   static const Color _purple = AppColors.secondaryColor1; // border + bottom bar
 
@@ -59,7 +64,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
             width: double.infinity,
             // color: _panelBg,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(0, 228, 179, 221)
+              color: const Color.fromARGB(0, 228, 179, 221),
             ),
             padding: const EdgeInsets.fromLTRB(26, 18, 26, 34),
             child: GridView.builder(
@@ -73,11 +78,7 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
                 childAspectRatio: 0.92, // matches SS card proportions
               ),
               itemBuilder: (context, index) {
-                return _CategoryCard(
-                  data: items[index],
-                  purple: _purple,
-                  onTap: onTap == null ? null : () => onTap!(index),
-                );
+                return _CategoryCard(data: items[index], purple: _purple);
               },
             ),
           ),
@@ -89,11 +90,10 @@ class ShopMoreCategoriesWidget extends StatelessWidget {
 }
 
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({required this.data, required this.purple, this.onTap});
+  const _CategoryCard({required this.data, required this.purple});
 
   final ShopCategoryCardData data;
   final Color purple;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +140,8 @@ class _CategoryCard extends StatelessWidget {
       ),
     );
 
-    if (onTap == null) return card;
+    if (data.onTap == null) return card;
 
-    return GestureDetector(onTap: onTap, child: card);
+    return GestureDetector(onTap: data.onTap, child: card);
   }
 }

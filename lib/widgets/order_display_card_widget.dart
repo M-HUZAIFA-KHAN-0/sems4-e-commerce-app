@@ -35,8 +35,7 @@ class OrderCard extends StatefulWidget {
   final OrderModel order;
   final VoidCallback onTapHeader; // Name/Image click event
 
-  const OrderCard({Key? key, required this.order, required this.onTapHeader})
-    : super(key: key);
+  const OrderCard({super.key, required this.order, required this.onTapHeader});
 
   @override
   _OrderCardState createState() => _OrderCardState();
@@ -278,10 +277,12 @@ class _OrderCardState extends State<OrderCard> {
 
 Color _statusColor(String s) {
   final lower = s.toLowerCase();
-  if (lower.contains('delivered') || lower.contains('received'))
+  if (lower.contains('delivered') || lower.contains('received')) {
     return AppColors.color55C59A;
+  }
   if (lower.contains('pending')) return AppColors.primaryYellow;
-  if (lower.contains('cancel') || lower.contains('rejected'))
+  if (lower.contains('cancel') || lower.contains('rejected')) {
     return AppColors.statusRed;
+  }
   return AppColors.textBlack87;
 }

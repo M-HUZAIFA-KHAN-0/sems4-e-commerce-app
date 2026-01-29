@@ -1,7 +1,9 @@
 import 'package:first/core/app_imports.dart';
-import 'package:first/models/product_detail_model.dart';
-import 'package:first/services/api/product_service.dart';
-import 'package:first/widgets/add_to_cart_confirmation_drawer.dart';
+// import 'package:first/models/product_detail_model.dart';
+// import 'package:first/services/api/product_service.dart';
+// import 'package:first/services/user_session_manager.dart';
+// import 'package:first/widgets/add_to_cart_confirmation_drawer.dart';
+import 'package:first/widgets/wishlist_button.dart';
 
 class ProductDetailPage extends StatefulWidget {
   /// Constructor can accept either productId OR product map (for backward compatibility)
@@ -35,11 +37,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   // UI State
   int _currentPage = 0;
-  String selectedColor = 'Gold';
-  String selectedStorage = '512GB - 8GB RAM';
+  String selectedColor = '';
+  String selectedStorage = '';
   int selectedQuantity = 1;
   late int availableStock = 15;
   bool _stockLimitReached = false;
+  ProductVariant? _selectedVariant;
+  // Mapping of formatted storage ("RAM - Storage") to variant for quick lookup
+  late final Map<String, ProductVariant> _storageToVariantMap = {};
 
   // Placeholder carousel (for backward compatibility with map-based products)
   final List<IconData> carouselIcons = [
@@ -77,6 +82,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         return;
       }
 
+      // Log the product view (fire and forget)
+      if (UserSessionManager().isLoggedIn) {
+        final userId = UserSessionManager().userId;
+        _productService.logProductView(productId: productId, userId: userId);
+      }
+
       // Fetch product detail from API
       final product = await _productService.fetchProductDetailById(productId);
 
@@ -92,12 +103,31 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _productDetail = product;
         _isLoading = false;
 
-        // Auto-select cheapest variant
+        // Build mapping of storage combinations to variants
+        _buildStorageToVariantMap();
+
+        // Auto-select cheapest variant and its first storage combination
         final cheapestVariant = product.getCheapestVariant();
         if (cheapestVariant != null) {
+          _selectedVariant = cheapestVariant;
           availableStock = cheapestVariant.stock;
           selectedQuantity = 1;
           _stockLimitReached = availableStock < 1;
+
+          // Select first storage combination for cheapest variant
+          final storageOptions = _getStorageCombinationsForVariant(
+            cheapestVariant,
+          );
+          if (storageOptions.isNotEmpty) {
+            selectedStorage = storageOptions.first;
+          }
+
+          final availableColorsForVariant = _getColorsForVariant(
+            cheapestVariant,
+          );
+          if (availableColorsForVariant.isNotEmpty) {
+            selectedColor = availableColorsForVariant.first;
+          }
         }
       });
     } catch (e) {
@@ -139,6 +169,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return mappedSpecs;
   }
 
+  /// Find variant matching the formatted storage string (RAM - Storage) using pre-built map
+  ProductVariant? _findVariantByFormattedStorage(String formattedStorage) {
+    return _storageToVariantMap[formattedStorage];
+  }
+
   /// Get available variants based on selected storage and color
   /// Used for dynamic filtering of color/storage options
   List<ProductVariant> _getAvailableVariants({
@@ -148,46 +183,159 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (_productDetail == null) return [];
 
     return _productDetail!.variants.where((variant) {
-      // Filter by storage (full SKU match) if specified
-      if (forStorage != null && variant.sku != forStorage) {
-        return false;
+      // Filter by storage if specified - match formatted storage string
+      if (forStorage != null) {
+        final variantStorage = _formatStorageFromVariant(variant);
+        if (variantStorage != forStorage) return false;
       }
 
-      // Filter by color if specified - try to match in SKU
-      // If color is not in SKU, still accept the variant (fallback for when SKU doesn't contain colors)
-      if (forColor != null && !variant.sku.contains(forColor)) {
-        // Don't filter out - accept the variant anyway since colors might not be in SKU
-        // This allows color selection even if SKU format doesn't include color names
+      // Filter by color if specified - check variantSpecifications
+      if (forColor != null) {
+        final hasColor = variant.variantSpecifications.any(
+          (spec) =>
+              spec['specificationName'] == 'Color' &&
+              spec['optionValue'] == forColor,
+        );
+        if (!hasColor) return false;
       }
 
       return true;
     }).toList();
   }
 
-  /// Update stock and UI when variant selection changes
+  /// Update stock and UI when storage is selected
   void _updateVariantSelection({String? newStorage, String? newColor}) {
     if (_productDetail == null) return;
 
-    final variants = _getAvailableVariants(
-      forStorage: newStorage,
-      forColor: newColor,
-    );
+    setState(() {
+      // If storage changed, find the matching variant
+      if (newStorage != null) {
+        final variant = _findVariantByFormattedStorage(newStorage);
+        if (variant != null) {
+          _selectedVariant = variant;
+          selectedStorage = newStorage;
+          availableStock = variant.stock;
+          selectedQuantity = 1;
+          _stockLimitReached = availableStock < 1;
 
-    if (variants.isEmpty) {
-      setState(() {
-        availableStock = 0;
-        _stockLimitReached = true;
-      });
-      return;
+          // Update color to first available color for this variant
+          final availableColorsForVariant = _getColorsForVariant(variant);
+          if (availableColorsForVariant.isNotEmpty) {
+            selectedColor = availableColorsForVariant.first;
+          }
+        }
+      }
+      // If only color changed within same storage
+      else if (newColor != null && newColor != selectedColor) {
+        // Verify color exists in current variant
+        if (_selectedVariant != null) {
+          final hasColor = _selectedVariant!.variantSpecifications.any(
+            (spec) =>
+                spec['specificationName'] == 'Color' &&
+                spec['optionValue'] == newColor,
+          );
+          if (hasColor) {
+            selectedColor = newColor;
+          }
+        }
+      }
+    });
+  }
+
+  /// Build mapping of all storage combinations ("RAM - Storage") to variants
+  void _buildStorageToVariantMap() {
+    _storageToVariantMap.clear();
+    if (_productDetail == null) return;
+
+    for (var variant in _productDetail!.variants) {
+      final combinations = _getStorageCombinationsForVariant(variant);
+      for (var combination in combinations) {
+        _storageToVariantMap[combination] = variant;
+      }
+    }
+  }
+
+  /// Get all RAM × Storage combinations for a variant
+  /// For Variant 2 with RAM: [16GB, 8GB] and Storage: [256GB, 512GB]
+  /// Returns: ["16GB - 256GB", "16GB - 512GB", "8GB - 256GB", "8GB - 512GB"]
+  List<String> _getStorageCombinationsForVariant(ProductVariant variant) {
+    final ramOptions = <String>{};
+    final storageOptions = <String>{};
+
+    // Extract all unique RAM and Storage options
+    for (var spec in variant.variantSpecifications) {
+      if (spec['specificationName'] == 'RAM') {
+        final ramValue = spec['optionValue'];
+        if (ramValue != null && ramValue is String) {
+          ramOptions.add(ramValue);
+        }
+      } else if (spec['specificationName'] == 'Storage') {
+        final storageValue = spec['optionValue'];
+        if (storageValue != null && storageValue is String) {
+          storageOptions.add(storageValue);
+        }
+      }
     }
 
-    // Get the first available variant and update stock
-    final selectedVariant = variants.first;
-    setState(() {
-      availableStock = selectedVariant.stock;
-      selectedQuantity = 1;
-      _stockLimitReached = availableStock < 1;
-    });
+    // Create Cartesian product: each RAM × each Storage
+    final combinations = <String>[];
+    for (var ram in ramOptions) {
+      for (var storage in storageOptions) {
+        combinations.add('$ram - $storage');
+      }
+    }
+
+    return combinations;
+  }
+
+  /// Extract storage and RAM from variant and format as "RAM - Storage"
+  String _formatStorageFromVariant(ProductVariant variant) {
+    String? ram;
+    String? storage;
+
+    for (var spec in variant.variantSpecifications) {
+      if (spec['specificationName'] == 'RAM') {
+        ram = spec['optionValue'] as String?;
+      } else if (spec['specificationName'] == 'Storage') {
+        storage = spec['optionValue'] as String?;
+      }
+    }
+
+    if (ram != null && storage != null) {
+      return '$ram - $storage';
+    }
+    return variant.sku;
+  }
+
+  /// Get colors available for a specific variant
+  List<String> _getColorsForVariant(ProductVariant variant) {
+    final colorList = <String>[];
+
+    for (var spec in variant.variantSpecifications) {
+      if (spec['specificationName'] == 'Color') {
+        final colorValue = spec['optionValue'];
+        if (colorValue != null && colorValue is String) {
+          colorList.add(colorValue);
+        }
+      }
+    }
+
+    return colorList;
+  }
+
+  /// Get all unique storage combinations (RAM × Storage) across all variants
+  List<String> _getAvailableStorageOptions() {
+    if (_productDetail == null) return [];
+
+    final storageOptions = <String>[];
+
+    for (var variant in _productDetail!.variants) {
+      final combinations = _getStorageCombinationsForVariant(variant);
+      storageOptions.addAll(combinations);
+    }
+
+    print('DEBUG FINAL STORAGE OPTIONS: $storageOptions');
+    return storageOptions;
   }
 
   /// Get all unique colors from product variants
@@ -195,37 +343,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (_productDetail == null) return [];
 
     final colorSet = <String>{};
-    final commonColors = [
-      'Gold',
-      'Silver',
-      'Black',
-      'White',
-      'Red',
-      'Blue',
-      'Green',
-      'Purple',
-      'Pink',
-      'Gray',
-      'Brown',
-      'Space Gray',
-      'Rose Gold',
-    ];
 
+    // Extract colors from variantSpecifications
     for (var variant in _productDetail!.variants) {
-      print('DEBUG SKU: ${variant.sku}'); // DEBUG
-      for (var color in commonColors) {
-        if (variant.sku.contains(color)) {
-          colorSet.add(color);
-          print('DEBUG FOUND COLOR: $color'); // DEBUG
+      for (var spec in variant.variantSpecifications) {
+        if (spec['specificationName'] == 'Color') {
+          final colorValue = spec['optionValue'];
+          if (colorValue != null && colorValue is String) {
+            colorSet.add(colorValue);
+            print('DEBUG FOUND COLOR: $colorValue'); // DEBUG
+          }
         }
       }
-    }
-
-    // If no colors found in SKU, return a default list of common colors
-    // This is a fallback when colors aren't properly stored in SKU
-    if (colorSet.isEmpty) {
-      print('DEBUG: No colors found in SKU, using default list');
-      colorSet.addAll(['Gold', 'Silver', 'Black']);
     }
 
     print('DEBUG FINAL COLORS: ${colorSet.toList()}'); // DEBUG
@@ -398,10 +527,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           style: TextStyle(color: Colors.black),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {},
-          ),
+          // Wishlist button - only show if user is logged in
+          if (UserSessionManager().isLoggedIn &&
+              UserSessionManager().wishlistId != null &&
+              _selectedVariant != null)
+            WishlistButton(
+              wishlistId: UserSessionManager().wishlistId!,
+              variantId: _selectedVariant!.variantId,
+            ),
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
             onPressed: () {},
@@ -552,7 +685,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   _buildColorsSection(),
 
                   const SizedBox(height: 24),
-                  
+
                   /// QUANTITY SECTION
                   const Text(
                     'Quantity',
@@ -591,7 +724,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             BGColorProdDisplayCard(
               heading: "Similar Products",
-              cars: [
+              prodItems: [
                 {
                   'name': 'BMW M4 Series',
                   'price': '\$155,000',
@@ -1047,25 +1180,35 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     // Open confirmation drawer
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => AddToCartConfirmationDrawer(
-                        selectedStorage: selectedStorage.toString(),
-                        selectedColor: selectedColor.toString(),
-                        selectedQuantity: selectedQuantity,
-                        availableStock: availableStock,
-                        product: widget.product ?? {},
-                        onConfirm: (storage, color, quantity) {
-                          // Handle the confirmed selection and navigate to cart
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CartPageExample(),
-                            ),
-                          );
-                        },
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   isScrollControlled: true,
+                    //   backgroundColor: Colors.transparent,
+                    //   builder: (context) => AddToCartConfirmationDrawer(
+                    //     storageOptions: _getAvailableStorageOptions(),
+                    //     colorOptions: _getColorsForVariant(_selectedVariant!),
+                    //     selectedStorage: selectedStorage.toString(),
+                    //     selectedColor: selectedColor.toString(),
+                    //     selectedQuantity: selectedQuantity,
+                    //     availableStock: availableStock,
+                    //     selectedVariant: _selectedVariant!,
+                    //     productDetail: _productDetail!,
+                    //     product: widget.product ?? {},
+                    //     onConfirm: (storage, color, quantity) {
+                    //       // Handle the confirmed selection and navigate to cart
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => CartPageExample(),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartPageExample(),
                       ),
                     );
                   },
@@ -1160,26 +1303,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   /// Helper: Build price section from cheapest variant
   Widget _buildPriceSection() {
-    if (_productDetail == null) {
+    if (_productDetail == null || _selectedVariant == null) {
       return const SizedBox.shrink();
     }
 
-    // Get the selected variant based on current selections
-    final availableVariants = _getAvailableVariants(
-      forStorage: selectedStorage,
-      forColor: selectedColor,
-    );
-
-    ProductVariant? selectedVariant;
-    if (availableVariants.isNotEmpty) {
-      selectedVariant = availableVariants.first;
-    } else {
-      selectedVariant = _productDetail!.getCheapestVariant();
-    }
-
-    if (selectedVariant == null) {
-      return const SizedBox.shrink();
-    }
+    // Use the currently selected variant (which is updated when storage changes)
+    final selectedVariant = _selectedVariant!;
 
     final finalPrice = selectedVariant.finalPrice ?? selectedVariant.price ?? 0;
     final originalPrice = selectedVariant.price ?? 0;
@@ -1266,17 +1395,19 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   /// Helper: Build storage section (RAM/Storage options from variants)
+  /// Get all unique storage options from variantSpecifications
+
   Widget _buildStorageSection() {
     if (_productDetail == null || _productDetail!.variants.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    // Get unique storage options from SKU
-    final storageOptions = <String>{
-      '512GB - 8GB RAM',
-      '256GB - 8GB RAM',
-      '512GB - 16GB RAM',
-    };
+    // Get unique storage options formatted as "RAM - Storage"
+    final storageOptions = _getAvailableStorageOptions();
+
+    if (storageOptions.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1303,11 +1434,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   /// Helper: Build colors section
   Widget _buildColorsSection() {
-    if (_productDetail == null) {
+    if (_productDetail == null || _selectedVariant == null) {
       return const SizedBox.shrink();
     }
 
-    final availableColors = _getAvailableColors();
+    // Get colors ONLY for the currently selected variant/storage
+    final availableColors = _getColorsForVariant(_selectedVariant!);
 
     if (availableColors.isEmpty) {
       return const SizedBox.shrink();
@@ -1465,34 +1597,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedStorage = storage;
-        });
-        // Update variant selection which updates price and stock
+        // Update variant selection which triggers setState internally
         _updateVariantSelection(newStorage: storage);
-        // Rebuild to show updated price
-        setState(() {});
       },
-      // child: Container(
-      //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      //   decoration: BoxDecoration(
-      //     color: isSelected ? Colors.blue[50] : AppColors.transparent,
-      //     gradient: isSelected ? AppColors.bgGradient : null,
-      //     border: Border.all(
-      //       color: isSelected ? Colors.blue : AppColors.backgroundGreyLight!,
-      //       width: isSelected ? 2 : 2,
-      //     ),
-      //     borderRadius: BorderRadius.circular(12),
-      //   ),
-      //   child: Text(
-      //     storage,
-      //     style: TextStyle(
-      //       fontSize: 12,
-      //       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-      //       color: isSelected ? Colors.blue : AppColors.textBlack,
-      //     ),
-      //   ),
-      // ),
       child: Container(
         padding: const EdgeInsets.all(2), // outer padding same for both
         decoration: BoxDecoration(

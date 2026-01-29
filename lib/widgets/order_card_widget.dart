@@ -165,11 +165,13 @@ class OrderCard extends StatelessWidget {
 
   Color _statusColor(String s) {
     final lower = s.toLowerCase();
-    if (lower.contains('delivered') || lower.contains('received'))
+    if (lower.contains('delivered') || lower.contains('received')) {
       return const Color(0xFF55C59A);
+    }
     if (lower.contains('pending')) return const Color(0xFFFFC107);
-    if (lower.contains('cancel') || lower.contains('rejected'))
+    if (lower.contains('cancel') || lower.contains('rejected')) {
       return const Color(0xFFE53935);
+    }
     return Colors.black87;
   }
 }

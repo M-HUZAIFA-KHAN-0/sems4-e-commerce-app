@@ -202,7 +202,7 @@ import 'dart:ui';
 
 import 'package:first/core/app_imports.dart';
 
-final session = UserSessionManager();
+// final session = UserSessionManager();
 
 class BottomBarWidget extends StatefulWidget {
   final int currentIndex;

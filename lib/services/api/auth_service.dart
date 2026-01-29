@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:first/services/api/api_client.dart';
+import 'package:first/services/api/cart_wishlist_service.dart';
 import 'package:first/services/user_session_manager.dart';
 
 class AuthService {
   final ApiClient _apiClient = ApiClient();
   final UserSessionManager _sessionManager = UserSessionManager();
+  final CartWishlistService _cartWishlistService = CartWishlistService();
 
   /// Sign up a new user
   Future<Map<String, dynamic>> signup({
@@ -75,11 +77,11 @@ class AuthService {
     required String otp,
   }) async {
     try {
-      final userId_int = userId is int ? userId : int.parse(userId.toString());
-      final dto = {"userId": userId_int, "code": otp};
+      final useridInt = userId is int ? userId : int.parse(userId.toString());
+      final dto = {"userId": useridInt, "code": otp};
 
       print('=== VERIFY EMAIL REQUEST ===');
-      print('UserId: $userId_int');
+      print('UserId: $useridInt');
       print('Code: $otp');
       print('Payload: $dto');
 
@@ -151,9 +153,22 @@ class AuthService {
 
         // Store userId in session manager if available
         if (userId != null) {
-          _sessionManager.setLoginData(
-            userId: userId is int ? userId : int.parse(userId.toString()),
-          );
+          final userIdInt = userId is int
+              ? userId
+              : int.parse(userId.toString());
+          _sessionManager.setLoginData(userId: userIdInt);
+
+          // Initialize cart and wishlist after successful login
+          print('🔄 Initializing cart and wishlist...');
+          try {
+            final result = await _cartWishlistService.initializeCartAndWishlist(userIdInt);
+            print('✅ Cart and Wishlist initialized successfully');
+            print('📋 Init result: $result');
+            print('💾 Session wishlistId: ${_sessionManager.wishlistId}');
+          } catch (e) {
+            print('⚠️ Error initializing cart and wishlist: $e');
+            // Don't fail login if cart/wishlist initialization fails
+          }
         }
 
         return {
@@ -212,15 +227,15 @@ class AuthService {
     required dynamic userId,
   }) async {
     try {
-      final userId_int = userId is int ? userId : int.parse(userId.toString());
+      final useridInt = userId is int ? userId : int.parse(userId.toString());
 
       print('=== RESEND OTP REQUEST ===');
       print('Email: $email');
-      print('UserId: $userId_int');
+      print('UserId: $useridInt');
 
       final response = await _apiClient.dio.post(
         '/api/user/resend-otp',
-        data: {'Email': email, 'UserId': userId_int},
+        data: {'Email': email, 'UserId': useridInt},
       );
 
       print('=== RESEND OTP RESPONSE ===');

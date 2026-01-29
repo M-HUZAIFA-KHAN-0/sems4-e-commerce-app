@@ -3,7 +3,14 @@ import 'package:first/screens/logout_drawer.dart';
 import 'package:first/services/api/auth_service.dart';
 
 class CategoriesDrawerWidget extends StatelessWidget {
-  const CategoriesDrawerWidget({super.key});
+  final List<CategoryModel> categories;
+  final Function(int categoryId)? onCategoryTap;
+
+  const CategoriesDrawerWidget({
+    super.key,
+    required this.categories,
+    this.onCategoryTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,21 +77,10 @@ class CategoriesDrawerWidget extends StatelessWidget {
       MenuItemData(
         label: AppConstant.isloggedIn ? 'Logout' : 'Login',
         icon: AppConstant.isloggedIn ? Icons.logout : Icons.login,
-        page: AppConstant.isloggedIn ? LogoutDrawer(onLogout: handleLogout) : LoginPage(),
+        page: AppConstant.isloggedIn
+            ? LogoutDrawer(onLogout: handleLogout)
+            : LoginPage(),
       ),
-    ];
-
-    final List<CategoryItem> categories = [
-      CategoryItem(label: 'Mobiles'),
-      CategoryItem(label: 'Smart Watches'),
-      CategoryItem(label: 'Wireless Earbuds'),
-      CategoryItem(label: 'Air Purifiers'),
-      CategoryItem(label: 'Personal Cares'),
-      CategoryItem(label: 'Mobile Accessories'),
-      CategoryItem(label: 'Bluetooth Speakers'),
-      CategoryItem(label: 'Power Banks'),
-      CategoryItem(label: 'Tablets'),
-      CategoryItem(label: 'Laptops'),
     ];
 
     final List<PopularListItem> popularLists = [
@@ -153,11 +149,19 @@ class CategoriesDrawerWidget extends StatelessWidget {
                       // CATEGORIES
                       _section(
                         title: 'CATEGORIES',
-                        child: Column(
-                          children: categories
-                              .map((c) => CategoryItemWidget(category: c))
-                              .toList(),
-                        ),
+                        child: categories.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('No categories available'),
+                              )
+                            : Column(
+                                children: categories
+                                    .map(
+                                      (c) =>
+                                          CategoryModelItemWidget(category: c),
+                                    )
+                                    .toList(),
+                              ),
                       ),
 
                       const Divider(),
@@ -309,6 +313,44 @@ class CategoryItemWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 category.label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textBlack87,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryModelItemWidget extends StatelessWidget {
+  final CategoryModel category;
+
+  const CategoryModelItemWidget({super.key, required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        // Optional: Navigate to category products or filter
+        print(
+          '🏷️ Category tapped: ${category.categoryName} (ID: ${category.categoryId})',
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          children: [
+            const Icon(Icons.category, size: 24, color: Colors.black54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                category.categoryName ?? 'Unknown',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

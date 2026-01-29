@@ -4,7 +4,7 @@ class ShopByPriceWidget extends StatelessWidget {
   // Click hone par kya hona chahiye, uska function yahan pass hoga
   final Function(String price)? onPriceClick;
 
-  ShopByPriceWidget({this.onPriceClick});
+  ShopByPriceWidget({super.key, this.onPriceClick});
 
   // Price ranges ki list
   final List<String> priceRanges = [
@@ -70,7 +70,7 @@ class PriceButton extends StatelessWidget {
   final bool isHighlighted;
   final VoidCallback onTap;
 
-  PriceButton({
+  const PriceButton({super.key, 
     required this.label,
     this.isHighlighted = false,
     required this.onTap,

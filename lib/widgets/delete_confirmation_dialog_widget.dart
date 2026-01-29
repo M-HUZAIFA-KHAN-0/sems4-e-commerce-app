@@ -26,12 +26,8 @@ class DeleteConfirmationDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             onConfirm();
-            Navigator.pop(context); // Close the dialog after confirm
           },
-          child: const Text(
-            'Delete',
-            style: TextStyle(color: Colors.red),
-          ),
+          child: const Text('Delete', style: TextStyle(color: Colors.red)),
         ),
       ],
     );

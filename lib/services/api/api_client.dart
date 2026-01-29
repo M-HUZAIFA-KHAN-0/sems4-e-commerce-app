@@ -18,6 +18,8 @@ class ApiClient {
         receiveTimeout: const Duration(seconds: 30),
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
+        validateStatus: (status) =>
+            status != null && status < 500, // Don't throw on 4xx, only on 5xx+
       ),
     );
 

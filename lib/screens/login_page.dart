@@ -1,7 +1,5 @@
 import 'package:first/core/app_imports.dart';
 import 'package:first/services/api/auth_service.dart';
-import 'package:first/main-home.dart';
-import 'signup_page.dart';
 import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {

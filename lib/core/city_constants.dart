@@ -1,25 +1,15 @@
+import 'package:first/services/api/city_service.dart';
+
 /// City constants for dropdown selector
 class CityConstants {
-  static const List<String> cities = [
-    'Karachi',
-    'Lahore',
-    'Islamabad',
-    'Rawalpindi',
-    'Faisalabad',
-    'Multan',
-    'Hyderabad',
-    'Peshawar',
-    'Quetta',
-    'Sialkot',
-    'Gujranwala',
-    'Sargodha',
-    'Bahawalpur',
-    'Larkana',
-    'Mirpur Khas',
-    'Jhang',
-    'Chakwal',
-    'Okara',
-    'Sahiwal',
-    'Wazirabad',
-  ];
+  static List<CityModel> cities = [];
+
+  static Future<void> initialize() async {
+    try {
+      final service = CityService();
+      cities = await service.fetchCities();
+    } catch (e) {
+      print('Error fetching cities: $e');
+    }
+  }
 }

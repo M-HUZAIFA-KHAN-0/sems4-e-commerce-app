@@ -3,7 +3,6 @@ import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/recent_view_more_page.dart';
 import 'package:first/core/app_imports.dart';
 import 'package:first/services/api/auth_service.dart';
-import 'package:first/screens/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

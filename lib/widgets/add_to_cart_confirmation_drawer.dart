@@ -1,24 +1,33 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/models/product_detail_model.dart';
 
 /// Reusable Add to Cart Confirmation Drawer
 ///
 /// This drawer shows the selected Storage, Color, and Quantity options
-/// with the exact same UI styling as the Product Detail Page.
+/// with the exact same UI styling and logic as the Product Detail Page.
 /// It opens when the user taps "Add to Cart" to confirm their selections.
 class AddToCartConfirmationDrawer extends StatefulWidget {
+  final List<String> storageOptions;
+  final List<String> colorOptions;
   final String selectedStorage;
   final String selectedColor;
   final int selectedQuantity;
   final int availableStock;
+  final ProductVariant selectedVariant;
+  final ProductDetailModel productDetail;
   final Map<String, dynamic> product;
   final Function(String storage, String color, int quantity) onConfirm;
 
   const AddToCartConfirmationDrawer({
     super.key,
+    required this.storageOptions,
+    required this.colorOptions,
     required this.selectedStorage,
     required this.selectedColor,
     required this.selectedQuantity,
     required this.availableStock,
+    required this.selectedVariant,
+    required this.productDetail,
     required this.product,
     required this.onConfirm,
   });
@@ -33,6 +42,7 @@ class _AddToCartConfirmationDrawerState
   late String _currentStorage;
   late String _currentColor;
   late int _currentQuantity;
+  late ProductVariant _currentVariant;
   bool _stockLimitReached = false;
 
   @override
@@ -41,11 +51,72 @@ class _AddToCartConfirmationDrawerState
     _currentStorage = widget.selectedStorage;
     _currentColor = widget.selectedColor;
     _currentQuantity = widget.selectedQuantity;
+    _currentVariant = widget.selectedVariant;
     _checkStockLimit();
   }
 
   void _checkStockLimit() {
-    _stockLimitReached = _currentQuantity >= widget.availableStock;
+    _stockLimitReached = _currentQuantity >= _currentVariant.stock;
+  }
+
+  /// Get colors available for the current variant (same logic as detail page)
+  List<String> _getColorsForVariant(ProductVariant variant) {
+    final colorList = <String>[];
+    for (var spec in variant.variantSpecifications) {
+      if (spec['specificationName'] == 'Color') {
+        final colorValue = spec['optionValue'];
+        if (colorValue != null && colorValue is String) {
+          colorList.add(colorValue);
+        }
+      }
+    }
+    return colorList;
+  }
+
+  /// Update variant selection (same logic as detail page)
+  void _updateVariantSelection({String? newStorage}) {
+    if (newStorage != null) {
+      // Find variant matching this storage
+      for (var variant in widget.productDetail.variants) {
+        final variantStorage = _formatStorageFromVariant(variant);
+        if (variantStorage == newStorage) {
+          setState(() {
+            _currentStorage = newStorage;
+            _currentVariant = variant;
+
+            // Update color to first available color for this variant
+            final availableColorsForVariant = _getColorsForVariant(variant);
+            if (availableColorsForVariant.isNotEmpty) {
+              _currentColor = availableColorsForVariant.first;
+            }
+
+            // Reset quantity
+            _currentQuantity = 1;
+            _checkStockLimit();
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  /// Format storage from variant (same logic as detail page)
+  String _formatStorageFromVariant(ProductVariant variant) {
+    String? ram;
+    String? storage;
+
+    for (var spec in variant.variantSpecifications) {
+      if (spec['specificationName'] == 'RAM') {
+        ram = spec['optionValue'] as String?;
+      } else if (spec['specificationName'] == 'Storage') {
+        storage = spec['optionValue'] as String?;
+      }
+    }
+
+    if (ram != null && storage != null) {
+      return '$ram - $storage';
+    }
+    return variant.sku;
   }
 
   @override
@@ -101,14 +172,22 @@ class _AddToCartConfirmationDrawerState
 
               const SizedBox(height: 8),
 
+              // Wrap(
+              //   spacing: 12,
+              //   runSpacing: 12,
+              //   children: [
+              //     _buildStorageOption('512GB - 8GB RAM'),
+              //     _buildStorageOption('256GB - 8GB RAM'),
+              //     _buildStorageOption('512GB - 16GB RAM'),
+              //   ],
+              // ),
+
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
-                children: [
-                  _buildStorageOption('512GB - 8GB RAM'),
-                  _buildStorageOption('256GB - 8GB RAM'),
-                  _buildStorageOption('512GB - 16GB RAM'),
-                ],
+                children: widget.storageOptions
+                    .map((s) => _buildStorageOption(s))
+                    .toList(),
               ),
 
               const SizedBox(height: 24),
@@ -125,19 +204,35 @@ class _AddToCartConfirmationDrawerState
 
               const SizedBox(height: 8),
 
-              SizedBox(
-                height: 100,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildColorOption('Gold'),
-                    const SizedBox(width: 12),
-                    _buildColorOption('Silver'),
-                    const SizedBox(width: 12),
-                    _buildColorOption('Black'),
-                  ],
-                ),
+              // Wrap(
+              //   spacing: 12,
+              //   runSpacing: 12,
+              //   children: [
+              //     _buildStorageOption('black'),
+              //     _buildStorageOption('red'),
+              //     _buildStorageOption('white'),
+              //   ],
+              // ),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: _getColorsForVariant(_currentVariant)
+                    .map((c) => _buildStorageOption(c))
+                    .toList(),
               ),
+              // SizedBox(
+              //   height: 100,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [
+              //       _buildColorOption('Gold'),
+              //       const SizedBox(width: 12),
+              //       _buildColorOption('Silver'),
+              //       const SizedBox(width: 12),
+              //       _buildColorOption('Black'),
+              //     ],
+              //   ),
+              // ),
 
               const SizedBox(height: 24),
 
@@ -158,7 +253,7 @@ class _AddToCartConfirmationDrawerState
                   Container(
                     height: 44,
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.backgroundGreyLight!),
+                      border: Border.all(color: AppColors.backgroundGreyLight),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -278,9 +373,7 @@ class _AddToCartConfirmationDrawerState
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _currentStorage = storage;
-        });
+        _updateVariantSelection(newStorage: storage);
       },
       child: Container(
         padding: const EdgeInsets.all(2),
@@ -323,63 +416,100 @@ class _AddToCartConfirmationDrawerState
     );
   }
 
-  /// BUILD COLOR OPTION - EXACT SAME UI AS PRODUCT DETAIL PAGE
-  Widget _buildColorOption(String color) {
-    bool isSelected = _currentColor == color;
-    Color colorValue;
+//   /// BUILD COLOR OPTION - EXACT SAME UI AS PRODUCT DETAIL PAGE
+//   Widget _buildColorOption(String color) {
+//     bool isSelected = _currentColor == color;
+//     Color colorValue;
 
-    switch (color) {
-      case 'Gold':
-        colorValue = AppColors.accentGold;
-        break;
-      case 'Silver':
-        colorValue = AppColors.accentSilver;
-        break;
-      case 'Black':
-        colorValue = AppColors.textBlack;
-        break;
-      default:
-        colorValue = AppColors.textGrey;
-    }
+//     switch (color.toLowerCase()) {
+//       case 'black':
+//         colorValue = AppColors.textBlack;
+//         break;
+//       case 'red':
+//         colorValue = const Color.fromARGB(255, 193, 38, 29);
+//         break;
+//       case 'white':
+//         colorValue = Colors.white;
+//         break;
+//       case 'gold':
+//         colorValue = AppColors.accentGold;
+//         break;
+//       case 'silver':
+//         colorValue = AppColors.accentSilver;
+//         break;
+//       default:
+//         colorValue = AppColors.textGrey;
+//     }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentColor = color;
-        });
-      },
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            padding: const EdgeInsets.all(1.5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              gradient: isSelected
-                  ? AppColors.bgGradient
-                  : LinearGradient(
-                      colors: [
-                        const Color.fromARGB(255, 255, 255, 255),
-                        const Color.fromARGB(255, 255, 255, 255),
-                      ],
-                    ),
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: colorValue,
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            color,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           _currentColor = color;
+//         });
+//       },
+//       child: Column(
+//         children: [
+//           Container(
+//             width: 40,
+//             height: 40,
+//             padding: const EdgeInsets.all(1.5),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(50),
+//               gradient: isSelected
+//                   ? AppColors.bgGradient
+//                   : LinearGradient(
+//                       colors: [
+//                         const Color.fromARGB(255, 255, 255, 255),
+//                         const Color.fromARGB(255, 255, 255, 255),
+//                       ],
+//                     ),
+//             ),
+//             child: Container(
+//               margin: const EdgeInsets.all(2),
+//               decoration: BoxDecoration(
+//                 color: colorValue,
+//                 borderRadius: BorderRadius.circular(50),
+//               ),
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             color,
+//             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

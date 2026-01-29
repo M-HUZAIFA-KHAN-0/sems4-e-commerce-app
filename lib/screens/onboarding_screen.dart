@@ -153,6 +153,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 }
 
 class OnboardingPage1 extends StatefulWidget {
+  const OnboardingPage1({super.key});
+
   @override
   State<OnboardingPage1> createState() => _OnboardingPage1State();
 }
@@ -271,6 +273,8 @@ class _OnboardingPage1State extends State<OnboardingPage1>
 }
 
 class OnboardingPage2 extends StatefulWidget {
+  const OnboardingPage2({super.key});
+
   @override
   State<OnboardingPage2> createState() => _OnboardingPage2State();
 }
@@ -438,6 +442,8 @@ class _FeatureCard extends StatelessWidget {
 }
 
 class OnboardingPage3 extends StatefulWidget {
+  const OnboardingPage3({super.key});
+
   @override
   State<OnboardingPage3> createState() => _OnboardingPage3State();
 }

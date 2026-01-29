@@ -113,7 +113,7 @@ class OrderTrackingWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '$items',
+                                    items,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
@@ -128,7 +128,7 @@ class OrderTrackingWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "$price",
+                                    price,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,

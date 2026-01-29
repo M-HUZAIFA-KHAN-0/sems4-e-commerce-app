@@ -14,7 +14,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String selectedFilter = 'All';
   int _selectedBottomIndex = 0;
 
-  List<Map<String, dynamic>> cars = [];
+  List<Map<String, dynamic>> prodItems = [];
+  List<CategoryModel> _categories = [];
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -22,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initializeProducts();
+    _initializeCategories();
   }
 
   Future<void> _initializeProducts() async {
@@ -35,9 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
       List<ProductModel> products = await service.fetchProducts();
 
       setState(() {
-        cars = products.map((product) => product.toMap()).toList();
+        prodItems = products.map((product) => product.toMap()).toList();
         _isLoading = false;
-        if (cars.isEmpty) {
+        if (prodItems.isEmpty) {
           _errorMessage = 'No products available';
         }
       });
@@ -48,6 +50,20 @@ class _MyHomePageState extends State<MyHomePage> {
             'Failed to load products. Please check your connection.';
       });
       print('Error initializing products: $e');
+    }
+  }
+
+  Future<void> _initializeCategories() async {
+    try {
+      final CategoryService categoryService = CategoryService();
+      final categories = await categoryService.fetchCategories();
+      if (mounted) {
+        setState(() {
+          _categories = categories;
+        });
+      }
+    } catch (e) {
+      print('Error loading categories: $e');
     }
   }
 
@@ -65,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
         titleSpacing: 0,
         title: const TopBarWidget(),
       ),
-      drawer: const CategoriesDrawerWidget(),
+      drawer: CategoriesDrawerWidget(categories: _categories),
       drawerEnableOpenDragGesture: false,
       drawerScrimColor: Colors.black.withOpacity(0.4),
       body: _errorMessage != null
@@ -108,17 +124,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     const SizedBox(height: 10),
 
-                    /// BRANDS
+                    /// Categires DISPLAY
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: const CategoriesDisplayWidget(),
+                      child: CategoriesDisplayWidget(
+                        categories: _categories,
+                        onCategoryTap: (categoryId) {
+                          print('Category ID clicked: $categoryId');
+                          // Handle navigation or backend call here
+                        },
+                      ),
                     ),
 
                     const SizedBox(height: 24),
 
                     BGColorProdDisplayCard(
                       heading: "Heighest Discounted Products",
-                      cars: cars,
+                      prodItems: prodItems,
                     ),
 
                     const SizedBox(height: 20),
@@ -126,24 +148,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     /// CAR GRID
                     Padding(
                       padding: const EdgeInsets.all(10),
-                      child: ProductDisplayWidget(cars: cars),
+                      child: ProductDisplayWidget(prodItems: prodItems),
                     ),
 
                     const SizedBox(height: 20),
 
                     BGColorProdDisplayCard(
                       heading: "Latest Laptops",
-                      cars: cars,
+                      prodItems: prodItems,
                     ),
-
                     const SizedBox(height: 24),
 
-                    CategoryViewCard(),
+                    const CategoryViewCard(),
                     const SizedBox(height: 24),
 
                     BGColorProdDisplayCard(
                       heading: "Latest Earbuds",
-                      cars: cars,
+                      prodItems: prodItems,
                     ),
 
                     const SizedBox(height: 24),
@@ -154,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     BGColorProdDisplayCard(
                       heading: "Latest Watches",
-                      cars: cars,
+                      prodItems: prodItems,
                     ),
 
                     const SizedBox(height: 24),

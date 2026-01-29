@@ -24,6 +24,14 @@ class _CitySelectorState extends State<CitySelector> {
   void initState() {
     super.initState();
     _selectedCity = widget.selectedCity;
+    _loadCities();
+  }
+
+  Future<void> _loadCities() async {
+    if (CityConstants.cities.isEmpty) {
+      await CityConstants.initialize();
+      if (mounted) setState(() {});
+    }
   }
 
   @override
@@ -66,9 +74,9 @@ class _CitySelectorState extends State<CitySelector> {
       ),
       items: CityConstants.cities.map((city) {
         return DropdownMenuItem<String>(
-          value: city,
+          value: city.cityId.toString(),
           child: Text(
-            city,
+            city.cityName,
             style: const TextStyle(fontSize: 14, color: AppColors.textBlack),
           ),
         );

@@ -69,7 +69,7 @@ class _ComparisonPageState extends State<ComparisonPage> {
       'id': product['id'] ?? 'unknown',
       'title': product['name'] ?? product['title'] ?? 'Product',
       'price': product['price'] ?? 'Rs 0',
-      'discount': product['discount'] ?? null,
+      'discount': product['discount'],
       'imageUrl': 'https://via.placeholder.com/200x200?text=Product',
       'specs': {
         'Screen Size': 'N/A',

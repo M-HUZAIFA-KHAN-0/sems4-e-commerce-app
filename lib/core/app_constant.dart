@@ -2,6 +2,7 @@
 import 'package:first/core/app_imports.dart';
 
 final session = UserSessionManager();
+final ApiClient _apiClient = ApiClient();
 
 class AppConstant {
   AppConstant._();

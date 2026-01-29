@@ -1,11 +1,14 @@
 import 'package:first/core/app_imports.dart';
 
 class BGColorProdDisplayCard extends StatelessWidget {
-  final List<Map<String, dynamic>> cars;
+  final List<Map<String, dynamic>> prodItems;
   final String? heading;
 
-
-  const BGColorProdDisplayCard({super.key, required this.cars, this.heading});
+  const BGColorProdDisplayCard({
+    super.key,
+    required this.prodItems,
+    this.heading,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +24,25 @@ class BGColorProdDisplayCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Heading with gradient text
-          if(heading != null && heading!.isNotEmpty)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                heading!,
-                style: const TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.bgGradientHeading),
-              ),
-            ],
-          ),
+          if (heading != null && heading!.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  heading!,
+                  style: const TextStyle(
+                    fontSize: FontSize.homePageTitle,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.bgGradientHeading,
+                  ),
+                ),
+              ],
+            ),
 
           const SizedBox(height: 18),
 
           // Product display
-          ProductDisplayWidget(cars: cars, glassEffect: true),
+          ProductDisplayWidget(prodItems: prodItems, glassEffect: true),
         ],
       ),
     );

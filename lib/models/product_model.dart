@@ -10,6 +10,11 @@ class ProductModel {
   final int discount; // static 10%
   final String? brandName;
   final String? categoryName;
+  final dynamic originalPrice; // from API response
+  final dynamic discountPrice; // from API response
+  final double averageRating; // from API response
+  final String? productImage; // from API response
+  final int discountPercentage; // from API response
 
   ProductModel({
     required this.productId,
@@ -23,6 +28,11 @@ class ProductModel {
     required this.discount,
     this.brandName,
     this.categoryName,
+    this.originalPrice,
+    this.discountPrice,
+    this.averageRating = 0,
+    this.productImage,
+    this.discountPercentage = 0,
   });
 
   factory ProductModel.fromJson(
@@ -45,6 +55,11 @@ class ProductModel {
       discount: 10, // static 10%
       brandName: json['brandName'] as String?,
       categoryName: json['categoryName'] as String?,
+      originalPrice: json['originalPrice'],
+      discountPrice: json['discountPrice'],
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0,
+      productImage: json['productImage'] as String?,
+      discountPercentage: (json['discountPercentage'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -62,6 +77,11 @@ class ProductModel {
       'discount': discount,
       'brandName': brandName,
       'categoryName': categoryName,
+      'originalPrice': originalPrice,
+      'discountPrice': discountPrice,
+      'averageRating': averageRating,
+      'productImage': productImage,
+      'discountPercentage': discountPercentage,
     };
   }
 
