@@ -20,7 +20,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      'imageUrl': 'https://picsum.photos/200?10',
+      // 'imageUrl': 'https://picsum.photos/200?10',
+      'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
       'quantity': 1,
@@ -34,7 +35,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      'imageUrl': 'https://picsum.photos/200?10',
+      // 'imageUrl': 'https://picsum.photos/200?10',
+      'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
       'quantity': 1,
@@ -47,7 +49,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      'imageUrl': 'https://picsum.photos/200?10',
+      // 'imageUrl': 'https://picsum.photos/200?10',
+      'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
       'quantity': 1,
@@ -60,13 +63,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   final List<Map<String, dynamic>> _pendingReviewProducts = [
     {
       'productName': 'Apple iPhone 15',
-      'imageUrl': 'https://picsum.photos/200?1',
+      // 'imageUrl': 'https://picsum.photos/200?1',
+      'imageUrl': '',
       'price': 'Rs. 79,999',
       'quantity': 1,
     },
     {
       'productName': 'Samsung Galaxy Watch',
-      'imageUrl': 'https://picsum.photos/200?2',
+      // 'imageUrl': 'https://picsum.photos/200?2',
+      'imageUrl': '',
       'price': 'Rs. 24,999',
       'quantity': 1,
     },
@@ -75,7 +80,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   final List<Map<String, dynamic>> _reviewedProducts = [
     {
       'productName': 'Sony WH-1000XM4 Headphones',
-      'imageUrl': 'https://picsum.photos/200?3',
+      // 'imageUrl': 'https://picsum.photos/200?3',
+      'imageUrl': '',
       'rating': 5,
       'reviewText':
           'Excellent sound quality and very comfortable to wear. Battery life is impressive.',
@@ -86,7 +92,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     },
     {
       'productName': 'iPad Pro 12.9',
-      'imageUrl': 'https://picsum.photos/200?6',
+      // 'imageUrl': 'https://picsum.photos/200?6',
+      'imageUrl': '',
       'rating': 4,
       'reviewText':
           'Great tablet for productivity and entertainment. Screen is beautiful.',

@@ -80,7 +80,8 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
                   productName: 'Tecno Camon 40 Pro',
                   productPrice: '60,999',
                   productColor: 'GALAXY BLACK',
-                  productImage: 'https://picsum.photos/200?1',
+                  // productImage: 'https://picsum.photos/200?1',
+                  productImage: '',
                   orderData: {
                     'name': 'Huzaifa Khan',
                     'email': 'huzpubgkhan@gmail.com',

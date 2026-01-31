@@ -153,5 +153,35 @@ class WishlistService {
       print('❌ Error removing from wishlist: $e');
       return false;
     }
+  
+  
+  
+  
+  
+  }
+  Future<bool> removeItemFromWishlist({
+    required int wishlistItemId,
+  }) async {
+    try {
+      print('=== REMOVE FROM WISHLIST REQUEST ===');
+      print('Wishlist ID: $wishlistItemId');
+
+      final response = await _apiClient.dio.delete(
+        '/api/WishlistItem/$wishlistItemId',
+      );
+
+      print('=== REMOVE FROM WISHLIST RESPONSE ===');
+      print('Status: ${response.statusCode}');
+      print('Data: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('✅ Item removed from wishlist');
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('❌ Error removing from wishlist: $e');
+      return false;
+    }
   }
 }

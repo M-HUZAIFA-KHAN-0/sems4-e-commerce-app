@@ -25,12 +25,21 @@ class CartWishlistService {
       print('Wishlist result: $wishlistResult');
 
       // Extract and store cart ID
-      final cartId = cartResult['cartId'];
+      var cartId = cartResult['cartId'];
+      print('📦 [CartWishlistService] cartResult keys: ${cartResult.keys}');
+      print(
+        '📦 [CartWishlistService] cartId value: $cartId, type: ${cartId.runtimeType}',
+      );
+
       if (cartId != null) {
-        _sessionManager.setCartId(
-          cartId is int ? cartId : int.parse(cartId.toString()),
-        );
-        print('✅ Cart ID stored: $cartId');
+        final parsedCartId = cartId is int
+            ? cartId
+            : int.parse(cartId.toString());
+        _sessionManager.setCartId(parsedCartId);
+        print('✅ Cart ID stored in session: $parsedCartId');
+        print('✅ Verify from session: ${_sessionManager.cartId}');
+      } else {
+        print('❌ cartId is null in cart result');
       }
 
       // Extract and store wishlist ID
@@ -67,15 +76,28 @@ class CartWishlistService {
       print('=== CART API RESPONSE ===');
       print('Status: ${response.statusCode}');
       print('Data: ${response.data}');
+      print('Data type: ${response.data.runtimeType}');
+      if (response.data is Map) {
+        print('Data keys: ${(response.data as Map).keys}');
+      }
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = response.data is Map ? response.data : {};
+      // Extract cartId from response regardless of status code
+      // Backend may return 400 with "Cart already exists" but still include cartId
+      final responseData = response.data is Map ? response.data : {};
+      final cartId =
+          responseData['cartId'] ??
+          responseData['id'] ??
+          responseData['CartId'];
+
+      if (cartId != null) {
+        print('📦 Extracted cartId: $cartId');
         return {
           'success': true,
-          'cartId': responseData['cartId'] ?? responseData['id'],
+          'cartId': cartId,
           'message': responseData['message'] ?? 'Cart retrieved/created',
         };
       } else {
+        print('❌ No cartId in response');
         return {'success': false, 'message': 'Failed to fetch cart'};
       }
     } on DioException catch (e) {
@@ -86,10 +108,14 @@ class CartWishlistService {
       // Try to extract cartId from error response
       if (e.response?.data is Map) {
         final responseData = e.response!.data as Map<String, dynamic>;
-        if (responseData.containsKey('cartId')) {
+        final cartId =
+            responseData['cartId'] ??
+            responseData['id'] ??
+            responseData['CartId'];
+        if (cartId != null) {
           return {
             'success': true,
-            'cartId': responseData['cartId'],
+            'cartId': cartId,
             'message': responseData['message'] ?? 'Cart already exists',
           };
         }

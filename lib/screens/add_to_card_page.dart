@@ -1,4 +1,5 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/cart_service.dart';
 
 class CartPageExample extends StatefulWidget {
   const CartPageExample({super.key});
@@ -10,80 +11,189 @@ class CartPageExample extends StatefulWidget {
 class _CartPageExampleState extends State<CartPageExample> {
   int _selectedBottomIndex = 3; // Set to 3 for Bag tab
   final UserSessionManager _sessionManager = UserSessionManager();
+  final CartService _cartService = CartService();
 
-  // Parent controls initial data + stock values
-  List<CartProductItem> cartItems = [
-    CartProductItem(
-      id: "1",
-      title: "Air pods max by Apple",
-      variantText: "Grey",
-      priceText: "\$ 1999,99",
-      quantity: 1,
-      stock: 2,
-      imageUrl: "https://picsum.photos/200?1",
+  bool _isLoading = true;
+  String? _cartId;
+  List<CartProductItem> cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCartData();
+  }
+
+  Future<void> _fetchCartData() async {
+    try {
+      final userId = _sessionManager.userId;
+      if (userId == null || userId <= 0) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // Fetch cart data from API
+      final cartData = await _cartService.getCartByUserId(userId: userId);
+      if (cartData == null) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      _cartId = cartData['cartId']?.toString() ?? cartData['id']?.toString();
+      final items =
+          (cartData['items'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+
+      print('📦 Cart Data: ${items.length} items found');
+      final mappedItems = items.map((item) => _mapApiToCartItem(item)).toList();
+
+      if (!mounted) return;
+      setState(() {
+        cartItems = mappedItems;
+        _isLoading = false;
+      });
+      print('✅ Cart UI updated with ${cartItems.length} items');
+    } catch (e) {
+      print('[CartPageExample] Error fetching cart: $e');
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
+  }
+
+  CartProductItem _mapApiToCartItem(Map<String, dynamic> item) {
+    // Extract variant specifications from API response
+    final variantSpecs = item['variantSpecifications'] as List? ?? [];
+    final variantSpecificationOptionsId =
+        item['variantSpecificationOptionsId'] ?? 0;
+
+    String ram = '';
+    String storage = '';
+    String color = '';
+
+    // Extract RAM and Storage
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'RAM') {
+        ram = spec['optionValue'];
+      }
+      if (spec['specificationName'] == 'Storage') {
+        storage = spec['optionValue'];
+      }
+    }
+
+    // Build RAM-Storage text
+    final ramStorageText = (ram.isNotEmpty && storage.isNotEmpty)
+        ? '$ram - $storage'
+        : 'Standard';
+
+    // Extract Color - MATCH optionId with variantSpecificationOptionsId
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'Color' &&
+          spec['optionId'] == variantSpecificationOptionsId) {
+        color = spec['optionValue'];
+        break; // Found the matching color
+      }
+    }
+
+    final productName = item['productName']?.toString() ?? 'Product';
+    final price = double.tryParse(item['price']?.toString() ?? '0') ?? 0;
+    final quantity = item['quantity'] ?? 1;
+    final imageUrl = item['image']?.toString() ?? '';
+    final cartItemId = item['cartItemId'] ?? 0;
+
+    print(
+      '🛒 [CartPageExample] Product: $productName, RAM-Storage: $ramStorageText, Color: $color, variantSpecOptionId: $variantSpecificationOptionsId',
+    );
+
+    final priceText = _formatMoney(price);
+
+    return CartProductItem(
+      id: cartItemId.toString(),
+      title: productName,
+      ramStorageText: ramStorageText,
+      color: color,
+      priceText: priceText,
+      quantity: quantity,
+      stock: 100,
+      imageUrl: imageUrl,
       isSelected: true,
-    ),
-    CartProductItem(
-      id: "2",
-      title: "Monitor LG 22”inc 4K 120Fps",
-      variantText: "120 Fps",
-      priceText: "\$ 299,99",
-      quantity: 1,
-      stock: 5,
-      imageUrl: "https://picsum.photos/200?2",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
-  ];
+    );
+  }
+
+  Future<void> _updateQuantity(int cartItemId, int newQuantity) async {
+    if (newQuantity <= 0) {
+      await _deleteItem(cartItemId);
+      return;
+    }
+
+    try {
+      final success =
+          await _cartService.updateCartItem(
+                cartItemId: cartItemId,
+                quantity: newQuantity,
+              )
+              as bool?;
+
+      if ((success ?? false) && mounted) {
+        setState(() {
+          final idx = cartItems.indexWhere(
+            (e) => e.id == cartItemId.toString(),
+          );
+          if (idx >= 0) {
+            cartItems[idx] = cartItems[idx].copyWith(quantity: newQuantity);
+          }
+        });
+      }
+    } catch (e) {
+      print('[CartPageExample] Error updating quantity: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update quantity: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteItem(int cartItemId) async {
+    try {
+      final success =
+          await _cartService.deleteCartItem(cartItemId: cartItemId) as bool?;
+
+      if ((success ?? false) && mounted) {
+        setState(() {
+          cartItems.removeWhere((e) => e.id == cartItemId.toString());
+        });
+      }
+    } catch (e) {
+      print('[CartPageExample] Error deleting item: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete item: $e')));
+      }
+    }
+  }
+
+  Future<void> _deleteMultipleItems(List<int> cartItemIds) async {
+    try {
+      final success =
+          await _cartService.deleteMultipleCartItems(cartItemIds: cartItemIds)
+              as bool?;
+
+      if ((success ?? false) && mounted) {
+        setState(() {
+          final cartItemIdStrs = cartItemIds.map((id) => id.toString()).toSet();
+          cartItems.removeWhere((e) => cartItemIdStrs.contains(e.id));
+        });
+      }
+    } catch (e) {
+      print('[CartPageExample] Error deleting items: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete items: $e')));
+      }
+    }
+  }
 
   double _parsePrice(String priceText) {
     var s = priceText.replaceAll(RegExp(r'[^0-9,\.]'), '');
@@ -130,7 +240,9 @@ class _CartPageExampleState extends State<CartPageExample> {
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: isLoggedIn
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : isLoggedIn
           ? _buildCartContent(selectedItems, selectedCount)
           : _buildLoginRequiredState(),
       bottomNavigationBar: BottomBarWidget(
@@ -187,12 +299,32 @@ class _CartPageExampleState extends State<CartPageExample> {
           child: CartListWidget(
             items: cartItems,
             onChanged: (updatedItems) {
+              // Find which item had quantity changed
+              for (int i = 0; i < updatedItems.length; i++) {
+                if (i < cartItems.length &&
+                    updatedItems[i].quantity != cartItems[i].quantity) {
+                  // Quantity changed, update in DB
+                  final cartItemId = int.tryParse(updatedItems[i].id) ?? 0;
+                  _updateQuantity(cartItemId, updatedItems[i].quantity);
+                }
+              }
+
+              // If item was deleted (updatedItems.length < cartItems.length)
+              if (updatedItems.length < cartItems.length) {
+                final deletedIds = cartItems
+                    .where((item) => !updatedItems.any((u) => u.id == item.id))
+                    .map((item) => int.tryParse(item.id) ?? 0)
+                    .where((id) => id > 0)
+                    .toList();
+                if (deletedIds.isNotEmpty) {
+                  _deleteMultipleItems(deletedIds);
+                }
+              }
+
               setState(() {
                 cartItems = updatedItems;
               });
             },
-            // emptyMessage:
-            //     "Your bag is empty.\nWhen you add products, they'll\nappear here.",
           ),
         ),
 

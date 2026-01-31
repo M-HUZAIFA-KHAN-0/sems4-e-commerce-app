@@ -1,5 +1,6 @@
 import 'package:first/screens/order_shipping_method_page.dart';
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/cart_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -9,37 +10,134 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-
   // Checkout data
   final String storeName = "Order Items";
+  final UserSessionManager _sessionManager = UserSessionManager();
+  final CartService _cartService = CartService();
 
-  List<CartProductItem> checkoutItems = [
-    CartProductItem(
-      id: "1",
-      title:
-          "Owl light 12-80v universal Product with 3 function and white owl light with 5 function...",
-      variantText: "No Brand, black owl light and and white owl li...",
-      priceText: "Rs. 562",
-      quantity: 1,
-      stock: 5,
-      imageUrl: "https://picsum.photos/200?1",
+  bool _isLoading = true;
+  List<CartProductItem> checkoutItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCheckoutData();
+  }
+
+  Future<void> _fetchCheckoutData() async {
+    try {
+      final userId = _sessionManager.userId;
+      if (userId == null || userId <= 0) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final cartData = await _cartService.getCartByUserId(userId: userId);
+      if (cartData == null) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final items =
+          (cartData['items'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+
+      print('📦 Checkout Data: ${items.length} items found');
+      final mappedItems = items.map((item) => _mapApiToCartItem(item)).toList();
+
+      if (!mounted) return;
+      setState(() {
+        checkoutItems = mappedItems;
+        _isLoading = false;
+      });
+      print('✅ Checkout UI updated with ${checkoutItems.length} items');
+    } catch (e) {
+      print('[CheckoutPage] Error fetching cart: $e');
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
+  }
+
+  CartProductItem _mapApiToCartItem(Map<String, dynamic> item) {
+    // Extract variant specifications from API response
+    final variantSpecs = item['variantSpecifications'] as List? ?? [];
+    final variantSpecificationOptionsId =
+        item['variantSpecificationOptionsId'] ?? 0;
+
+    String ram = '';
+    String storage = '';
+    String color = '';
+
+    // Extract RAM and Storage
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'RAM') {
+        ram = spec['optionValue'];
+      }
+      if (spec['specificationName'] == 'Storage') {
+        storage = spec['optionValue'];
+      }
+    }
+
+    // Build RAM-Storage text
+    final ramStorageText = (ram.isNotEmpty && storage.isNotEmpty)
+        ? '$ram - $storage'
+        : 'Standard';
+
+    // Extract Color - MATCH optionId with variantSpecificationOptionsId
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'Color' &&
+          spec['optionId'] == variantSpecificationOptionsId) {
+        color = spec['optionValue'];
+        break; // Found the matching color
+      }
+    }
+
+    final productName = item['productName']?.toString() ?? 'Product';
+    final price = double.tryParse(item['price']?.toString() ?? '0') ?? 0;
+    final quantity = item['quantity'] ?? 1;
+    final imageUrl = item['image']?.toString() ?? '';
+    final cartItemId = item['cartItemId'] ?? 0;
+
+    print(
+      '🛒 [CheckoutPage] Product: $productName, RAM-Storage: $ramStorageText, Color: $color, variantSpecOptionId: $variantSpecificationOptionsId',
+    );
+
+    return CartProductItem(
+      id: cartItemId.toString(),
+      title: productName,
+      ramStorageText: ramStorageText,
+      color: color,
+      priceText: 'PKR ${price.toStringAsFixed(2)}',
+      quantity: quantity,
+      stock: 100,
+      imageUrl: imageUrl,
       isSelected: true,
-    ),
-    CartProductItem(
-      id: "2",
-      title:
-          "Owl light 12-80v universal Product with 3 function and white owl light with 5 function...",
-      variantText: "No Brand, black owl light and and white owl li...",
-      priceText: "Rs. 576",
-      quantity: 1,
-      stock: 5,
-      imageUrl: "https://picsum.photos/200?2",
-      isSelected: true,
-    ),
-  ];
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundGrey,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          foregroundColor: AppColors.textBlack87,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, size: 20),
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          title: const Text(
+            'Checkout',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
@@ -137,15 +235,15 @@ class _StoreProductsSection extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.store,
-                    size: 22,
-                    color: AppColors.backgroundWhite,
-                  ),
+                  Icon(Icons.store, size: 22, color: AppColors.backgroundWhite),
                   const SizedBox(width: 8),
                   Text(
                     "Order Items",
-                    style: const TextStyle(fontSize: 16, color: AppColors.backgroundWhite, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: AppColors.backgroundWhite,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   Text(
@@ -163,8 +261,8 @@ class _StoreProductsSection extends StatelessWidget {
           const Divider(height: 4, color: Color(0xFFEEEEEE)),
           Container(
             decoration: BoxDecoration(
-        gradient: AppColors.secondaryBGGradientColor,
-      ),
+              gradient: AppColors.secondaryBGGradientColor,
+            ),
             child: Column(
               children: items
                   .asMap()
@@ -182,7 +280,10 @@ class _StoreProductsSection extends StatelessWidget {
                         if (entry.key < items.length - 1)
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Divider(height: 0.5, color: Color(0xFFEEEEEE)),
+                            child: Divider(
+                              height: 0.5,
+                              color: Color(0xFFEEEEEE),
+                            ),
                           ),
                       ],
                     ),
@@ -245,11 +346,17 @@ class _CheckoutProductCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 3),
-              Text(
-                item.variantText,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF999999)),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Row(
+                children: [
+                  if (item.ramStorageText!.isNotEmpty)
+                    ShowVariantSpecsWidget(variantText: item.ramStorageText!),
+
+                  if (item.ramStorageText!.isNotEmpty && item.color!.isNotEmpty)
+                    const SizedBox(width: 6),
+
+                  if (item.color!.isNotEmpty)
+                    ShowVariantSpecsWidget(variantText: item.color!),
+                ],
               ),
               const SizedBox(height: 4),
               Row(
@@ -316,9 +423,7 @@ class _SummarySection extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12),
       // color: AppColors.backgroundWhite,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: AppColors.secondaryBGGradientColor,
-      ),
+      decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -327,7 +432,10 @@ class _SummarySection extends StatelessWidget {
             children: [
               Text(
                 "Subtotal (${items.length} items)",
-                style: const TextStyle(fontSize: 13, color: AppColors.textGreyDark),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textGreyDark,
+                ),
               ),
               Text(
                 "Rs. ${merchandiseTotal.toStringAsFixed(0)}",
@@ -389,9 +497,7 @@ class _VoucherSectionState extends State<_VoucherSection> {
       margin: const EdgeInsets.only(top: 12),
       // color: AppColors.backgroundWhite,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: AppColors.secondaryBGGradientColor,
-      ),
+      decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
       child: Column(
         children: [
           Row(
@@ -416,7 +522,10 @@ class _VoucherSectionState extends State<_VoucherSection> {
                   },
                   child: const Text(
                     "Voucher code >",
-                    style: TextStyle(fontSize: 12, color: AppColors.secondaryColor1),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.secondaryColor1,
+                    ),
                   ),
                 ),
               if (_showVoucherInput)
@@ -554,9 +663,7 @@ class _TotalPaymentSection extends StatelessWidget {
 
     return Container(
       // color: AppColors.backgroundWhite,
-      decoration: BoxDecoration(
-        gradient: AppColors.bgLightGradientColor,
-      ),
+      decoration: BoxDecoration(gradient: AppColors.bgLightGradientColor),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [

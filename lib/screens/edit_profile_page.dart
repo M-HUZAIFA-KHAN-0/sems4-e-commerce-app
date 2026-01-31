@@ -1,12 +1,17 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/user_profile_service.dart';
+import 'package:first/models/user_profile_model.dart';
+import 'package:first/models/user_model.dart';
 
 class EditProfilePage extends StatefulWidget {
-  final Map<String, String>? initialData;
+  final Map<String, String>? initialUserData;
+  final Map<String, String>? initialProfileData;
   final String? initialProfileImagePath;
 
   const EditProfilePage({
     super.key,
-    this.initialData,
+    this.initialUserData,
+    this.initialProfileData,
     this.initialProfileImagePath,
   });
 
@@ -19,37 +24,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
+  late TextEditingController _bioController;
 
   CroppedFile? _profileImage;
   bool _isSaveEnabled = false;
   bool _isLoading = false;
   String? _errorMessage;
 
+  // Add profile service
+  final UserProfileService _profileService = UserProfileService();
+
   @override
   void initState() {
     super.initState();
     if (widget.initialProfileImagePath != null &&
-        widget.initialProfileImagePath!.isNotEmpty) {
+        widget.initialProfileImagePath!.isNotEmpty &&
+        widget.initialProfileImagePath!.startsWith('/')) {
       _profileImage = CroppedFile(widget.initialProfileImagePath!);
     }
 
     _firstNameController = TextEditingController(
-      text: widget.initialData?['firstName'] ?? '',
+      text: widget.initialUserData?['firstName'] ?? '',
     );
     _lastNameController = TextEditingController(
-      text: widget.initialData?['lastName'] ?? '',
+      text: widget.initialUserData?['lastName'] ?? '',
     );
     _emailController = TextEditingController(
-      text: widget.initialData?['email'] ?? '',
+      text: widget.initialUserData?['email'] ?? '',
     );
     _phoneController = TextEditingController(
-      text: widget.initialData?['phone'] ?? '',
+      text: widget.initialUserData?['phoneNumber'] ?? '',
+    );
+    _bioController = TextEditingController(
+      text: widget.initialProfileData?['bio'] ?? '',
     );
 
     _firstNameController.addListener(_onFieldChanged);
     _lastNameController.addListener(_onFieldChanged);
     _emailController.addListener(_onFieldChanged);
     _phoneController.addListener(_onFieldChanged);
+    _bioController.addListener(_onFieldChanged);
   }
 
   void _onFieldChanged() {
@@ -87,30 +101,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final userId = UserSessionManager().userId;
+      if (userId == null || userId <= 0) {
+        throw Exception('User not logged in');
+      }
 
-      final profileData = {
-        'firstName': _firstNameController.text,
-        'lastName': _lastNameController.text,
-        'email': _emailController.text,
-        'phone': _phoneController.text,
-        'profileImagePath': _profileImage?.path,
-      };
+      final firstName = _firstNameController.text.trim();
+      final lastName = _lastNameController.text.trim();
+      final email = _emailController.text.trim();
+      final phoneNumber = _phoneController.text.trim();
+      final bio = _bioController.text.trim();
+
+      print(
+        '💾 [EditProfilePage] Saving full profile - userId: $userId, firstName: $firstName, lastName: $lastName, email: $email, phone: $phoneNumber, bio: $bio',
+      );
+
+      // Update full profile (user data + profile data in one request)
+      final success = await _profileService.updateFullProfile(
+        userId: userId,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        bio: bio,
+        imagePath: _profileImage?.path,
+      );
+
+      if (!success) {
+        throw Exception('Failed to update profile');
+      }
 
       if (mounted) {
+        print('✅ [EditProfilePage] Profile updated successfully');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
+          const SnackBar(content: Text('✅ Profile updated successfully')),
         );
-        Navigator.pop(context, profileData);
+        Navigator.pop(context);
       }
     } catch (e) {
       debugPrint('Save error: $e');
       setState(() {
-        _errorMessage = 'Failed to save profile. Please try again.';
+        _errorMessage = 'Error: ${e.toString()}';
       });
     } finally {
-      if (mounted) _isLoading = false;
-      setState(() {});
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -122,6 +158,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _lastNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _bioController.dispose();
     super.dispose();
   }
 
@@ -191,23 +228,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
               controller: _firstNameController,
               prefixIcon: Icons.person_outline,
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             AuthField(
               hint: 'Last Name',
               controller: _lastNameController,
               prefixIcon: Icons.person_outline,
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             AuthField(
               hint: 'Email',
               controller: _emailController,
               prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              readOnly: true,
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             AuthField(
-              hint: 'Phone',
+              hint: 'Phone Number',
               controller: _phoneController,
               prefixIcon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+            const SizedBox(height: 16),
+            AuthField(
+              hint: 'Bio',
+              controller: _bioController,
+              prefixIcon: Icons.info_outline,
+              // maxLines: 3,
             ),
             const SizedBox(height: 40),
             if (_errorMessage != null)

@@ -132,7 +132,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                     const SizedBox(height: 6),
 
                     Text(
-                      "Variant: ${item.variantText}",
+                      "Variant: ${item.ramStorageText} + Color: ${item.color}",
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.textGreyLabel,

@@ -1,69 +1,10 @@
 import 'package:first/core/app_imports.dart';
+// import 'package:first/models/cart_product_model.dart';
 
-/// Cart product item model
+/// Cart list widget - displays cart items
 
-class CartProductItem {
-  const CartProductItem({
-    required this.id,
-    required this.title,
-    required this.variantText,
-    required this.priceText,
-    required this.quantity,
-    required this.stock,
-    this.imageProvider,
-    this.imageUrl,
-    this.isSelected = true,
-  });
-
-  final String id;
-  final String title;
-  final String variantText;
-  final String priceText;
-
-  /// Initial quantity from parent
-  final int quantity;
-
-  /// Max quantity allowed from parent
-  final int stock;
-
-  /// Provide either imageProvider or imageUrl
-  final ImageProvider? imageProvider;
-  final String? imageUrl;
-
-  /// Used by "Clear selected items"
-  final bool isSelected;
-
-  CartProductItem copyWith({
-    String? id,
-    String? title,
-    String? variantText,
-    String? priceText,
-    int? quantity,
-    int? stock,
-    ImageProvider? imageProvider,
-    String? imageUrl,
-    bool? isSelected,
-  }) {
-    return CartProductItem(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      variantText: variantText ?? this.variantText,
-      priceText: priceText ?? this.priceText,
-      quantity: quantity ?? this.quantity,
-      stock: stock ?? this.stock,
-      imageProvider: imageProvider ?? this.imageProvider,
-      imageUrl: imageUrl ?? this.imageUrl,
-      isSelected: isSelected ?? this.isSelected,
-    );
-  }
-}
 class CartListWidget extends StatefulWidget {
-  const CartListWidget({
-    super.key,
-    this.items,
-    this.onChanged,
-    this.onShopNow,
-  });
+  const CartListWidget({super.key, this.items, this.onChanged, this.onShopNow});
 
   final List<CartProductItem>? items;
   final ValueChanged<List<CartProductItem>>? onChanged;
@@ -198,19 +139,17 @@ class _CartListWidgetState extends State<CartListWidget> {
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return EmptyStateWidget(
-      emptyMessage:
-          "Your bag is empty.\nWhen you add products, they'll\nappear here.",
-      icon: Icons.shopping_bag_outlined,
-      buttonText: "Shop Now",
-      onButtonPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MyHomePage(),
-          ),
-        );
-      },
-    );
+        emptyMessage:
+            "Your bag is empty.\nWhen you add products, they'll\nappear here.",
+        icon: Icons.shopping_bag_outlined,
+        buttonText: "Shop Now",
+        onButtonPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        },
+      );
     }
 
     final anySelected = _items.any((e) => e.isSelected);
@@ -286,6 +225,7 @@ class _CartListWidgetState extends State<CartListWidget> {
                                 content:
                                     'Are you sure you want to clear the selected items?', // Pass content
                                 onConfirm: () {
+                                  Navigator.of(dialogContext).pop();
                                   _clearSelected();
                                 },
                               );
@@ -294,19 +234,20 @@ class _CartListWidgetState extends State<CartListWidget> {
                         }
                       : null,
                   icon: anySelected
-    ? ShaderMask(
-        shaderCallback: (bounds) => AppColors.bgGradient.createShader(bounds),
-        child: const Icon(
-          Icons.delete,
-          size: 34,
-          color: Colors.white, // gradient ke liye white color
-        ),
-      )
-    : Icon(
-        Icons.delete,
-        size: 34,
-        color: AppColors.textGreyLabel,
-      ),
+                      ? ShaderMask(
+                          shaderCallback: (bounds) =>
+                              AppColors.bgGradient.createShader(bounds),
+                          child: const Icon(
+                            Icons.delete,
+                            size: 34,
+                            color: Colors.white, // gradient ke liye white color
+                          ),
+                        )
+                      : Icon(
+                          Icons.delete,
+                          size: 34,
+                          color: AppColors.textGreyLabel,
+                        ),
                   style: IconButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
@@ -461,13 +402,20 @@ class _CartRowCard extends StatelessWidget {
 
                   const SizedBox(height: 0),
 
-                  Text(
-                    "Variant: ${item.variantText}",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: _textGrey,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      if (item.ramStorageText!.isNotEmpty)
+                        ShowVariantSpecsWidget(
+                          variantText: item.ramStorageText!,
+                        ),
+
+                      if (item.ramStorageText!.isNotEmpty &&
+                          item.color!.isNotEmpty)
+                        const SizedBox(width: 6),
+
+                      if (item.color!.isNotEmpty)
+                        ShowVariantSpecsWidget(variantText: item.color!),
+                    ],
                   ),
 
                   const SizedBox(height: 4),
@@ -481,7 +429,7 @@ class _CartRowCard extends StatelessWidget {
                               TextSpan(
                                 text: item.priceText,
                                 style: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.textBlack87,
                                 ),
@@ -497,7 +445,7 @@ class _CartRowCard extends StatelessWidget {
                               TextSpan(
                                 text: "${item.quantity}",
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Color.fromARGB(221, 134, 134, 134),
                                 ),
@@ -576,22 +524,21 @@ class _QtyControl extends StatelessWidget {
   final VoidCallback? onMinus;
   final VoidCallback onPlus;
 
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         _CircleIconButton(icon: Icons.remove, onTap: onMinus),
-        const SizedBox(width: 6),
+        const SizedBox(width: 4),
         Text(
           "$quantity",
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: FontWeight.w800,
             color: AppColors.textBlack87,
           ),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: 4),
         _CircleIconButton(icon: Icons.add, onTap: onPlus),
       ],
     );
@@ -608,20 +555,19 @@ class _CircleIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(999),
       child: Container(
-        width: 28,
-        height: 28,
+        width: 25,
+        height: 25,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           // color: AppColors.backgroundWhite,
           gradient: AppColors.bgGradient,
           border: Border.all(color: _borderGrey, width: 1.6),
         ),
-        child: Icon(icon, size: 20, color: AppColors.backgroundWhite),
+        child: Icon(icon, size: 18, color: AppColors.backgroundWhite),
       ),
     );
   }

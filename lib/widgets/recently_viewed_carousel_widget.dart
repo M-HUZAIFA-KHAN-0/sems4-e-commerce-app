@@ -1,4 +1,5 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/screens/product_detail_page.dart';
 
 /// Model for Recently Viewed Product
 class RecentlyViewedProduct {
@@ -173,118 +174,128 @@ class RecentlyViewedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7),
-        // color: AppColors.backgroundWhite,
-        gradient: AppColors.secondaryBGGradientColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            spreadRadius: 0,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                ProductDetailPage(productId: int.tryParse(product.id) ?? 0),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image Section with Discount Badge
-          Stack(
-            children: [
-              AspectRatio(
-                aspectRatio: 1.3, // ✅ auto-adjust height to width
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(8),
-                  ),
-                  child: Image.network(
-                    product.image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[200],
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey[400],
-                          size: 40,
-                        ),
-                      );
-                    },
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(7),
+          // color: AppColors.backgroundWhite,
+          gradient: AppColors.secondaryBGGradientColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              spreadRadius: 0,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Image Section with Discount Badge
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.3, // ✅ auto-adjust height to width
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(8),
+                    ),
+                    child: Image.network(
+                      product.image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[200],
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey[400],
+                            size: 40,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              // Discount Badge
-              if (product.discountPercent != null)
-                Positioned(
-                  top: 6,
-                  left: 6,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 3,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.textBlack,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      '↓ ${product.discountPercent!.toStringAsFixed(0)}%',
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.backgroundWhite,
+                // Discount Badge
+                if (product.discountPercent != null)
+                  Positioned(
+                    top: 6,
+                    left: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 3,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.textBlack,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        '↓ ${product.discountPercent!.toStringAsFixed(0)}%',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.backgroundWhite,
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          // Product Details — Fixed height
-          Padding(
-            padding: const EdgeInsets.all(6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min, // 🔑 important
-              children: [
-                Flexible(
-                  child: Text(
-                    product.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(221, 32, 32, 32),
-                      height: 1.1, // 👈 thoda safe
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Rs ${product.currentPrice.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textBlack,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Rs ${product.originalPrice.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[500],
-                    decoration: TextDecoration.lineThrough,
-                  ),
-                ),
               ],
             ),
-          ),
-        ],
+            // Product Details — Fixed height
+            Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min, // 🔑 important
+                children: [
+                  Flexible(
+                    child: Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(221, 32, 32, 32),
+                        height: 1.1, // 👈 thoda safe
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Rs ${product.currentPrice.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textBlack,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Rs ${product.originalPrice.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey[500],
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

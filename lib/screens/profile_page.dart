@@ -3,6 +3,10 @@ import 'package:first/screens/logout_drawer.dart';
 import 'package:first/screens/recent_view_more_page.dart';
 import 'package:first/core/app_imports.dart';
 import 'package:first/services/api/auth_service.dart';
+import 'package:first/services/api/user_profile_service.dart';
+import 'package:first/services/api/product_view_service.dart';
+import 'package:first/models/user_profile_model.dart';
+import 'package:first/models/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,6 +17,99 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedBottomIndex = 4;
+
+  // Add profile service and models
+  final UserProfileService _profileService = UserProfileService();
+  final ProductViewService _viewService = ProductViewService();
+  UserProfileModel? _userProfile;
+  UserModel? _userData;
+  bool _isLoadingProfile = true;
+  String? _profileError;
+  List<RecentlyViewedProduct> _recentlyViewedProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+    _loadRecentlyViewed();
+  }
+
+  Future<void> _loadProfileData() async {
+    try {
+      final userId = UserSessionManager().userId;
+      if (userId == null || userId <= 0) {
+        setState(() => _profileError = 'User not logged in');
+        return;
+      }
+
+      // Load both user data and profile data in parallel
+      final results = await Future.wait([
+        _profileService.fetchUserData(userId: userId),
+        _profileService.fetchUserProfile(userId: userId),
+      ]);
+
+      if (mounted) {
+        setState(() {
+          _userData = results[0] as UserModel?;
+          _userProfile = results[1] as UserProfileModel?;
+          _isLoadingProfile = false;
+        });
+      }
+    } catch (e) {
+      print('❌ [ProfilePage] Error loading profile: $e');
+      if (mounted) {
+        setState(() {
+          _profileError = 'Failed to load profile';
+          _isLoadingProfile = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _loadRecentlyViewed() async {
+    try {
+      final views = await _viewService.getAllProductViews();
+      if (views == null || views.isEmpty) {
+        if (mounted) setState(() => _recentlyViewedProducts = []);
+        return;
+      }
+
+      // Get non-discounted products
+      final nonDiscounted = _viewService.filterNonDiscounted(views);
+
+      // Convert to RecentlyViewedProduct
+      final products = nonDiscounted.map((view) {
+        return RecentlyViewedProduct(
+          id: view.productId.toString(),
+          title: view.productName,
+          image: view.productImage ?? '',
+          currentPrice: view.discountPrice,
+          originalPrice: view.originalPrice,
+          discountPercent: view.discountPercentage > 0
+              ? view.discountPercentage
+              : null,
+        );
+      }).toList();
+
+      if (mounted) {
+        setState(() {
+          _recentlyViewedProducts = products;
+        });
+      }
+
+      print(
+        '✅ Loaded ${_recentlyViewedProducts.length} recently viewed products',
+      );
+    } catch (e) {
+      print('❌ Error loading recently viewed: $e');
+    }
+  }
+
+  // Add profile service and model
+  // final UserProfileService _profileService = UserProfileService();
+  // UserProfileModel? _userProfile;
+  // bool _isLoadingProfile = true;
+  // String? _profileError;
 
   @override
   Widget build(BuildContext context) {
@@ -55,16 +152,31 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const EditProfilePage(
-                                  initialData: {
-                                    'firstName': 'John',
-                                    'lastName': 'Doe',
-                                    'email': 'john@example.com',
-                                    'phone': '+923001234567',
+                                builder: (context) => EditProfilePage(
+                                  initialUserData: {
+                                    'firstName': _userData?.firstName ?? '',
+                                    'lastName': _userData?.lastName ?? '',
+                                    'email': _userData?.email ?? '',
+                                    'phoneNumber': _userData?.phoneNumber ?? '',
                                   },
+                                  initialProfileData: {
+                                    'bio': _userProfile?.bio ?? '',
+                                    'profileId':
+                                        _userProfile?.profileId?.toString() ??
+                                        '',
+                                  },
+                                  initialProfileImagePath:
+                                      _userProfile?.profileImage != null
+                                      ? _profileService.getProfileImageUrl(
+                                          _userProfile!.profileImage,
+                                        )
+                                      : null,
                                 ),
                               ),
-                            );
+                            ).then((_) {
+                              // Reload profile after edit
+                              _loadProfileData();
+                            });
                           },
                         ),
                         // child: const Icon(
@@ -93,33 +205,59 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               child: ClipOval(
-                                child: Image.network(
-                                  "https://picsum.photos/200?2", // 👈 yahan apni image
-                                  fit:
-                                      BoxFit.cover, // circle fill karegi nicely
-                                ),
+                                child: _userProfile?.profileImage != null
+                                    ? Image.network(
+                                        _profileService.getProfileImageUrl(
+                                          _userProfile!.profileImage,
+                                        ),
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            },
+                                      )
+                                    : Container(
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                               ),
                             ),
 
                             const SizedBox(height: 8),
 
-                            const Text(
-                              'Huzaifa Khan',
+                            Text(
+                              _userData != null
+                                  ? '${_userData!.firstName ?? ''} ${_userData!.lastName ?? ''}'
+                                        .trim()
+                                  : 'User Profile',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.backgroundWhite,
                               ),
                             ),
-                            const Text(
-                              'huzaifakhan@example.com',
+                            Text(
+                              _userData?.email ?? 'No email',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.backgroundWhite,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -257,79 +395,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 },
-                products: [
-                  RecentlyViewedProduct(
-                    id: '1',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                    discountPercent: 7,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                  ),
-                  RecentlyViewedProduct(
-                    id: '2',
-                    title: 'Insert 5G network card',
-                    image: 'image_url',
-                    currentPrice: 1678,
-                    originalPrice: 1800,
-                  ),
-                  // ... more products
-                ],
+                products: _recentlyViewedProducts,
               ),
 
               const SizedBox(height: 12),
@@ -413,7 +479,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const EditProfilePage(
-                              initialData: {
+                              initialUserData: {
                                 'firstName': 'John',
                                 'lastName': 'Doe',
                                 'email': 'john@example.com',

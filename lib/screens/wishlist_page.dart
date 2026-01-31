@@ -1,4 +1,5 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/wishlist_service.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -11,42 +12,256 @@ class _WishlistPageState extends State<WishlistPage> {
   int _selectedBottomIndex = 2; // Set to 2 for wishlist page
   final UserSessionManager _sessionManager = UserSessionManager();
 
+  bool _isLoading = true;
+  String? _errorMessage;
+  final _wishlistService = WishlistService();
+
   // Parent controls initial data + stock values
   List<CartProductItem> wishlistItems = [
-    CartProductItem(
-      id: "1",
-      title: "Air pods max by Apple",
-      variantText: "Grey",
-      priceText: "\$ 1999,99",
-      quantity: 1,
-      stock: 2,
-      imageUrl: "https://picsum.photos/200?1",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "2",
-      title: "Monitor LG 22”inc 4K 120Fps",
-      variantText: "120 Fps",
-      priceText: "\$ 299,99",
-      quantity: 1,
-      stock: 5,
-      imageUrl: "https://picsum.photos/200?2",
-      isSelected: true,
-    ),
-    CartProductItem(
-      id: "3",
-      title: "Earphones for monitor",
-      variantText: "Combo",
-      priceText: "\$ 199,99",
-      quantity: 1,
-      stock: 1,
-      imageUrl: "https://picsum.photos/200?3",
-      isSelected: true,
-    ),
+    // CartProductItem(
+    //   id: "1",
+    //   title: "Air pods max by Apple",
+    //   variantText: "Grey",
+    //   priceText: "\$ 1999,99",
+    //   quantity: 1,
+    //   stock: 2,
+    //   // imageUrl: "https://picsum.photos/200?1",
+    //   imageUrl: "",
+    //   isSelected: true,
+    // ),
+    // CartProductItem(
+    //   id: "2",
+    //   title: "Monitor LG 22”inc 4K 120Fps",
+    //   variantText: "120 Fps",
+    //   priceText: "\$ 299,99",
+    //   quantity: 1,
+    //   stock: 5,
+    //   // imageUrl: "https://picsum.photos/200?2",
+    //   imageUrl: "",
+    //   isSelected: true,
+    // ),
+    // CartProductItem(
+    //   id: "3",
+    //   title: "Earphones for monitor",
+    //   variantText: "Combo",
+    //   priceText: "\$ 199,99",
+    //   quantity: 1,
+    //   stock: 1,
+    //   // imageUrl: "https://picsum.photos/200?3",
+    //   imageUrl: "",
+    //   isSelected: true,
+    // ),
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _fetchWishlistData();
+  }
+
+  Future<void> _fetchWishlistData() async {
+    if (!_sessionManager.isLoggedIn) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    try {
+      final userId = _sessionManager.userId;
+      if (userId == null) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'User ID not found';
+        });
+        return;
+      }
+
+      final wishlistData = await _wishlistService.getUserWishlist(
+        userId: userId,
+      );
+
+      if (wishlistData != null && wishlistData['items'] is List) {
+        final items = wishlistData['items'] as List;
+        final convertedItems = items.map((item) {
+          return _mapApiToCartItem(item as Map<String, dynamic>);
+        }).toList();
+
+        setState(() {
+          wishlistItems = convertedItems;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'No wishlist data found';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Error loading wishlist: $e';
+      });
+      print('❌ Error fetching wishlist: $e');
+    }
+  }
+
+  //  delete prod from wishlist API
+  Future<void> _deleteWishlistItem(int wishlistItemId) async {
+    try {
+      await _wishlistService.removeItemFromWishlist(
+        wishlistItemId: wishlistItemId,
+      );
+
+      // ✅ local list se bhi remove
+      setState(() {
+        wishlistItems.removeWhere((e) => e.id == wishlistItemId.toString());
+      });
+
+      print('✅ Wishlist item deleted: $wishlistItemId');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Item removed from wishlist'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Error deleting wishlist item: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('❌ Failed to remove item from wishlist'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Delete multiple items from wishlist
+  Future<void> _deleteMultipleWishlistItems(List<int> wishlistItemIds) async {
+    try {
+      // Delete all items in parallel
+      await Future.wait(
+        wishlistItemIds.map(
+          (id) => _wishlistService.removeItemFromWishlist(wishlistItemId: id),
+        ),
+      );
+
+      // Remove from local list
+      setState(() {
+        for (var id in wishlistItemIds) {
+          wishlistItems.removeWhere((e) => e.id == id.toString());
+        }
+      });
+
+      print('✅ ${wishlistItemIds.length} items deleted from wishlist');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '✅ ${wishlistItemIds.length} items removed from wishlist',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Error deleting multiple items: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('❌ Failed to remove items from wishlist'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  CartProductItem _mapApiToCartItem(Map<String, dynamic> apiItem) {
+    // final variantSpecs = apiItem['variantSpecifications'] as List? ?? [];
+    // final variantText = variantSpecs.isNotEmpty
+    //     ? variantSpecs.map((spec) => '${spec['optionValue']}').join(', ')
+    //     : 'Standard';
+
+    final variantSpecs = apiItem['variantSpecifications'] as List? ?? [];
+
+    String ram = '';
+    String storage = '';
+    String color = '';
+
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'RAM') {
+        ram = spec['optionValue'];
+      }
+      if (spec['specificationName'] == 'Storage') {
+        storage = spec['optionValue'];
+      }
+    }
+
+    final ramStorageText = (ram.isNotEmpty && storage.isNotEmpty)
+        ? '$ram - $storage'
+        : 'Standard';
+
+    for (final spec in variantSpecs) {
+      if (spec['specificationName'] == 'Color') {
+        color = spec['optionValue'];
+        break; // 🔥 sirf ek color chahiye
+      }
+    }
+
+    print(
+      'Mapping wishlist item: ${apiItem['productName']} with variant: $ramStorageText , color : $color , variantSpecs: $variantSpecs',
+    );
+
+    return CartProductItem(
+      id:
+          apiItem['wishlistItemId']?.toString() ??
+          '${DateTime.now().millisecondsSinceEpoch}',
+      title: apiItem['productName'] ?? 'Unknown Product',
+      // variantText: '$ramStorageText , Color: $color',
+      ramStorageText: ramStorageText,
+      color: color,
+      priceText: 'PKR ${(apiItem['price'] ?? 0).toStringAsFixed(2)}',
+      quantity: 1,
+      stock: 5,
+      imageUrl: apiItem['image'] ?? '',
+      isSelected: true,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Handle loading and error states
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundGreyLighter,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundWhite,
+          elevation: 0,
+          foregroundColor: AppColors.textBlack87,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, size: 20),
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          title: const Text(
+            'My Wishlist',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_errorMessage != null && !_sessionManager.isLoggedIn) {
+      return _buildLoginRequiredState();
+    }
+
     // ✅ calculate ONLY selected items
     final selectedItems = wishlistItems.where((e) => e.isSelected).toList();
     final selectedCount = selectedItems.length;
@@ -122,6 +337,22 @@ class _WishlistPageState extends State<WishlistPage> {
                 wishlistItems = updatedItems;
               });
             },
+            onDeleteItem: (itemId) {
+              final intId = int.tryParse(itemId);
+              if (intId != null) {
+                _deleteWishlistItem(intId);
+              }
+            },
+            onDeleteMultiple: (itemIds) {
+              final intIds = itemIds
+                  .map((id) => int.tryParse(id))
+                  .where((id) => id != null)
+                  .cast<int>()
+                  .toList();
+              if (intIds.isNotEmpty) {
+                _deleteMultipleWishlistItems(intIds);
+              }
+            },
             emptyMessage:
                 "Your wishlist is empty.\nWhen you add products, they'll\nappear here.",
           ),
@@ -136,11 +367,14 @@ class _WishlistPageState extends State<WishlistPage> {
               onPressed: () {
                 final selectedIds = wishlistItems
                     .where((e) => e.isSelected)
-                    .map((e) => e.id)
-                    .toSet();
-                setState(() {
-                  wishlistItems.removeWhere((e) => selectedIds.contains(e.id));
-                });
+                    .map((e) => int.tryParse(e.id))
+                    .where((id) => id != null)
+                    .cast<int>()
+                    .toList();
+
+                if (selectedIds.isNotEmpty) {
+                  _deleteMultipleWishlistItems(selectedIds);
+                }
               },
               buttonText: 'Add all items to cart',
             ),
@@ -172,6 +406,8 @@ class WishlistListWidget extends StatefulWidget {
     this.items,
     this.onChanged,
     this.onShopNow,
+    this.onDeleteItem,
+    this.onDeleteMultiple,
     this.emptyMessage =
         "Your wishlist is empty.\nWhen you add products, they'll\nappear here.",
   });
@@ -179,6 +415,8 @@ class WishlistListWidget extends StatefulWidget {
   final List<CartProductItem>? items;
   final ValueChanged<List<CartProductItem>>? onChanged;
   final VoidCallback? onShopNow;
+  final Function(String)? onDeleteItem;
+  final Function(List<String>)? onDeleteMultiple;
   final String emptyMessage;
 
   @override
@@ -219,6 +457,8 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
     setState(() {
       _items.removeWhere((e) => e.id == id);
     });
+    // Call the delete API callback
+    widget.onDeleteItem?.call(id);
     _notifyParent();
   }
 
@@ -226,10 +466,14 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
     final selectedIds = _items
         .where((e) => e.isSelected)
         .map((e) => e.id)
-        .toSet();
+        .toList();
+
     setState(() {
       _items.removeWhere((e) => selectedIds.contains(e.id));
     });
+
+    // Call the delete multiple API callback
+    widget.onDeleteMultiple?.call(selectedIds);
     _notifyParent();
   }
 
@@ -324,6 +568,7 @@ class _WishlistListWidgetState extends State<WishlistListWidget> {
                                 content:
                                     'Are you sure you want to clear the selected items?', // Pass content
                                 onConfirm: () {
+                                  Navigator.of(dialogContext).pop();
                                   _clearSelected();
                                 },
                               );
@@ -407,7 +652,7 @@ class _WishlistRowCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () => onToggleSelected,
+            onTap: () => onToggleSelected(),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 140),
               width: 20,
@@ -484,16 +729,22 @@ class _WishlistRowCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Variant: ${item.variantText}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: _textGrey,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      if (item.ramStorageText!.isNotEmpty)
+                        ShowVariantSpecsWidget(
+                          variantText: item.ramStorageText!,
+                        ),
+
+                      if (item.ramStorageText!.isNotEmpty &&
+                          item.color!.isNotEmpty)
+                        const SizedBox(width: 6),
+
+                      if (item.color!.isNotEmpty)
+                        ShowVariantSpecsWidget(variantText: item.color!),
+                    ],
                   ),
-                  // const SizedBox(height: 6),
+
                   Row(
                     children: [
                       Expanded(

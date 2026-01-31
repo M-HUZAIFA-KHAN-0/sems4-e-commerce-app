@@ -1,7 +1,9 @@
 import 'package:first/core/app_imports.dart';
+import 'package:flutter/services.dart';
 
 class AuthField extends StatelessWidget {
-  const AuthField({super.key, 
+  const AuthField({
+    super.key,
     required this.hint,
     required this.controller,
     required this.prefixIcon,
@@ -10,6 +12,8 @@ class AuthField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.validator,
+    this.readOnly = false,
+    this.inputFormatters,
   });
 
   final String hint;
@@ -20,6 +24,8 @@ class AuthField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
+  final bool readOnly;
+  final List<TextInputFormatter>? inputFormatters;
 
   static const Color _fieldBg = Color(0xFFF3F4F6);
 
@@ -31,7 +37,13 @@ class AuthField extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+      readOnly: readOnly,
+      inputFormatters: inputFormatters,
+      style: TextStyle(
+        fontSize: 12.5,
+        fontWeight: FontWeight.w700,
+        color: readOnly ? const Color(0xFF999999) : Colors.black,
+      ),
       decoration: InputDecoration(
         filled: true,
         fillColor: _fieldBg,

@@ -149,7 +149,9 @@ CartProductItem NotificationCardItem({
   return CartProductItem(
     id: 'notif_01',
     title: title ?? 'Notification',
-    variantText: subtitle,
+    // variantText: subtitle,
+    ramStorageText: '',
+    color: '',
     imageUrl: '',
     priceText: "99",
     quantity: 0,

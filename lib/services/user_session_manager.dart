@@ -79,6 +79,9 @@ class UserSessionManager {
   /// Check if user data exists
   bool get hasUserData => _userId != null && _userEmail != null;
 
+  /// Get authentication token
+  String? get token => _token;
+
   /// Get wishlist ID
   int? get wishlistId {
     print('📖 WISHLIST ID GET: $_wishlistId');

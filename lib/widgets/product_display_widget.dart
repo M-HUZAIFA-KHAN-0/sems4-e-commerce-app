@@ -240,7 +240,8 @@ class _ProductCardState extends State<ProductCard> {
                     Positioned.fill(
                       child: Image.network(
                         widget.product['productImage'] ??
-                            'https://picsum.photos/200?3',
+                            // 'https://picsum.photos/200?3',
+                            '',
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
