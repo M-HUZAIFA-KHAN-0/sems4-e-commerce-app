@@ -52,21 +52,21 @@ class _CarouselWidgetState extends State<CarouselWidget> {
             percent: '20%',
             title: 'Week Deals!',
             desc: 'Get a new car discount\nonly valid this week',
-            imgUrl: '',
+            imgUrl: '../../assets/laptops/laptop-2.jpg',
             // imgUrl: 'https://picsum.photos/200?3',
           ),
           DealCard(
             percent: '30%',
             title: 'Hot Offer!',
             desc: 'Limited time SUV offers\nhurry up now',
-            imgUrl: '',
+            imgUrl: '../../assets/laptops/laptop-1.jpg',
             // imgUrl: 'https://picsum.photos/200?3',
           ),
           DealCard(
             percent: '15%',
             title: 'Special Discount',
             desc: 'Best price for new models\nthis weekend',
-            imgUrl: '',
+            imgUrl: '../../assets/laptops/laptop-3.jpg',
             // imgUrl: 'https://picsum.photos/200?3',
           ),
         ],
@@ -159,7 +159,7 @@ class DealCard extends StatelessWidget {
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
+                child: Image.asset(
                   imgUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {

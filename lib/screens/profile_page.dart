@@ -37,29 +37,44 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfileData() async {
     try {
       final userId = UserSessionManager().userId;
+      print('📍 [ProfilePage] Loading profile for userId: $userId');
+
       if (userId == null || userId <= 0) {
+        print('❌ [ProfilePage] Invalid userId: $userId');
         setState(() => _profileError = 'User not logged in');
         return;
       }
+
+      print('🔄 [ProfilePage] Fetching user data and profile...');
 
       // Load both user data and profile data in parallel
       final results = await Future.wait([
         _profileService.fetchUserData(userId: userId),
         _profileService.fetchUserProfile(userId: userId),
-      ]);
+      ], eagerError: true);
 
       if (mounted) {
+        final userData = results[0] as UserModel?;
+        final userProfile = results[1] as UserProfileModel?;
+
+        print('✅ [ProfilePage] Data loaded:');
+        print('   • User: ${userData?.firstName} ${userData?.lastName}');
+        print('   • Email: ${userData?.email}');
+        print('   • Profile Bio: ${userProfile?.bio ?? "No bio"}');
+        print('   • Profile Image: ${userProfile?.profileImage ?? "No image"}');
+
         setState(() {
-          _userData = results[0] as UserModel?;
-          _userProfile = results[1] as UserProfileModel?;
+          _userData = userData;
+          _userProfile = userProfile;
           _isLoadingProfile = false;
+          _profileError = null;
         });
       }
     } catch (e) {
       print('❌ [ProfilePage] Error loading profile: $e');
       if (mounted) {
         setState(() {
-          _profileError = 'Failed to load profile';
+          _profileError = 'Failed to load profile: ${e.toString()}';
           _isLoadingProfile = false;
         });
       }
@@ -190,77 +205,118 @@ class _ProfilePageState extends State<ProfilePage> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: AppColors.backgroundWhite,
-                                  width: 2,
-                                ),
-                              ),
-                              child: ClipOval(
-                                child: _userProfile?.profileImage != null
-                                    ? Image.network(
-                                        _profileService.getProfileImageUrl(
-                                          _userProfile!.profileImage,
-                                        ),
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: const Icon(
-                                                  Icons.person,
-                                                  size: 60,
-                                                  color: Colors.grey,
-                                                ),
-                                              );
-                                            },
-                                      )
-                                    : Container(
-                                        color: Colors.grey[300],
-                                        child: const Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.grey,
-                                        ),
+                        child: _isLoadingProfile
+                            ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const CircularProgressIndicator(
+                                    color: AppColors.backgroundWhite,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Loading profile...',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.backgroundWhite,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : _profileError != null
+                            ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: AppColors.backgroundWhite,
+                                    size: 48,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    _profileError!,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.backgroundWhite,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: _loadProfileData,
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 90,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.backgroundWhite,
+                                        width: 2,
                                       ),
+                                    ),
+                                    child: ClipOval(
+                                      child: _userProfile?.profileImage != null
+                                          ? Image.network(
+                                              _profileService
+                                                  .getProfileImageUrl(
+                                                    _userProfile!.profileImage,
+                                                  ),
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.grey[300],
+                                                      child: const Icon(
+                                                        Icons.person,
+                                                        size: 60,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    );
+                                                  },
+                                            )
+                                          : Container(
+                                              color: Colors.grey[300],
+                                              child: const Icon(
+                                                Icons.person,
+                                                size: 60,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _userData != null
+                                        ? '${_userData!.firstName ?? ''} ${_userData!.lastName ?? ''}'
+                                              .trim()
+                                        : 'User Profile',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.backgroundWhite,
+                                    ),
+                                  ),
+                                  Text(
+                                    _userData?.email ?? 'No email',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.backgroundWhite,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            Text(
-                              _userData != null
-                                  ? '${_userData!.firstName ?? ''} ${_userData!.lastName ?? ''}'
-                                        .trim()
-                                  : 'User Profile',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.backgroundWhite,
-                              ),
-                            ),
-                            Text(
-                              _userData?.email ?? 'No email',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.backgroundWhite,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                   ],
@@ -362,27 +418,27 @@ class _ProfilePageState extends State<ProfilePage> {
 
               const SizedBox(height: 12),
 
-              UnpaidOrderCarouselWidget(
-                orders: [
-                  UnpaidOrder(
-                    id: '1',
-                    productImage: 'image_url',
-                    orderBadgeText: 'SPECIAL OFFER...',
-                    onPayNowPressed: () {
-                      // Handle payment navigation
-                    },
-                  ),
-                  UnpaidOrder(
-                    id: '1',
-                    productImage: 'image_url',
-                    orderBadgeText: 'SPECIAL OFFER...',
-                    onPayNowPressed: () {
-                      // Handle payment navigation
-                    },
-                  ),
-                  // ... more orders if needed
-                ],
-              ),
+              // UnpaidOrderCarouselWidget(
+              //   orders: [
+              //     UnpaidOrder(
+              //       id: '1',
+              //       productImage: 'image_url',
+              //       orderBadgeText: 'SPECIAL OFFER...',
+              //       onPayNowPressed: () {
+              //         // Handle payment navigation
+              //       },
+              //     ),
+              //     UnpaidOrder(
+              //       id: '1',
+              //       productImage: 'image_url',
+              //       orderBadgeText: 'SPECIAL OFFER...',
+              //       onPayNowPressed: () {
+              //         // Handle payment navigation
+              //       },
+              //     ),
+              //     // ... more orders if needed
+              //   ],
+              // ),
 
               const SizedBox(height: 12),
 

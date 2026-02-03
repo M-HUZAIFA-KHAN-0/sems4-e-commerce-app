@@ -1,6 +1,7 @@
 import 'package:first/screens/order_shipping_method_page.dart';
 import 'package:first/core/app_imports.dart';
 import 'package:first/services/api/cart_service.dart';
+import 'package:first/services/api/order_service.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -14,8 +15,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final String storeName = "Order Items";
   final UserSessionManager _sessionManager = UserSessionManager();
   final CartService _cartService = CartService();
+  final OrderService _orderService = OrderService();
 
   bool _isLoading = true;
+  bool _isPlacingOrder = false;
   List<CartProductItem> checkoutItems = [];
 
   @override
@@ -59,11 +62,117 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
+  Future<void> _placeOrder() async {
+    try {
+      // Prevent multiple clicks
+      if (_isPlacingOrder) return;
+
+      // Get user ID
+      final userId = _sessionManager.userId;
+      if (userId == null || userId <= 0) {
+        _showError('User not logged in');
+        return;
+      }
+
+      // Calculate total amount
+      double totalAmount = 0;
+      for (final item in checkoutItems) {
+        final price =
+            double.tryParse(
+              item.priceText.replaceAll('PKR ', '').replaceAll('RS ', ''),
+            ) ??
+            0;
+        totalAmount += price * item.quantity;
+      }
+
+      print(
+        '💳 [CheckoutPage] Placing order - UserId: $userId, Total: $totalAmount, Items: ${checkoutItems.length}',
+      );
+
+      // Update UI to show loading
+      setState(() => _isPlacingOrder = true);
+
+      // STEP 1: Create Order
+      print('📝 [CheckoutPage] STEP 1: Creating order...');
+      final orderResult = await _orderService.createOrder(
+        userId: userId,
+        totalAmount: totalAmount,
+      );
+
+      if (orderResult == null) {
+        _showError('Failed to create order');
+        setState(() => _isPlacingOrder = false);
+        return;
+      }
+
+      final orderId = orderResult['orderId'];
+      print('✅ [CheckoutPage] Order created - OrderId: $orderId');
+
+      // STEP 2: Create Order Items
+      print('📝 [CheckoutPage] STEP 2: Creating order items...');
+      final itemsData = checkoutItems
+          .map(
+            (item) => {
+              'variantId': item.variantId ?? 0,
+              'quantity': item.quantity,
+              'variantSpecificationOptionsId':
+                  item.variantSpecificationOptionsId ?? 0,
+            },
+          )
+          .toList();
+
+      print('🛒 [CheckoutPage] Items to create: $itemsData');
+
+      final itemsCreated = await _orderService.createAllOrderItems(
+        orderId: orderId,
+        items: itemsData,
+      );
+
+      if (!itemsCreated) {
+        _showError('Failed to create order items');
+        setState(() => _isPlacingOrder = false);
+        return;
+      }
+
+      print('✅ [CheckoutPage] All order items created successfully');
+
+      // SUCCESS: Navigate to Order Shipping Method Page
+      if (!mounted) return;
+      setState(() => _isPlacingOrder = false);
+
+      print('🎉 [CheckoutPage] Order creation complete - Navigating...');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderShippingMethodPage(
+            orderId: orderId,
+            itemsTotalAmount: totalAmount,
+          ),
+        ),
+      );
+    } catch (e) {
+      print('❌ [CheckoutPage] Error placing order: $e');
+      _showError('Error placing order: $e');
+      setState(() => _isPlacingOrder = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
   CartProductItem _mapApiToCartItem(Map<String, dynamic> item) {
     // Extract variant specifications from API response
     final variantSpecs = item['variantSpecifications'] as List? ?? [];
     final variantSpecificationOptionsId =
         item['variantSpecificationOptionsId'] ?? 0;
+    final variantId = item['variantId'] as int? ?? 0;
 
     String ram = '';
     String storage = '';
@@ -100,7 +209,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final cartItemId = item['cartItemId'] ?? 0;
 
     print(
-      '🛒 [CheckoutPage] Product: $productName, RAM-Storage: $ramStorageText, Color: $color, variantSpecOptionId: $variantSpecificationOptionsId',
+      '🛒 [CheckoutPage] Product: $productName, RAM-Storage: $ramStorageText, Color: $color, variantId: $variantId, variantSpecOptionId: $variantSpecificationOptionsId',
     );
 
     return CartProductItem(
@@ -113,6 +222,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       stock: 100,
       imageUrl: imageUrl,
       isSelected: true,
+      variantId: variantId,
+      variantSpecificationOptionsId: variantSpecificationOptionsId,
     );
   }
 
@@ -163,11 +274,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   _StoreProductsSection(items: checkoutItems),
 
                   // Summary Section
-                  _SummarySection(items: checkoutItems),
+                  // _SummarySection(items: checkoutItems),
 
                   // Voucher Section
-                  const _VoucherSection(),
-
+                  // const _VoucherSection(),
                   const SizedBox(height: 80),
                 ],
               ),
@@ -175,7 +285,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
 
           // Sticky Total and Pay Button Section
-          _TotalPaymentSection(items: checkoutItems),
+          _TotalPaymentSection(
+            items: checkoutItems,
+            isPlacingOrder: _isPlacingOrder,
+            onPlaceOrder: _placeOrder,
+          ),
         ],
       ),
     );
@@ -388,251 +502,257 @@ class _CheckoutProductCard extends StatelessWidget {
 }
 
 // Summary Section Widget
-class _SummarySection extends StatelessWidget {
-  final List<CartProductItem> items;
+// class _SummarySection extends StatelessWidget {
+//   final List<CartProductItem> items;
 
-  const _SummarySection({required this.items});
+//   const _SummarySection({required this.items});
 
-  double _parsePrice(String priceText) {
-    var s = priceText.replaceAll(RegExp(r'[^0-9,\.]'), '');
-    if (s.isEmpty) return 0;
+//   double _parsePrice(String priceText) {
+//     var s = priceText.replaceAll(RegExp(r'[^0-9,\.]'), '');
+//     if (s.isEmpty) return 0;
 
-    final lastComma = s.lastIndexOf(',');
-    final lastDot = s.lastIndexOf('.');
-    final commaIsDecimal = lastComma > lastDot;
+//     final lastComma = s.lastIndexOf(',');
+//     final lastDot = s.lastIndexOf('.');
+//     final commaIsDecimal = lastComma > lastDot;
 
-    if (commaIsDecimal) {
-      s = s.replaceAll('.', '');
-      s = s.replaceAll(',', '.');
-    } else {
-      s = s.replaceAll(',', '');
-    }
+//     if (commaIsDecimal) {
+//       s = s.replaceAll('.', '');
+//       s = s.replaceAll(',', '.');
+//     } else {
+//       s = s.replaceAll(',', '');
+//     }
 
-    return double.tryParse(s) ?? 0;
-  }
+//     return double.tryParse(s) ?? 0;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final merchandiseTotal = items.fold<double>(
-      0,
-      (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
-    );
-    final shippingFee = 165.0;
+//   @override
+//   Widget build(BuildContext context) {
+//     final merchandiseTotal = items.fold<double>(
+//       0,
+//       (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
+//     );
+//     final shippingFee = 165.0;
 
-    return Container(
-      margin: const EdgeInsets.only(top: 12),
-      // color: AppColors.backgroundWhite,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Subtotal (${items.length} items)",
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textGreyDark,
-                ),
-              ),
-              Text(
-                "Rs. ${merchandiseTotal.toStringAsFixed(0)}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textBlack,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Divider(height: 1, color: Color(0xFFEEEEEE)),
-          const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Shipping Fee",
-                style: TextStyle(fontSize: 13, color: AppColors.textGreyDark),
-              ),
-              Text(
-                "Rs. ${shippingFee.toStringAsFixed(0)}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textBlack,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       margin: const EdgeInsets.only(top: 12),
+//       // color: AppColors.backgroundWhite,
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 "Subtotal (${items.length} items)",
+//                 style: const TextStyle(
+//                   fontSize: 13,
+//                   color: AppColors.textGreyDark,
+//                 ),
+//               ),
+//               Text(
+//                 "Rs. ${merchandiseTotal.toStringAsFixed(0)}",
+//                 style: const TextStyle(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w600,
+//                   color: AppColors.textBlack,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           const SizedBox(height: 6),
+//           const Divider(height: 1, color: Color(0xFFEEEEEE)),
+//           const SizedBox(height: 6),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               const Text(
+//                 "Shipping Fee",
+//                 style: TextStyle(fontSize: 13, color: AppColors.textGreyDark),
+//               ),
+//               Text(
+//                 "Rs. ${shippingFee.toStringAsFixed(0)}",
+//                 style: const TextStyle(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w600,
+//                   color: AppColors.textBlack,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 // Voucher Section Widget
-class _VoucherSection extends StatefulWidget {
-  const _VoucherSection();
+// class _VoucherSection extends StatefulWidget {
+//   const _VoucherSection();
 
-  @override
-  State<_VoucherSection> createState() => _VoucherSectionState();
-}
+//   @override
+//   State<_VoucherSection> createState() => _VoucherSectionState();
+// }
 
-class _VoucherSectionState extends State<_VoucherSection> {
-  bool _showVoucherInput = false;
-  final TextEditingController _voucherController = TextEditingController();
+// class _VoucherSectionState extends State<_VoucherSection> {
+//   bool _showVoucherInput = false;
+//   final TextEditingController _voucherController = TextEditingController();
 
-  @override
-  void dispose() {
-    _voucherController.dispose();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _voucherController.dispose();
+//     super.dispose();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 12),
-      // color: AppColors.backgroundWhite,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              GradientIconWidget(icon: Icons.card_giftcard, size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                "Voucher & Code",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textBlack,
-                ),
-              ),
-              const Spacer(),
-              if (!_showVoucherInput)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showVoucherInput = true;
-                    });
-                  },
-                  child: const Text(
-                    "Voucher code >",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.secondaryColor1,
-                    ),
-                  ),
-                ),
-              if (_showVoucherInput)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showVoucherInput = false;
-                      _voucherController.clear();
-                    });
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: AppColors.textGreyLightest,
-                    size: 20,
-                  ),
-                ),
-            ],
-          ),
-          if (_showVoucherInput) ...[
-            const SizedBox(height: 12),
-            TextField(
-              controller: _voucherController,
-              decoration:
-                  OutlineInputDecorationHelper.createInputDecoration(
-                    labelText: 'Voucher Code',
-                    hintText: "Enter voucher code",
-                    borderColor: AppColors.borderGreyDivider,
-                    focusedBorderColor: AppColors.formBlack,
-                    hintColor: AppColors.textGreyLightest,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    suffixIcon: _voucherController.text.isNotEmpty
-                        ? Icons.clear
-                        : null,
-                  ).copyWith(
-                    suffixIcon: _voucherController.text.isNotEmpty
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _voucherController.clear();
-                              });
-                            },
-                            child: const Icon(
-                              Icons.clear,
-                              color: AppColors.textGreyLightest,
-                              size: 18,
-                            ),
-                          )
-                        : null,
-                  ),
-              onChanged: (value) {
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: _voucherController.text.isEmpty
-                    ? null
-                    : () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Voucher code applied: ${_voucherController.text}',
-                            ),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                        setState(() {
-                          _showVoucherInput = false;
-                        });
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _voucherController.text.isEmpty
-                      ? const Color(0xFFEEEEEE)
-                      : AppColors.formBlack,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  "Apply",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.backgroundWhite,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.only(top: 12),
+//       // color: AppColors.backgroundWhite,
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(gradient: AppColors.secondaryBGGradientColor),
+//       child: Column(
+//         children: [
+//           Row(
+//             children: [
+//               GradientIconWidget(icon: Icons.card_giftcard, size: 20),
+//               const SizedBox(width: 8),
+//               const Text(
+//                 "Voucher & Code",
+//                 style: TextStyle(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w600,
+//                   color: AppColors.textBlack,
+//                 ),
+//               ),
+//               const Spacer(),
+//               if (!_showVoucherInput)
+//                 GestureDetector(
+//                   onTap: () {
+//                     setState(() {
+//                       _showVoucherInput = true;
+//                     });
+//                   },
+//                   child: const Text(
+//                     "Voucher code >",
+//                     style: TextStyle(
+//                       fontSize: 12,
+//                       color: AppColors.secondaryColor1,
+//                     ),
+//                   ),
+//                 ),
+//               if (_showVoucherInput)
+//                 GestureDetector(
+//                   onTap: () {
+//                     setState(() {
+//                       _showVoucherInput = false;
+//                       _voucherController.clear();
+//                     });
+//                   },
+//                   child: const Icon(
+//                     Icons.close,
+//                     color: AppColors.textGreyLightest,
+//                     size: 20,
+//                   ),
+//                 ),
+//             ],
+//           ),
+//           if (_showVoucherInput) ...[
+//             const SizedBox(height: 12),
+//             TextField(
+//               controller: _voucherController,
+//               decoration:
+//                   OutlineInputDecorationHelper.createInputDecoration(
+//                     labelText: 'Voucher Code',
+//                     hintText: "Enter voucher code",
+//                     borderColor: AppColors.borderGreyDivider,
+//                     focusedBorderColor: AppColors.formBlack,
+//                     hintColor: AppColors.textGreyLightest,
+//                     contentPadding: const EdgeInsets.symmetric(
+//                       horizontal: 12,
+//                       vertical: 10,
+//                     ),
+//                     suffixIcon: _voucherController.text.isNotEmpty
+//                         ? Icons.clear
+//                         : null,
+//                   ).copyWith(
+//                     suffixIcon: _voucherController.text.isNotEmpty
+//                         ? GestureDetector(
+//                             onTap: () {
+//                               setState(() {
+//                                 _voucherController.clear();
+//                               });
+//                             },
+//                             child: const Icon(
+//                               Icons.clear,
+//                               color: AppColors.textGreyLightest,
+//                               size: 18,
+//                             ),
+//                           )
+//                         : null,
+//                   ),
+//               onChanged: (value) {
+//                 setState(() {});
+//               },
+//             ),
+//             const SizedBox(height: 8),
+//             SizedBox(
+//               width: double.infinity,
+//               height: 40,
+//               child: ElevatedButton(
+//                 onPressed: _voucherController.text.isEmpty
+//                     ? null
+//                     : () {
+//                         ScaffoldMessenger.of(context).showSnackBar(
+//                           SnackBar(
+//                             content: Text(
+//                               'Voucher code applied: ${_voucherController.text}',
+//                             ),
+//                             duration: const Duration(seconds: 2),
+//                           ),
+//                         );
+//                         setState(() {
+//                           _showVoucherInput = false;
+//                         });
+//                       },
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: _voucherController.text.isEmpty
+//                       ? const Color(0xFFEEEEEE)
+//                       : AppColors.formBlack,
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(26),
+//                   ),
+//                   elevation: 0,
+//                 ),
+//                 child: const Text(
+//                   "Apply",
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                     fontWeight: FontWeight.w600,
+//                     color: AppColors.backgroundWhite,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 // Total and Payment Section Widget (Sticky Bottom Bar)
 class _TotalPaymentSection extends StatelessWidget {
   final List<CartProductItem> items;
+  final bool isPlacingOrder;
+  final VoidCallback onPlaceOrder;
 
-  const _TotalPaymentSection({required this.items});
+  const _TotalPaymentSection({
+    required this.items,
+    required this.isPlacingOrder,
+    required this.onPlaceOrder,
+  });
 
   double _parsePrice(String priceText) {
     var s = priceText.replaceAll(RegExp(r'[^0-9,\.]'), '');
@@ -658,7 +778,8 @@ class _TotalPaymentSection extends StatelessWidget {
       0,
       (sum, item) => sum + (_parsePrice(item.priceText) * item.quantity),
     );
-    final shippingFee = 165.0;
+    // final shippingFee = 165.0;
+    final shippingFee = 0;
     final total = merchandiseTotal + shippingFee;
 
     return Container(
@@ -699,15 +820,8 @@ class _TotalPaymentSection extends StatelessWidget {
           ),
           // Place Order Button
           PrimaryBtnWidget(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrderShippingMethodPage(),
-                ),
-              );
-            },
-            buttonText: "Place order",
+            onPressed: () => isPlacingOrder ? null : onPlaceOrder(),
+            buttonText: isPlacingOrder ? "Creating..." : "Place order",
             width: 140,
             height: 40,
           ),

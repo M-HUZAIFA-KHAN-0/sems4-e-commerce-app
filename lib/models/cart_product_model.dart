@@ -14,6 +14,8 @@ class CartProductItem {
     this.imageProvider,
     this.imageUrl,
     this.isSelected = true,
+    this.variantId,
+    this.variantSpecificationOptionsId,
   });
 
   final String id;
@@ -36,6 +38,10 @@ class CartProductItem {
   /// Used by "Clear selected items"
   final bool isSelected;
 
+  /// For order creation
+  final int? variantId;
+  final int? variantSpecificationOptionsId;
+
   CartProductItem copyWith({
     String? id,
     String? title,
@@ -48,6 +54,8 @@ class CartProductItem {
     ImageProvider? imageProvider,
     String? imageUrl,
     bool? isSelected,
+    int? variantId,
+    int? variantSpecificationOptionsId,
   }) {
     return CartProductItem(
       id: id ?? this.id,
@@ -61,6 +69,9 @@ class CartProductItem {
       imageProvider: imageProvider ?? this.imageProvider,
       imageUrl: imageUrl ?? this.imageUrl,
       isSelected: isSelected ?? this.isSelected,
+      variantId: variantId ?? this.variantId,
+      variantSpecificationOptionsId:
+          variantSpecificationOptionsId ?? this.variantSpecificationOptionsId,
     );
   }
 }

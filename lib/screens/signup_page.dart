@@ -167,22 +167,30 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(height: 18),
 
                       // Big icon
-                      const Icon(
-                        Icons.directions_car_filled,
+                      // const Icon(
+                      //   Icons.directions_car_filled,
+                      //   size: 74,
+                      //   color: AppColors.textBlack,
+                      // ),
+                      GradientIconWidget(
+                        icon: Icons.laptop_mac,
                         size: 74,
-                        color: AppColors.textBlack,
                       ),
 
                       const SizedBox(height: 14),
 
                       // Title
-                      const Text(
-                        "Create Your Account",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.textBlack,
-                        ),
+                      // const Text(
+                      //   "Create Your Account",
+                      //   style: TextStyle(
+                      //     fontSize: 22,
+                      //     fontWeight: FontWeight.w800,
+                      //     color: AppColors.textBlack,
+                      //   ),
+                      // ),
+                      GradientText(
+                        text: "Create Your Account",
+                        fontSize: 22,
                       ),
 
                       const SizedBox(height: 18),
@@ -325,41 +333,41 @@ class _SignUpPageState extends State<SignUpPage> {
                               onPressed: _isLoading ? null : _submit,
                             ),
 
-                            const SizedBox(height: 18),
+                            // const SizedBox(height: 18),
 
-                            // Divider: "or continue with"
-                            const _ContinueDivider(text: "or continue with"),
+                            // // Divider: "or continue with"
+                            // const _ContinueDivider(text: "or continue with"),
 
-                            const SizedBox(height: 16),
+                            // const SizedBox(height: 16),
 
                             // Social buttons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _SocialIconButton(
-                                  child: const Icon(
-                                    Icons.facebook,
-                                    color: Color(0xFF1877F2),
-                                    size: 22,
-                                  ),
-                                  onTap: () {},
-                                ),
-                                const SizedBox(width: 14),
-                                _SocialIconButton(
-                                  child: const _GoogleG(),
-                                  onTap: () {},
-                                ),
-                                const SizedBox(width: 14),
-                                _SocialIconButton(
-                                  child: const Icon(
-                                    Icons.apple,
-                                    color: AppColors.textBlack,
-                                    size: 22,
-                                  ),
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     _SocialIconButton(
+                            //       child: const Icon(
+                            //         Icons.facebook,
+                            //         color: Color(0xFF1877F2),
+                            //         size: 22,
+                            //       ),
+                            //       onTap: () {},
+                            //     ),
+                            //     const SizedBox(width: 14),
+                            //     _SocialIconButton(
+                            //       child: const _GoogleG(),
+                            //       onTap: () {},
+                            //     ),
+                            //     const SizedBox(width: 14),
+                            //     _SocialIconButton(
+                            //       child: const Icon(
+                            //         Icons.apple,
+                            //         color: AppColors.textBlack,
+                            //         size: 22,
+                            //       ),
+                            //       onTap: () {},
+                            //     ),
+                            //   ],
+                            // ),
 
                             const SizedBox(height: 18),
 

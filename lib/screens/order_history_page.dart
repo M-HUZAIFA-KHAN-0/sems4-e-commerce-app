@@ -1,4 +1,6 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/services/api/order_service.dart';
+import 'package:first/services/user_session_manager.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int initialTabIndex;
@@ -12,15 +14,24 @@ class OrderHistoryPage extends StatefulWidget {
 class _OrderHistoryPageState extends State<OrderHistoryPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  final OrderService _orderService = OrderService();
+  final UserSessionManager _sessionManager = UserSessionManager();
 
-  // ---------------- SAMPLE DATA ----------------
-  // final List<Map<String, dynamic>> _allOrders = [];
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  final List<Map<String, dynamic>> _toPayOrders = [
+  // API Data mapped to existing structures
+  List<Map<String, dynamic>> _toPayOrders = [];
+  List<Map<String, dynamic>> _toReceiveOrders = [];
+  List<Map<String, dynamic>> _cancelledOrders = [];
+  List<Map<String, dynamic>> _pendingReviewProducts = [];
+  List<Map<String, dynamic>> _reviewedProducts = [];
+
+  // Sample data (fallback if needed)
+  final List<Map<String, dynamic>> _sampleToPayOrders = [
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      // 'imageUrl': 'https://picsum.photos/200?10',
       'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
@@ -30,12 +41,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     },
   ];
 
-  // final List<Map<String, dynamic>> _toShipOrders = [];
-  final List<Map<String, dynamic>> _toReceiveOrders = [
+  final List<Map<String, dynamic>> _sampleToReceiveOrders = [
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      // 'imageUrl': 'https://picsum.photos/200?10',
       'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
@@ -44,12 +53,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       'status': 'To pay',
     },
   ];
-  // final List<Map<String, dynamic>> _toReviewOrders = [];
-  final List<Map<String, dynamic>> _cancelledOrders = [
+
+  final List<Map<String, dynamic>> _sampleCancelledOrders = [
     {
       'orderNumber': 'ORD-1001',
       'placedDate': 'Jan 07, 2026',
-      // 'imageUrl': 'https://picsum.photos/200?10',
       'imageUrl': '',
       'productName': 'AirPods Max by Apple',
       'variant': 'Grey',
@@ -59,25 +67,22 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     },
   ];
 
-  // Review related data
-  final List<Map<String, dynamic>> _pendingReviewProducts = [
+  final List<Map<String, dynamic>> _samplePendingReviewProducts = [
     {
       'productName': 'Apple iPhone 15',
-      // 'imageUrl': 'https://picsum.photos/200?1',
       'imageUrl': '',
       'price': 'Rs. 79,999',
       'quantity': 1,
     },
     {
       'productName': 'Samsung Galaxy Watch',
-      // 'imageUrl': 'https://picsum.photos/200?2',
       'imageUrl': '',
       'price': 'Rs. 24,999',
       'quantity': 1,
     },
   ];
 
-  final List<Map<String, dynamic>> _reviewedProducts = [
+  final List<Map<String, dynamic>> _sampleReviewedProducts = [
     {
       'productName': 'Sony WH-1000XM4 Headphones',
       // 'imageUrl': 'https://picsum.photos/200?3',
@@ -103,12 +108,6 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
 
   // ------------------------------------------------
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _tabController = TabController(length: 6, vsync: this);
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -117,6 +116,144 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       vsync: this,
       initialIndex: widget.initialTabIndex,
     );
+    _fetchOrders();
+  }
+
+  // --------
+
+  /// Fetch orders from API using userId from session
+  Future<void> _fetchOrders() async {
+    try {
+      final userId = _sessionManager.userId;
+      if (userId == null) {
+        setState(() {
+          _errorMessage = 'User not logged in';
+          _isLoading = false;
+        });
+        print('❌ [OrderHistory] User ID not found in session');
+        return;
+      }
+
+      print('📋 [OrderHistory] Fetching orders for userId: $userId');
+
+      final orders = await _orderService.getOrdersByUserId(userId);
+
+      if (!mounted) return;
+
+      if (orders == null) {
+        setState(() {
+          _errorMessage = 'Failed to load orders';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Process orders and filter by delivery status
+      _processOrdersData(orders);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      print('✅ [OrderHistory] Orders loaded successfully');
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Error: ${e.toString()}';
+        _isLoading = false;
+      });
+      print('❌ [OrderHistory] Error fetching orders: $e');
+    }
+  }
+
+  /// Process API response and filter orders by delivery status
+  void _processOrdersData(List<Map<String, dynamic>> apiOrders) {
+    _toPayOrders.clear();
+    _toReceiveOrders.clear();
+    _cancelledOrders.clear();
+
+    for (final order in apiOrders) {
+      final String deliveryStatus = order['deliveryStatus'] ?? 'Pending';
+      final List<dynamic> items = order['items'] ?? [];
+      final Map<String, dynamic>? orderAddress = order['orderAddress'];
+      final String placedDate = _formatDate(
+        order['createdAt'] ?? DateTime.now().toString(),
+      );
+      final int orderId = order['orderId'] ?? 0;
+      final double totalAmount = (order['totalAmount'] ?? 0).toDouble();
+
+      // Create order card data for each item
+      for (final item in items) {
+        final Map<String, dynamic> orderItem = {
+          'orderNumber': 'ORD-${orderId.toString().padLeft(4, '0')}',
+          'placedDate': placedDate,
+          'imageUrl': item['image'] ?? '',
+          'productName': item['productName'] ?? 'Unknown Product',
+          'variant': _getVariantName(item['variantSpecifications']),
+          'quantity': item['quantity'] ?? 1,
+          'price': 'Rs. ${(item['price'] ?? 0).toStringAsFixed(2)}',
+          'status': deliveryStatus,
+          'address': orderAddress,
+        };
+
+        // Filter by delivery status for each tab
+        if (deliveryStatus.toLowerCase() == 'pending') {
+          _toPayOrders.add(orderItem);
+        } else if (deliveryStatus.toLowerCase().contains('ship') ||
+            deliveryStatus.toLowerCase().contains('delivery') ||
+            deliveryStatus.toLowerCase() == 'confirmed') {
+          _toReceiveOrders.add(orderItem);
+        } else if (deliveryStatus.toLowerCase() == 'cancelled') {
+          _cancelledOrders.add(orderItem);
+        }
+      }
+    }
+
+    print(
+      '📊 [OrderHistory] Processed orders - ToPay: ${_toPayOrders.length}, ToReceive: ${_toReceiveOrders.length}, Cancelled: ${_cancelledOrders.length}',
+    );
+  }
+
+  /// Format date from API response
+  String _formatDate(String dateString) {
+    try {
+      final DateTime date = DateTime.parse(dateString);
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    } catch (e) {
+      return 'Unknown Date';
+    }
+  }
+
+  /// Extract variant name from variant specifications
+  String _getVariantName(List<dynamic>? specs) {
+    if (specs == null || specs.isEmpty) return '';
+    // Return the color if available, otherwise the first spec option value
+    try {
+      final colorSpec = specs.firstWhere(
+        (s) => s['specificationName'] == 'Color',
+        orElse: () => null,
+      );
+      if (colorSpec != null) {
+        return colorSpec['optionValue'] ?? '';
+      }
+      return specs.first['optionValue'] ?? '';
+    } catch (e) {
+      return '';
+    }
   }
 
   @override
@@ -282,7 +419,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
           children: [
             // Pending Reviews Widget
             if (hasPending)
-            PendingReviewWidget(products: _pendingReviewProducts),
+              PendingReviewWidget(products: _pendingReviewProducts),
 
             // Reviewed Products Widget
             if (hasReviewed) ReviewedProductWidget(products: _reviewedProducts),
@@ -326,24 +463,52 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
         ),
       ),
 
-      body: Column(
-        children: [
-          // ---------------- TAB VIEWS ----------------
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    _errorMessage!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _errorMessage = null;
+                      });
+                      _fetchOrders();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            )
+          : Column(
               children: [
-                // _buildList(_allOrders),
-                _buildList(_toPayOrders, isOrderTracking: true),
-                // _buildList(_toShipOrders),
-                _buildList(_toReceiveOrders),
-                _buildReviewTab(),
-                _buildList(_cancelledOrders),
+                // ---------------- TAB VIEWS ----------------
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      // _buildList(_allOrders),
+                      _buildList(_toPayOrders, isOrderTracking: true),
+                      // _buildList(_toShipOrders),
+                      _buildList(_toReceiveOrders),
+                      _buildReviewTab(),
+                      _buildList(_cancelledOrders),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

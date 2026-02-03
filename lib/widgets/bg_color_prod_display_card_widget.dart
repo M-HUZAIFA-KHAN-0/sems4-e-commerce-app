@@ -17,7 +17,7 @@ class BGColorProdDisplayCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
       decoration: BoxDecoration(
         // gradient: AppColors.bgGradient, // Use your AppColors.bgGradient
-        gradient: AppColors.bgSecondaryGradient,
+        gradient: AppColors.bgLightGradientColor,
         borderRadius: BorderRadius.circular(2),
       ),
       child: Column(
@@ -33,7 +33,7 @@ class BGColorProdDisplayCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: FontSize.homePageTitle,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.bgGradientHeading,
+                    color: AppColors.textBlack,
                   ),
                 ),
               ],

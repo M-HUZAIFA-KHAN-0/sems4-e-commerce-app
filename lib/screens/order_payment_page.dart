@@ -1,15 +1,225 @@
 import 'package:first/core/app_imports.dart';
 
 class OrderPaymentPage extends StatefulWidget {
-  const OrderPaymentPage({super.key});
+  final int orderId;
+  final double itemsTotalAmount;
+  final double shippingPrice;
+
+  const OrderPaymentPage({
+    required this.orderId,
+    required this.itemsTotalAmount,
+    required this.shippingPrice,
+    super.key,
+  });
 
   @override
   State<OrderPaymentPage> createState() => _OrderPaymentPageState();
 }
 
 class _OrderPaymentPageState extends State<OrderPaymentPage> {
+  final PaymentService _paymentService = PaymentService();
+  final ShipmentService _shipmentService = ShipmentService();
+  final UserSessionManager _sessionManager = UserSessionManager();
+
   String paymentType = "full"; // full / advance
   String paymentMethod = "bank"; // bank / card
+  int? selectedPaymentMethodId;
+
+  bool _isLoadingMethods = true;
+  bool _isProcessing = false;
+  List<PaymentMethod> _paymentMethods = [];
+
+  final GlobalKey<_BankTransferSectionState> _bankTransferKey =
+      GlobalKey<_BankTransferSectionState>();
+  final GlobalKey<_CreditCardSectionState> _creditCardKey =
+      GlobalKey<_CreditCardSectionState>();
+
+  double totalAmount = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPaymentMethods();
+    _loadTotalAmount();
+  }
+
+  /// Load total amount from passed parameters
+  void _loadTotalAmount() {
+    // Calculate total: items amount + shipping price
+    totalAmount = widget.itemsTotalAmount + widget.shippingPrice;
+    print('💰 [OrderPaymentPage] Total Calculation:');
+    print('   Items Total: ${widget.itemsTotalAmount}');
+    print('   Shipping: ${widget.shippingPrice}');
+    print('   Grand Total: $totalAmount');
+  }
+
+  /// Load payment methods from API
+  Future<void> _loadPaymentMethods() async {
+    try {
+      print('🔄 [OrderPaymentPage] Loading payment methods...');
+      final methods = await _paymentService.getPaymentMethods();
+
+      if (!mounted) return;
+
+      if (methods != null) {
+        setState(() {
+          _paymentMethods = methods;
+          _isLoadingMethods = false;
+          // Auto-select first payment method
+          if (methods.isNotEmpty) {
+            selectedPaymentMethodId = methods.first.paymentMethodId;
+          }
+        });
+        print('✅ [OrderPaymentPage] Loaded ${methods.length} payment methods');
+      } else {
+        setState(() => _isLoadingMethods = false);
+        _showError('Failed to load payment methods');
+      }
+    } catch (e) {
+      print('❌ [OrderPaymentPage] Error loading payment methods: $e');
+      if (mounted) {
+        setState(() => _isLoadingMethods = false);
+      }
+      _showError('Error loading payment methods: $e');
+    }
+  }
+
+  /// Validate payment details based on selected method
+  bool _validatePaymentDetails() {
+    if (selectedPaymentMethodId == null) {
+      _showError('Please select a payment method');
+      return false;
+    }
+
+    if (paymentMethod == "bank") {
+      final isValid = _bankTransferKey.currentState?.validateDetails() ?? false;
+      if (!isValid) {
+        _showError('Please fill all bank transfer details');
+        return false;
+      }
+    } else if (paymentMethod == "card") {
+      final isValid = _creditCardKey.currentState?.validateDetails() ?? false;
+      if (!isValid) {
+        _showError('Please fill all credit card details');
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /// Create payment via API
+  Future<void> _onNextPressed() async {
+    // Validate payment details
+    if (!_validatePaymentDetails()) {
+      return;
+    }
+
+    setState(() => _isProcessing = true);
+
+    try {
+      print('🔄 [OrderPaymentPage] Creating payment...');
+      print('   OrderId: ${widget.orderId}');
+      print('   PaymentMethodId: $selectedPaymentMethodId');
+      print('   Amount: $totalAmount');
+
+      final result = await _paymentService.createPayment(
+        orderId: widget.orderId,
+        paymentMethodId: selectedPaymentMethodId ?? 0,
+        amount: totalAmount,
+      );
+
+      if (!mounted) return;
+
+      if (result != null && result['success'] == true) {
+        print('✅ [OrderPaymentPage] Payment created successfully!');
+        print('   PaymentId: ${result['paymentId']}');
+
+        // 🚚 Create Shipment after successful payment
+        print('🔄 [OrderPaymentPage] Creating shipment...');
+        final shipmentResult = await _shipmentService.createShipment(
+          orderId: widget.orderId,
+          courierName: "Standard Courier", // Default courier name
+          shippingPrice: widget.shippingPrice,
+        );
+
+        if (shipmentResult != null && shipmentResult['success'] == true) {
+          print('✅ [OrderPaymentPage] Shipment created successfully!');
+          print('   ShipmentId: ${shipmentResult['shipmentId']}');
+          print('   TrackingNumber: ${shipmentResult['trackingNumber']}');
+        } else {
+          print('⚠️ [OrderPaymentPage] Warning: Shipment creation failed');
+          print('   Message: ${shipmentResult?['message']}');
+        }
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Payment processed successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 1),
+          ),
+        );
+
+        // Wait a moment then navigate to receipt
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (!mounted) return;
+
+        // Navigate to order confirmation
+        // final orderReceiptPage = OrderReceiptPage(
+        //   orderNumber: '${widget.orderId}',
+        //   productName: 'Product Name',
+        //   productPrice: '$totalAmount',
+        //   productColor: 'Color',
+        //   productImage: '',
+        //   orderData: {
+        //     'name': _sessionManager.userName ?? 'Customer',
+        //     'email': _sessionManager.userEmail ?? '',
+        //     'phone': '',
+        //     'cnic': '',
+        //     'province': '',
+        //     'city': '',
+        //     'area': '',
+        //     'address': '',
+        //     'shippingCost': '0',
+        //     'expectedDelivery': 'Processing...',
+        //     'totalPrice': '$totalAmount',
+        //     'paidAmount': '$totalAmount',
+        //   },
+        // );
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => OrderConfirmationSuccessScreen(
+              // targetPage: orderReceiptPage,
+              targetPage: const MyHomePage(),
+              message: 'Your payment has been processed successfully',
+              displayDuration: const Duration(seconds: 2),
+            ),
+          ),
+        );
+      } else {
+        _showError(result?['message'] ?? 'Failed to process payment');
+      }
+    } catch (e) {
+      print('❌ [OrderPaymentPage] Error: $e');
+      _showError('Error: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,33 +246,48 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
                   const SizedBox(height: 16),
                   _buildProgressIndicator(),
                   const SizedBox(height: 16),
-                  CardContainerWidget(
-                    child: PaymentOptionSelector(
-                      value: paymentType,
-                      onChanged: (v) {
-                        setState(() {
-                          paymentType = v;
-                          if (v == "advance") {
-                            paymentMethod = "bank"; // credit hide
-                          }
-                        });
-                      },
+                  if (_isLoadingMethods)
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: CircularProgressIndicator(),
+                    )
+                  else ...[
+                    CardContainerWidget(
+                      child: PaymentOptionSelector(
+                        value: paymentType,
+                        onChanged: (v) {
+                          setState(() {
+                            paymentType = v;
+                            if (v == "advance") {
+                              paymentMethod = "bank";
+                            }
+                          });
+                          // Update payment method ID when payment option changes
+                          _updateSelectedPaymentMethod();
+                        },
+                      ),
                     ),
-                  ),
-                  CardContainerWidget(
-                    child: PaymentMethodSelector(
-                      paymentType: paymentType,
-                      value: paymentMethod,
-                      onChanged: (v) {
-                        setState(() => paymentMethod = v);
-                      },
+                    CardContainerWidget(
+                      child: PaymentMethodSelectorNew(
+                        paymentType: paymentType,
+                        value: paymentMethod,
+                        onChanged: (v) {
+                          setState(() => paymentMethod = v);
+                          // Update selected payment method ID based on selection
+                          _updateSelectedPaymentMethod();
+                        },
+                        paymentMethods: _paymentMethods,
+                        selectedPaymentMethodId: selectedPaymentMethodId,
+                      ),
                     ),
-                  ),
-                  CardContainerWidget(
-                    child: paymentMethod == "bank"
-                        ? const BankTransferSection()
-                        : const CreditCardSection(),
-                  ),
+                    CardContainerWidget(
+                      child: paymentMethod == "bank"
+                          ? BankTransferSection(key: _bankTransferKey)
+                          : CreditCardSection(key: _creditCardKey),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTotalAmountStrip(),
+                  ],
                   const SizedBox(height: 28),
                 ],
               ),
@@ -70,49 +295,67 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: PrimaryBtnWidget(
-              width: double.infinity,
-              buttonText: "Next",
-              onPressed: () {
-                // Create order receipt page with sample data
-                final orderReceiptPage = OrderReceiptPage(
-                  orderNumber: '2827966',
-                  productName: 'Tecno Camon 40 Pro',
-                  productPrice: '60,999',
-                  productColor: 'GALAXY BLACK',
-                  // productImage: 'https://picsum.photos/200?1',
-                  productImage: '',
-                  orderData: {
-                    'name': 'Huzaifa Khan',
-                    'email': 'huzpubgkhan@gmail.com',
-                    'phone': '03154699890',
-                    'cnic': '42101-3754411-3',
-                    'province': 'Sindh',
-                    'city': 'Karachi - North\nKarachi Sector 11',
-                    'area': 'Sector 11 - C 2',
-                    'address': 'R-196 top floor sector 11c2 north Karachi',
-                    'shippingCost': '149',
-                    'expectedDelivery': 'Oct 30 - Nov 01',
-                    'totalPrice': '61,148',
-                    'paidAmount': '1,148',
-                  },
-                );
-
-                // Navigate to confirmation screen which will then navigate to receipt
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => OrderConfirmationSuccessScreen(
-                      targetPage: orderReceiptPage,
-                      message: 'Your order has been placed successfully',
-                      displayDuration: const Duration(seconds: 2),
+            child: _isProcessing
+                ? ElevatedButton(
+                    onPressed: null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.bgPrimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: const SizedBox(
+                      height: 50,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        ),
+                      ),
+                    ),
+                  )
+                : PrimaryBtnWidget(
+                    width: double.infinity,
+                    buttonText: "Complete Payment",
+                    onPressed: _onNextPressed,
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
+    );
+  }
+
+  /// Update selected payment method based on current selections
+  void _updateSelectedPaymentMethod() {
+    // Map payment type and method to payment method ID
+    // Format: "Full Payment | Bank Transfer" = 1, etc.
+    final paymentTypeText = paymentType == "full"
+        ? "Full Payment"
+        : "Advance Payment";
+    final paymentMethodText = paymentMethod == "bank"
+        ? "Bank Transfer"
+        : "Credit Card";
+    final methodName = "$paymentTypeText | $paymentMethodText";
+
+    print('🔄 [DEBUG] Looking for method: $methodName');
+    print(
+      '🔄 [DEBUG] Available methods: ${_paymentMethods.map((m) => '${m.paymentMethodId}:${m.methodName}').join(', ')}',
+    );
+
+    // Find matching payment method ID
+    final method = _paymentMethods.firstWhere(
+      (m) => m.methodName == methodName,
+      orElse: () => _paymentMethods.isNotEmpty
+          ? _paymentMethods.first
+          : PaymentMethod(paymentMethodId: 0, methodName: ""),
+    );
+
+    setState(() {
+      selectedPaymentMethodId = method.paymentMethodId;
+    });
+
+    print(
+      '🔄 [OrderPaymentPage] Selected payment method: $methodName (ID: ${method.paymentMethodId})',
     );
   }
 
@@ -127,6 +370,112 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
           StepLine(active: true),
           StepCircle(active: true, label: "PAYMENT", stepNumber: 3),
         ],
+      ),
+    );
+  }
+
+  /// Build total amount strip showing items, shipping, and grand total
+  Widget _buildTotalAmountStrip() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Order Summary',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Items total row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Items Total',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                Text(
+                  'Rs ${widget.itemsTotalAmount.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Shipping total row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Shipping',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                Text(
+                  'Rs ${widget.shippingPrice.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Divider
+            Divider(color: Colors.grey.shade300, thickness: 1, height: 16),
+            // Grand total row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Grand Total',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  'Rs ${totalAmount.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.bgPrimaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -168,17 +517,21 @@ class PaymentOptionSelector extends StatelessWidget {
   }
 }
 
-/// ================= PAYMENT METHOD =================
-class PaymentMethodSelector extends StatelessWidget {
+/// ================= PAYMENT METHOD (UPDATED) =================
+class PaymentMethodSelectorNew extends StatelessWidget {
   final String paymentType;
   final String value;
   final ValueChanged<String> onChanged;
+  final List<PaymentMethod> paymentMethods;
+  final int? selectedPaymentMethodId;
 
-  const PaymentMethodSelector({
+  const PaymentMethodSelectorNew({
     super.key,
     required this.paymentType,
     required this.value,
     required this.onChanged,
+    required this.paymentMethods,
+    this.selectedPaymentMethodId,
   });
 
   @override
@@ -186,13 +539,18 @@ class PaymentMethodSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Payment Method",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         _methodTile("Bank Transfer", "bank"),
         if (paymentType == "full") _methodTile("Credit Card", "card"),
+        const SizedBox(height: 8),
+        Text(
+          'Selected Method ID: $selectedPaymentMethodId',
+          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+        ),
       ],
     );
   }
@@ -234,21 +592,44 @@ class _BankTransferSectionState extends State<BankTransferSection> {
     }
   }
 
+  /// Validate all bank transfer details
+  bool validateDetails() {
+    if (nameCtrl.text.trim().isEmpty) {
+      print('❌ [BankTransfer] Account holder name is empty');
+      return false;
+    }
+    if (accCtrl.text.trim().isEmpty) {
+      print('❌ [BankTransfer] Account number is empty');
+      return false;
+    }
+    if (proof == null) {
+      print('❌ [BankTransfer] Payment proof not selected');
+      return false;
+    }
+    print('✅ [BankTransfer] All details validated');
+    return true;
+  }
+
+  @override
+  void dispose() {
+    nameCtrl.dispose();
+    accCtrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Payment Details",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            // color: Colors.grey.shade100,
-            // color: AppColors.pinkPrimaryColor,
             gradient: AppColors.tooLightGradientColor,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -277,12 +658,18 @@ class _BankTransferSectionState extends State<BankTransferSection> {
         const SizedBox(height: 16),
         TextField(
           controller: nameCtrl,
-          decoration: const InputDecoration(labelText: "Account Holder Name"),
+          decoration: const InputDecoration(
+            labelText: "Account Holder Name *",
+            hintText: "Your name",
+          ),
         ),
         const SizedBox(height: 12),
         TextField(
           controller: accCtrl,
-          decoration: const InputDecoration(labelText: "Account Number"),
+          decoration: const InputDecoration(
+            labelText: "Account Number *",
+            hintText: "Your account number",
+          ),
         ),
         const SizedBox(height: 12),
         GestureDetector(
@@ -290,22 +677,44 @@ class _BankTransferSectionState extends State<BankTransferSection> {
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade400),
+              border: Border.all(
+                color: proof == null ? Colors.grey.shade400 : Colors.green,
+                width: proof == null ? 1 : 2,
+              ),
               borderRadius: BorderRadius.circular(8),
+              color: proof == null ? Colors.white : Colors.green.shade50,
             ),
             child: Row(
               children: [
-                const Icon(Icons.upload_file, color: Colors.grey),
+                Icon(
+                  proof == null ? Icons.upload_file : Icons.check_circle,
+                  color: proof == null ? Colors.grey : Colors.green,
+                ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    proofName ?? "Payment Proof (Screenshot)",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: proofName == null
-                          ? Colors.grey
-                          : AppColors.textBlack,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        proofName ?? "Payment Proof (Screenshot) *",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: proofName == null
+                              ? Colors.grey
+                              : AppColors.textBlack,
+                        ),
+                      ),
+                      if (proofName != null)
+                        Text(
+                          '✓ File selected',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.green.shade700,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -318,19 +727,62 @@ class _BankTransferSectionState extends State<BankTransferSection> {
 }
 
 /// ================= CREDIT CARD =================
-class CreditCardSection extends StatelessWidget {
+class CreditCardSection extends StatefulWidget {
   const CreditCardSection({super.key});
+
+  @override
+  State<CreditCardSection> createState() => _CreditCardSectionState();
+}
+
+class _CreditCardSectionState extends State<CreditCardSection> {
+  final cardNumberCtrl = TextEditingController();
+  final expiryCtrl = TextEditingController();
+  final cvvCtrl = TextEditingController();
+
+  /// Validate all credit card details
+  bool validateDetails() {
+    if (cardNumberCtrl.text.trim().isEmpty) {
+      print('❌ [CreditCard] Card number is empty');
+      return false;
+    }
+    if (cardNumberCtrl.text.length < 13) {
+      print('❌ [CreditCard] Card number is too short');
+      return false;
+    }
+    if (expiryCtrl.text.trim().isEmpty) {
+      print('❌ [CreditCard] Expiry date is empty');
+      return false;
+    }
+    if (cvvCtrl.text.trim().isEmpty) {
+      print('❌ [CreditCard] CVV is empty');
+      return false;
+    }
+    if (cvvCtrl.text.length < 3) {
+      print('❌ [CreditCard] CVV is invalid');
+      return false;
+    }
+    print('✅ [CreditCard] All details validated');
+    return true;
+  }
+
+  @override
+  void dispose() {
+    cardNumberCtrl.dispose();
+    expiryCtrl.dispose();
+    cvvCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Card Details",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         NoteBoxWidget(
           message:
               "Processing fee of 2% will be applied for credit card payments.",
@@ -342,16 +794,44 @@ class CreditCardSection extends StatelessWidget {
           padding: const EdgeInsets.all(12),
         ),
         const SizedBox(height: 16),
-        TextField(decoration: const InputDecoration(labelText: "Card Number")),
-        const SizedBox(height: 12),
         TextField(
-          decoration: const InputDecoration(labelText: "Expiry Date (MM/YY)"),
+          controller: cardNumberCtrl,
+          decoration: const InputDecoration(
+            labelText: "Card Number *",
+            hintText: "1234 5678 9012 3456",
+          ),
+          keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 12),
-        TextField(decoration: const InputDecoration(labelText: "CVV")),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: expiryCtrl,
+                decoration: const InputDecoration(
+                  labelText: "Expiry Date *",
+                  hintText: "MM/YY",
+                ),
+                keyboardType: TextInputType.datetime,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextField(
+                controller: cvvCtrl,
+                decoration: const InputDecoration(
+                  labelText: "CVV *",
+                  hintText: "123",
+                ),
+                keyboardType: TextInputType.number,
+                obscureText: true,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
-}
 
-/// End of file
+  /// End of file
+}

@@ -1,4 +1,5 @@
 import 'package:first/core/app_imports.dart';
+import 'package:first/models/address_model.dart';
 
 class AddressService {
   final ApiClient _apiClient = ApiClient();
@@ -6,6 +7,7 @@ class AddressService {
   /// Create a new address
   Future<bool> createAddress(CreateAddressModel address) async {
     try {
+      print('📍 Creating new address');
       final response = await _apiClient.dio.post(
         '/api/Address',
         data: address.toJson(),
@@ -25,7 +27,46 @@ class AddressService {
     }
   }
 
-  /// Get all addresses for a user
+  /// Get all addresses for a user (Returns AddressModel objects)
+  Future<List<AddressModel>> getAddressesByUserId(int userId) async {
+    try {
+      print('📍 Fetching addresses for userId: $userId');
+      final response = await _apiClient.dio.get('/api/Address/user/$userId');
+
+      if (response.statusCode == 200) {
+        if (response.data is List) {
+          final addresses = (response.data as List)
+              .map(
+                (json) => AddressModel.fromJson(json as Map<String, dynamic>),
+              )
+              .toList();
+
+          print('✅ Fetched ${addresses.length} addresses');
+          for (var i = 0; i < addresses.length; i++) {
+            print(
+              '   Address ${i + 1}: ${addresses[i].label} - ${addresses[i].addressLine1}',
+            );
+          }
+
+          return addresses;
+        }
+        return [];
+      }
+      return [];
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        print('⚠️ No addresses found for this user');
+        return [];
+      }
+      print('❌ Error fetching addresses: ${e.response?.data}');
+      return [];
+    } catch (e) {
+      print('❌ Unexpected error: $e');
+      return [];
+    }
+  }
+
+  /// Get all addresses for a user (Legacy - Returns raw Maps)
   Future<List<Map<String, dynamic>>?> getUserAddresses(int userId) async {
     try {
       print('📍 Fetching addresses for user: $userId');
@@ -101,3 +142,7 @@ class AddressService {
     }
   }
 }
+  //     return false;
+  //   }
+  // }
+// }

@@ -51,34 +51,49 @@ class _ProductCardState extends State<ProductCard> {
   @override
   void initState() {
     super.initState();
+    // Only check wishlist if user is logged in
     _checkIfInWishlist();
   }
 
   Future<void> _checkIfInWishlist() async {
     // Only check if user is logged in and has wishlistId
-    if (!UserSessionManager().isLoggedIn ||
-        UserSessionManager().wishlistId == null) {
+    final sessionManager = UserSessionManager();
+    if (!sessionManager.isLoggedIn || sessionManager.wishlistId == null) {
+      // Don't check wishlist status if not logged in
+      print('⚠️ [ProductCard] User not logged in or wishlist not initialized');
       return;
     }
 
-    // try {
-    //   final variantId = widget.product['variantId'] as int?;
-    //   if (variantId == null) return;
+    try {
+      final variantId = widget.product['variantId'] as int?;
+      if (variantId == null) return;
 
-    //   final isInWishlist = await _wishlistService.isInWishlist(
-    //     wishlistId: UserSessionManager().wishlistId!,
-    //     variantId: variantId,
-    //   );
+      final isInWishlist = await _wishlistService.isInWishlist(
+        wishlistId: sessionManager.wishlistId!,
+        variantId: variantId,
+      );
 
-    //   if (mounted) {
-    //     setState(() => _isFavorited = isInWishlist);
-    //   }
-    // } catch (e) {
-    //   print('Error checking wishlist: $e');
-    // }
+      if (mounted) {
+        setState(() => _isFavorited = isInWishlist);
+      }
+    } catch (e) {
+      print('Error checking wishlist: $e');
+    }
   }
 
   Future<void> _toggleWishlist() async {
+    // Check if variantId exists first
+    final variantId = widget.product['variantId'] as int?;
+    if (variantId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('This product variant is not available'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     // Check if user is logged in
     if (!UserSessionManager().isLoggedIn) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,17 +117,6 @@ class _ProductCardState extends State<ProductCard> {
     }
 
     final userId = UserSessionManager().userId;
-    // final variantId = widget.product['variantId'] as int?;
-
-    // if (variantId == null) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('Product variant not found'),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    //   return;
-    // }
 
     if (userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -126,60 +130,60 @@ class _ProductCardState extends State<ProductCard> {
 
     setState(() => _isLoading = true);
 
-    // try {
-    //   bool success;
-    //   if (_isFavorited) {
-    //     // Remove from wishlist
-    //     success = await _wishlistService.removeFromWishlist(
-    //       wishlistId: UserSessionManager().wishlistId!,
-    //       variantId: variantId,
-    //     );
-    //   } else {
-    //     // Add to wishlist (backend expects userId + variantId)
-    //     success = await _wishlistService.addToWishlist(
-    //       userId: userId,
-    //       variantId: variantId,
-    //     );
-    //   }
+    try {
+      bool success;
+      if (_isFavorited) {
+        // Remove from wishlist
+        success = await _wishlistService.removeFromWishlist(
+          wishlistId: UserSessionManager().wishlistId!,
+          variantId: variantId,
+        );
+      } else {
+        // Add to wishlist (backend expects userId + variantId)
+        success = await _wishlistService.addToWishlist(
+          userId: userId,
+          variantId: variantId,
+        );
+      }
 
-    //   if (mounted) {
-    //     if (success) {
-    //       setState(() => _isFavorited = !_isFavorited);
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(
-    //           content: Text(
-    //             _isFavorited
-    //                 ? '❤️ Added to Wishlist'
-    //                 : '🗑️ Removed from Wishlist',
-    //           ),
-    //           backgroundColor: Colors.green,
-    //           duration: const Duration(seconds: 2),
-    //         ),
-    //       );
-    //     } else {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(
-    //           content: Text('Failed to update wishlist'),
-    //           backgroundColor: Colors.red,
-    //         ),
-    //       );
-    //     }
-    //   }
-    // } catch (e) {
-    //   print('Error toggling wishlist: $e');
-    //   if (mounted) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(
-    //         content: Text('Error updating wishlist'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } finally {
-    //   if (mounted) {
-    //     setState(() => _isLoading = false);
-    //   }
-    // }
+      if (mounted) {
+        if (success) {
+          setState(() => _isFavorited = !_isFavorited);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _isFavorited
+                    ? '❤️ Added to Wishlist'
+                    : '🗑️ Removed from Wishlist',
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to update wishlist'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('Error toggling wishlist: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error updating wishlist'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   String _formatDiscount(dynamic discount) {
@@ -215,7 +219,7 @@ class _ProductCardState extends State<ProductCard> {
               : AppColors.productCardGrey,
           boxShadow: [
             BoxShadow(
-              color: AppColors.glassmorphismBoxShadowBlack,
+              color: const Color.fromARGB(98, 102, 102, 102),
               blurRadius: 6,
             ),
           ],
@@ -253,65 +257,73 @@ class _ProductCardState extends State<ProductCard> {
                     ),
 
                     /// FAVORITE BUTTON
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: GestureDetector(
-                        onTap: _isLoading ? null : _toggleWishlist,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.accentRed,
-                                    ),
-                                  ),
-                                )
-                              : Icon(
-                                  _isFavorited
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: _isFavorited
-                                      ? AppColors.accentRed
-                                      : AppColors.textBlack,
-                                  size: 20,
-                                ),
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   top: 6,
+                    //   right: 6,
+                    //   child: GestureDetector(
+                    //     onTap: widget.product['variantId'] == null
+                    //         ? null
+                    //         : _toggleWishlist,
+                    //     child: Container(
+                    //       width: 32,
+                    //       height: 32,
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.white.withOpacity(0.8),
+                    //         borderRadius: BorderRadius.circular(8),
+                    //       ),
+                    //       child: _isLoading
+                    //           ? const SizedBox(
+                    //               height: 20,
+                    //               width: 20,
+                    //               child: CircularProgressIndicator(
+                    //                 strokeWidth: 2,
+                    //                 valueColor: AlwaysStoppedAnimation<Color>(
+                    //                   AppColors.accentRed,
+                    //                 ),
+                    //               ),
+                    //             )
+                    //           : Icon(
+                    //               widget.product['variantId'] == null
+                    //                   ? Icons.block
+                    //                   : (_isFavorited
+                    //                         ? Icons.favorite
+                    //                         : Icons.favorite_border),
+                    //               color: widget.product['variantId'] == null
+                    //                   ? Colors.grey
+                    //                   : (_isFavorited
+                    //                         ? AppColors.accentRed
+                    //                         : AppColors.textBlack),
+                    //               size: 20,
+                    //             ),
+                    //     ),
+                    //   ),
+                    // ),
 
-                    /// DISCOUNT TAG
-                    Positioned(
-                      top: 6,
-                      left: 6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.textBlack,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          '↓ ${_formatDiscount(widget.product['discountPercentage'])}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.backgroundWhite,
-                          ),
-                        ),
-                      ),
-                    ),
+                    widget.product['isDiscounted'] == true
+    ? Positioned(
+        top: 6,
+        left: 6,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 4,
+            vertical: 2,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.textBlack,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            '↓ ${_formatDiscount(widget.product['discountPercentage'])}',
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.backgroundWhite,
+            ),
+          ),
+        ),
+      )
+    : const SizedBox.shrink(),
+
                   ],
                 ),
               ),
@@ -329,7 +341,7 @@ class _ProductCardState extends State<ProductCard> {
                         'reviews:',
                         style: TextStyle(
                           fontSize: 9,
-                          color: AppColors.formGrey96,
+                          color: AppColors.textGreyDark,
                         ),
                       ),
                       const SizedBox(width: 2),
@@ -367,7 +379,7 @@ class _ProductCardState extends State<ProductCard> {
                     style: const TextStyle(
                       fontSize: 9,
                       decoration: TextDecoration.lineThrough,
-                      color: AppColors.textGrey,
+                      color: AppColors.textGreyDark,
                     ),
                   ),
                 ],

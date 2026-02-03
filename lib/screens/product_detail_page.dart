@@ -1,8 +1,4 @@
 // import 'package:first/core/app_imports.dart';
-// // import 'package:first/models/product_detail_model.dart';
-// // import 'package:first/services/api/product_service.dart';
-// // import 'package:first/services/user_session_manager.dart';
-// // import 'package:first/widgets/add_to_cart_confirmation_drawer.dart';
 // import 'package:first/widgets/wishlist_button.dart';
 // import 'package:first/services/api/cart_service.dart';
 
@@ -45,6 +41,7 @@
 //   late int availableStock = 15;
 //   bool _stockLimitReached = false;
 //   ProductVariant? _selectedVariant;
+//   int? selectedVariantSpecOptionId;
 //   // Mapping of formatted storage ("RAM - Storage") to variant for quick lookup
 //   late final Map<String, ProductVariant> _storageToVariantMap = {};
 
@@ -128,7 +125,9 @@
 //             cheapestVariant,
 //           );
 //           if (availableColorsForVariant.isNotEmpty) {
-//             selectedColor = availableColorsForVariant.first;
+//             selectedColor = availableColorsForVariant.first['value'];
+//             selectedVariantSpecOptionId = availableColorsForVariant
+//                 .first['variantSpecificationOptionsId'];
 //           }
 //         }
 //       });
@@ -223,7 +222,9 @@
 //           // Update color to first available color for this variant
 //           final availableColorsForVariant = _getColorsForVariant(variant);
 //           if (availableColorsForVariant.isNotEmpty) {
-//             selectedColor = availableColorsForVariant.first;
+//             selectedColor = availableColorsForVariant.first['value'];
+//             selectedVariantSpecOptionId =
+//                 availableColorsForVariant.first['optionId'] as int?;
 //           }
 //         }
 //       }
@@ -238,6 +239,13 @@
 //           );
 //           if (hasColor) {
 //             selectedColor = newColor;
+//             final spec = _selectedVariant!.variantSpecifications.firstWhere(
+//               (s) =>
+//                   s['specificationName'] == 'Color' &&
+//                   s['optionValue'] == newColor,
+//               orElse: () => {},
+//             );
+//             selectedVariantSpecOptionId = spec['optionId'] as int?;
 //           }
 //         }
 //       }
@@ -310,14 +318,17 @@
 //   }
 
 //   /// Get colors available for a specific variant
-//   List<String> _getColorsForVariant(ProductVariant variant) {
-//     final colorList = <String>[];
+//   List<Map<String, dynamic>> _getColorsForVariant(ProductVariant variant) {
+//     final colorList = <Map<String, dynamic>>[];
 
 //     for (var spec in variant.variantSpecifications) {
 //       if (spec['specificationName'] == 'Color') {
 //         final colorValue = spec['optionValue'];
 //         if (colorValue != null && colorValue is String) {
-//           colorList.add(colorValue);
+//           colorList.add({
+//             'value': colorValue,
+//             'optionId': spec['optionId'] as int?,
+//           });
 //         }
 //       }
 //     }
@@ -463,36 +474,12 @@
 //     }
 
 //     try {
-//       // Get or create cart
-//       final userId = session.userId!;
-//       final userCartId = session.cartId!;
-//       print('🛒 [ProductDetailPage] Getting cart for userId: $userId');
+//       // Get cartId from session
+//       final cartId = UserSessionManager().cartId;
+//       print('🛒 [ProductDetailPage] CartId from session: $cartId');
 
-//       final cartData = await _cartService.addItemToCart(
-//         cartId: userCartId,
-//         variantId: _selectedVariant!.variantId,
-//         quantity: selectedQuantity,
-//         variantSpecificationOptionsId: null,
-//       );
-
-//       if (cartData == null) {
-//         print('❌ [ProductDetailPage] Cart data is null');
-//         if (mounted) {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             const SnackBar(
-//               content: Text('❌ Failed to get cart'),
-//               backgroundColor: Colors.red,
-//             ),
-//           );
-//         }
-//         return;
-//       }
-
-//       final cartId = cartData['cartId'] as int? ?? 0;
-//       print('🛒 [ProductDetailPage] Got cartId: $cartId');
-
-//       if (cartId == 0) {
-//         print('❌ [ProductDetailPage] Invalid cartId: $cartId');
+//       if (cartId == null || cartId <= 0) {
+//         print('❌ [ProductDetailPage] Invalid cartId in session');
 //         if (mounted) {
 //           ScaffoldMessenger.of(context).showSnackBar(
 //             const SnackBar(
@@ -506,14 +493,14 @@
 
 //       // Add to cart API call
 //       print(
-//         '🛒 [ProductDetailPage] Calling addItemToCart with cartId=$cartId, variantId=${_selectedVariant!.variantId}, quantity=$selectedQuantity',
+//         '🛒 [ProductDetailPage] Calling addItemToCart with cartId=$cartId, variantId=${_selectedVariant!.variantId}, quantity=$selectedQuantity, variantSpecOptionId=$selectedVariantSpecOptionId',
 //       );
 
 //       final result = await _cartService.addItemToCart(
 //         cartId: cartId,
 //         variantId: _selectedVariant!.variantId,
 //         quantity: selectedQuantity,
-//         variantSpecificationOptionsId: null,
+//         variantSpecificationOptionsId: selectedVariantSpecOptionId,
 //       );
 
 //       print('🛒 [ProductDetailPage] addItemToCart result: $result');
@@ -1056,6 +1043,30 @@
 //                       },
 //                     ],
 //                   },
+//                   {
+//                     'title': 'Performance',
+//                     'rows': [
+//                       {'key': 'Processor Type', 'value': 'AMD Ryzen 5'},
+//                       {'key': 'Processor Speed', 'value': '3.2 GHz'},
+//                     ],
+//                   },
+//                   {
+//                     'title': 'Battery',
+//                     'rows': [
+//                       {'key': 'Battery Type', 'value': 'Lithium-ion'},
+//                       {'key': 'Battery Life', 'value': 'Up to 8 hours'},
+//                     ],
+//                   },
+//                   {
+//                     'title': 'Connectivity',
+//                     'rows': [
+//                       {'key': 'Bluetooth', 'value': 'Yes'},
+//                       {'key': 'Wireless/Wifi', 'value': 'Yes'},
+//                       {'key': 'USB', 'value': 'Yes'},
+//                       {'key': 'Camera', 'value': 'Yes'},
+//                       {'key': 'Fingerprint Reader', 'value': 'Yes'}
+//                     ],
+//                   },
 //                 ],
 //               ),
 //             ),
@@ -1592,7 +1603,7 @@
 //           spacing: 12,
 //           runSpacing: 12,
 //           children: availableColors
-//               .map((color) => _buildColorOption(color))
+//               .map((colorMap) => _buildColorOption(colorMap))
 //               .toList(),
 //         ),
 //       ],
@@ -1666,18 +1677,13 @@
 //     );
 //   }
 
-//   Widget _buildColorOption(String color) {
+//   Widget _buildColorOption(Map<String, dynamic> colorMap) {
+//     final String color = colorMap['value'];
 //     bool isSelected = selectedColor == color;
 
 //     return GestureDetector(
 //       onTap: () {
-//         setState(() {
-//           selectedColor = color;
-//         });
-//         // Update variant selection which updates price and stock
 //         _updateVariantSelection(newColor: color);
-//         // Rebuild to show updated price
-//         setState(() {});
 //       },
 //       child: Container(
 //         padding: const EdgeInsets.all(2), // outer padding same for both
@@ -1861,10 +1867,6 @@
 // }
 
 import 'package:first/core/app_imports.dart';
-// import 'package:first/models/product_detail_model.dart';
-// import 'package:first/services/api/product_service.dart';
-// import 'package:first/services/user_session_manager.dart';
-// import 'package:first/widgets/add_to_cart_confirmation_drawer.dart';
 import 'package:first/widgets/wishlist_button.dart';
 import 'package:first/services/api/cart_service.dart';
 
@@ -2450,6 +2452,164 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     });
   }
 
+  /// Mapping of API specification names to static frontend keys
+  /// This ensures consistent key matching between API and UI
+  static const Map<String, String> _specificationKeyMapping = {
+    // API Key -> Frontend Display Key
+    'Dimensions': 'Dimensions',
+    'Weight': 'Weight',
+    'OS': 'Operating System',
+    'Operating System': 'Operating System',
+    'CPU': 'Generation',
+    'Display': 'Screen Size',
+    'Screen Size': 'Screen Size',
+    'Screen Resolution': 'Screen Resolution',
+    'Touch Screen': 'Touch Screen',
+    'Backlit Keyboard': 'Backlit Keyboard',
+    'Storage': 'Internal Memory',
+    'Internal Memory': 'Internal Memory',
+    'RAM': 'RAM',
+    'GPU': 'Graphics Memory',
+    'Graphics Memory': 'Graphics Memory',
+    'Processor Type': 'Processor Type',
+    'Processor Speed': 'Processor Speed',
+    'Battery Type': 'Battery Type',
+    'Battery Life': 'Battery Life',
+    'Bluetooth': 'Bluetooth',
+    'Wireless/Wifi': 'Wireless/Wifi',
+    'USB': 'USB',
+    'Camera': 'Camera',
+    'Fingerprint Reader': 'Fingerprint Reader',
+    'Color': 'Color',
+  };
+
+  /// Get mapped key for specification (returns the key if no mapping found)
+  String _getMappedSpecKey(String apiKey) {
+    return _specificationKeyMapping[apiKey] ?? apiKey;
+  }
+
+  List<Map<String, dynamic>> _getDynamicSpecSections() {
+    // ✅ Initialize all values with 'N/A' as default
+    List<Map<String, dynamic>> sections = [
+      {
+        'title': 'General Features',
+        'rows': [
+          {'key': 'Dimensions', 'value': 'N/A'},
+          {'key': 'Weight', 'value': 'N/A'},
+          {'key': 'Operating System', 'value': 'N/A'},
+          {'key': 'Generation', 'value': 'N/A'},
+        ],
+      },
+      {
+        'title': 'Display',
+        'rows': [
+          {'key': 'Screen Size', 'value': 'N/A'},
+          {'key': 'Screen Resolution', 'value': 'N/A'},
+          {'key': 'Touch Screen', 'value': 'N/A'},
+          {'key': 'Backlit Keyboard', 'value': 'N/A'},
+        ],
+      },
+      {
+        'title': 'Memory',
+        'rows': [
+          {'key': 'Internal Memory', 'value': 'N/A'},
+          {'key': 'RAM', 'value': 'N/A'},
+          {'key': 'Graphics Memory', 'value': 'N/A'},
+        ],
+      },
+      {
+        'title': 'Performance',
+        'rows': [
+          {'key': 'Processor Type', 'value': 'N/A'},
+          {'key': 'Processor Speed', 'value': 'N/A'},
+        ],
+      },
+      {
+        'title': 'Battery',
+        'rows': [
+          {'key': 'Battery Type', 'value': 'N/A'},
+          {'key': 'Battery Life', 'value': 'N/A'},
+        ],
+      },
+      {
+        'title': 'Connectivity',
+        'rows': [
+          {'key': 'Bluetooth', 'value': 'N/A'},
+          {'key': 'Wireless/Wifi', 'value': 'N/A'},
+          {'key': 'USB', 'value': 'N/A'},
+          {'key': 'Camera', 'value': 'N/A'},
+          {'key': 'Fingerprint Reader', 'value': 'N/A'},
+        ],
+      },
+    ];
+
+    // ✅ Create a lookup map of static keys for O(1) lookup
+    final staticKeysSet = <String>{};
+    for (var section in sections) {
+      final rows = section['rows'] as List<Map<String, dynamic>>;
+      for (var row in rows) {
+        staticKeysSet.add(row['key'] as String);
+      }
+    }
+
+    // ✅ Update from product specifications
+    // Only update if API key matches a static key (via mapping)
+    if (_productDetail != null) {
+      for (var spec in _productDetail!.specifications) {
+        final apiKey = spec.specificationName;
+        final mappedKey = _getMappedSpecKey(apiKey);
+        final value = spec.getDisplayValue();
+
+        // Check if this mapped key exists in our static structure
+        if (staticKeysSet.contains(mappedKey)) {
+          for (var section in sections) {
+            final rows = section['rows'] as List<Map<String, dynamic>>;
+            for (var row in rows) {
+              if (row['key'] == mappedKey &&
+                  value.isNotEmpty &&
+                  value != 'N/A') {
+                row['value'] = value;
+              }
+            }
+          }
+        } else {
+          print('⚠️ WARNING: API key "$apiKey" does not match any static key');
+        }
+      }
+    }
+
+    // ✅ Update from selected variant specifications
+    // These typically override product specifications for variant-specific values
+    if (_selectedVariant != null) {
+      for (var vSpec in _selectedVariant!.variantSpecifications) {
+        final apiKey = vSpec['specificationName'] as String?;
+        final value = vSpec['optionValue'] as String?;
+
+        if (apiKey != null && value != null && value.isNotEmpty) {
+          final mappedKey = _getMappedSpecKey(apiKey);
+
+          // Check if this mapped key exists in our static structure
+          if (staticKeysSet.contains(mappedKey)) {
+            for (var section in sections) {
+              final rows = section['rows'] as List<Map<String, dynamic>>;
+              for (var row in rows) {
+                if (row['key'] == mappedKey) {
+                  row['value'] = value;
+                }
+              }
+            }
+          } else {
+            print(
+              '⚠️ WARNING: Variant key "$apiKey" does not match any static key',
+            );
+          }
+        }
+      }
+    }
+
+    return sections;
+  }
+
   @override
   Widget build(BuildContext context) {
     final brandImages = <ImageProvider>[
@@ -2777,64 +2937,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ],
             ),
 
-            /// SIMILAR PRODUCTS
-            // Container(
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.all(16),
-            //   decoration: BoxDecoration(
-            //     // color: Colors.blue[50], // light blue background
-
-            //     borderRadius: BorderRadius.circular(2),
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Text(
-            //         "Similar Products",
-            //         style: TextStyle(fontSize: FontSize.homePageTitle, fontWeight: FontWeight.bold, color: AppColors.backgroundWhite),
-            //       ),
-
-            //       const SizedBox(height: 12),
-
-            //       ProductDisplayWidget(
-            //         cars: [
-            //           {
-            //             'name': 'BMW M4 Series',
-            //             'price': '\$155,000',
-            //             'rating': 4.5,
-            //             'status': 'New',
-            //             'image': Icons.directions_car,
-            //             'color': Colors.grey,
-            //           },
-            //           {
-            //             'name': 'Camaro Sports',
-            //             'price': '\$170,000',
-            //             'rating': 4.7,
-            //             'status': 'New',
-            //             'image': Icons.directions_car,
-            //             'color': Colors.amber,
-            //           },
-            //           {
-            //             'name': 'Audi Sports',
-            //             'price': '\$133,000',
-            //             'rating': 4.1,
-            //             'status': 'Used',
-            //             'image': Icons.directions_car,
-            //             'color': Colors.red,
-            //           },
-            //           {
-            //             'name': 'Audi Sports',
-            //             'price': '\$133,000',
-            //             'rating': 4.1,
-            //             'status': 'Used',
-            //             'image': Icons.directions_car,
-            //             'color': Colors.red,
-            //           },
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
             const SizedBox(height: 28),
 
             Padding(
@@ -2875,42 +2977,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Padding(
               // key: _specDetailsKey,
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SpecificationDetails(
-                sections: [
-                  {
-                    'title': 'General Features',
-                    'rows': [
-                      {'key': 'Dimensions', 'value': 'N/A'},
-                      {'key': 'Weight', 'value': '1.69 kg'},
-                      {
-                        'key': 'Operating System',
-                        'value': 'Genuine Windows 11 Home',
-                      },
-                      {'key': 'Generation', 'value': 'AMD'},
-                    ],
-                  },
-                  {
-                    'title': 'Display',
-                    'rows': [
-                      {'key': 'Screen Size', 'value': '15.6'},
-                      {'key': 'Screen Resolution', 'value': '1920x1080'},
-                      {'key': 'Touch Screen', 'value': 'No'},
-                      {'key': 'Backlit Keyboard', 'value': 'N/A'},
-                    ],
-                  },
-                  {
-                    'title': 'Memory',
-                    'rows': [
-                      {'key': 'Internal Memory', 'value': '512 GB'},
-                      {'key': 'RAM', 'value': '8 GB'},
-                      {
-                        'key': 'Graphics Memory',
-                        'value': 'AMD Radeon™ Graphics',
-                      },
-                    ],
-                  },
-                ],
-              ),
+              child: SpecificationDetails(sections: _getDynamicSpecSections()),
             ),
 
             const SizedBox(height: 16),

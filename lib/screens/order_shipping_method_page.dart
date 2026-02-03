@@ -16,7 +16,14 @@ class ShippingOption {
 }
 
 class OrderShippingMethodPage extends StatefulWidget {
-  const OrderShippingMethodPage({super.key});
+  final int orderId;
+  final double itemsTotalAmount;
+
+  const OrderShippingMethodPage({
+    required this.orderId,
+    required this.itemsTotalAmount,
+    super.key,
+  });
 
   @override
   State<OrderShippingMethodPage> createState() =>
@@ -36,14 +43,14 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
         title: 'Standard Delivery',
         description:
             'Order will be delivered between 3 - 4 business days straight to your doorstep',
-        price: '\$3',
+        price: '150',
       ),
       ShippingOption(
         id: 'nextday',
         title: 'Next Day Delivery',
         description:
             'Order will be delivered between 1 - 2 business days straight to your doorstep',
-        price: '\$5',
+        price: '250',
       ),
     ];
   }
@@ -89,10 +96,21 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
               padding: const EdgeInsets.all(10),
               child: PrimaryBtnWidget(
                 onPressed: () {
+                  // Get selected shipping option price
+                  final selectedShipping = _shippingOptions.firstWhere(
+                    (s) => s.id == _selectedShippingId,
+                  );
+                  final shippingPrice =
+                      double.tryParse(selectedShipping.price) ?? 0.0;
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const OrderAddressConfirmPage(),
+                      builder: (context) => OrderAddressConfirmPage(
+                        orderId: widget.orderId,
+                        itemsTotalAmount: widget.itemsTotalAmount,
+                        shippingPrice: shippingPrice,
+                      ),
                     ),
                   );
                 },
@@ -211,10 +229,7 @@ class _OrderShippingMethodPageState extends State<OrderShippingMethodPage> {
             //     color: AppColors.primaryGreen,
             //   ),
             // ),
-            GradientText(
-              text: option.price,
-              fontSize: 18,
-            ), 
+            GradientText(text: option.price, fontSize: 18),
           ],
         ),
       ),

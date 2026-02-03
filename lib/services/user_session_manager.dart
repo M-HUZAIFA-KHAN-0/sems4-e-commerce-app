@@ -97,9 +97,10 @@ class UserSessionManager {
     _userEmail = null;
     _userName = null;
     _isLoggedIn = false;
+    _token = null; // Clear token on logout
     _wishlistId = null;
     _cartId = null;
-    print('✅ User session cleared');
+    print('✅ User session cleared (including token)');
   }
 
   /// Print current session info (for debugging)
@@ -109,5 +110,10 @@ class UserSessionManager {
     print('Email: $_userEmail');
     print('Name: $_userName');
     print('Is Logged In: $_isLoggedIn');
+    print(
+      'Token: ${_token != null ? '${_token!.substring(0, 20)}...' : 'None'}',
+    );
+    print('WishlistId: $_wishlistId');
+    print('CartId: $_cartId');
   }
 }

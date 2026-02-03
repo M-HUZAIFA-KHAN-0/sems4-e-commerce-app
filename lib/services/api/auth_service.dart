@@ -151,17 +151,26 @@ class AuthService {
         // Mark user as logged in
         _sessionManager.setLoggedIn(isLoggedIn: true);
 
+        // Store token in session manager if available
+        if (token != null && token is String) {
+          _sessionManager.setToken(token);
+          print('🔑 [AuthService] Token stored in session');
+        }
+
         // Store userId in session manager if available
         if (userId != null) {
           final userIdInt = userId is int
               ? userId
               : int.parse(userId.toString());
           _sessionManager.setLoginData(userId: userIdInt);
+          print('👤 [AuthService] UserId stored in session: $userIdInt');
 
           // Initialize cart and wishlist after successful login
           print('🔄 Initializing cart and wishlist...');
           try {
-            final result = await _cartWishlistService.initializeCartAndWishlist(userIdInt);
+            final result = await _cartWishlistService.initializeCartAndWishlist(
+              userIdInt,
+            );
             print('✅ Cart and Wishlist initialized successfully');
             print('📋 Init result: $result');
             print('💾 Session wishlistId: ${_sessionManager.wishlistId}');
